@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPS設定好了，你的引擎為什麼還沒啟動？</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: #f0f0f0;
+    color: #2a2a2a;
+    padding: 32px 20px;
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: #1a1a1a;
+    padding: 22px 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .num-badge {
+    background: #c2637a;
+    color: #fff;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 28px;
+    font-weight: 900;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .header-title h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #faf2e0;
+    line-height: 1.4;
+  }
+  .header-title h1 span { color: #c2637a; }
+  .header-title p {
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+    letter-spacing: 0.05em;
+  }
+  .header-right {
+    text-align: right;
+  }
+  .header-right .brand {
+    font-size: 13px;
+    color: #6b9ec4;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .header-right .sub {
+    font-size: 10px;
+    color: #666;
+    margin-top: 4px;
+    letter-spacing: 0.12em;
+  }
+
+  /* ── BODY ── */
+  .body {
+    padding: 28px 36px 36px;
+  }
+
+  /* ── TYPE CARDS ── */
+  .type-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .type-card {
+    border: 1.5px solid #e8e0da;
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: #fafafa;
+    position: relative;
+  }
+  .type-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .icon-pink  { background: #c2637a; }
+  .icon-blue  { background: #6b9ec4; }
+  .icon-slate { background: #546e7a; }
+
+  .type-content .type-name {
+    font-weight: 700;
+    font-size: 14px;
+    color: #1a1a1a;
+    margin-bottom: 3px;
+  }
+  .type-content .type-desc {
+    font-size: 11px;
+    color: #888;
+    line-height: 1.6;
+  }
+  .type-checkbox {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid #ccc;
+    border-radius: 3px;
+  }
+
+  /* ── STEP HEADER ── */
+  .step-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1.5px solid #f0e8e0;
+  }
+  .step-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .step-badge {
+    background: #c2637a;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    padding: 4px 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .step-badge-blue { background: #6b9ec4; }
+  .step-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+  .step-hint {
+    font-size: 11px;
+    color: #aaa;
+    font-style: italic;
+    text-align: right;
+    max-width: 360px;
+    line-height: 1.5;
+  }
+
+  /* ── SOLUTION GRID ── */
+  .solution-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .sol-col {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1.5px solid;
+  }
+  .sol-col.pink  { border-color: #e8a0b0; }
+  .sol-col.blue  { border-color: #93bdd4; }
+  .sol-col.slate { border-color: #b0c0c8; }
+
+  .sol-header {
+    padding: 12px 16px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sol-col.pink  .sol-header { background: #fff0f3; }
+  .sol-col.blue  .sol-header { background: #f0f7fc; }
+  .sol-col.slate .sol-header { background: #f0f4f6; }
+
+  .sol-header-icon {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+    border: 2px solid rgba(255,255,255,0.6);
+  }
+  .sol-col.pink  .sol-header-icon { background: #c2637a; }
+  .sol-col.blue  .sol-header-icon { background: #6b9ec4; }
+  .sol-col.slate .sol-header-icon { background: #546e7a; }
+
+  .sol-header-text .type-label {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-bottom: 1px;
+  }
+  .sol-col.pink  .type-label { color: #c2637a; }
+  .sol-col.blue  .type-label { color: #6b9ec4; }
+  .sol-col.slate .type-label { color: #546e7a; }
+
+  .sol-header-text .sol-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  .sol-body {
+    padding: 14px 16px 16px;
+    background: #fff;
+  }
+  .sol-body.pink  { background: #fff8f9; }
+  .sol-body.blue  { background: #f4f9fc; }
+  .sol-body.slate { background: #f6f8f9; }
+
+  .method-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+  .sol-col.pink  .method-badge { background: #c2637a; color: #fff; }
+  .sol-col.blue  .method-badge { background: #6b9ec4; color: #fff; }
+  .sol-col.slate .method-badge { background: #546e7a; color: #fff; }
+
+  .sol-main-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .sol-desc {
+    font-size: 11px;
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  /* ── FILL-IN SECTIONS ── */
+  .fill-section {
+    margin-bottom: 12px;
+  }
+  .fill-label {
+    font-size: 11px;
+    color: #555;
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .fill-label::before {
+    content: '↪';
+    font-size: 12px;
+    color: #c2637a;
+  }
+  .sol-col.blue  .fill-label::before { color: #6b9ec4; }
+  .sol-col.slate .fill-label::before { color: #546e7a; }
+
+  .fill-line {
+    border-bottom: 1px solid #d8cfc5;
+    height: 20px;
+    margin-bottom: 6px;
+    width: 100%;
+  }
+
+  .fill-grid {
+    display: grid;
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+  .fill-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #555;
+  }
+  .fill-row .fill-field {
+    flex: 1;
+    border-bottom: 1px solid #d8cfc5;
+    height: 18px;
+  }
+
+  /* ── SECTION DIVIDER ── */
+  .section-div {
+    border: none;
+    border-top: 1.5px dashed #e8e0da;
+    margin: 4px 0 28px;
+  }
+
+  /* ── LAYER SYSTEM ── */
+  .layer-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .layer-row {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    gap: 0;
+    border-radius: 8px;
+    overflow: visible;
+    border: 1.5px solid #e8e0da;
+  }
+  .layer-tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.3em;
+    min-width: 52px;
+    border-radius: 6px 0 0 6px;
+    overflow: hidden;
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+  }
+  .layer-tab.pink  { background: #c2637a; }
+  .layer-tab.dark  { background: #2a2a2a; }
+  .layer-tab.blue  { background: #6b9ec4; }
+
+  .layer-content {
+    padding: 16px 20px;
+    background: #fff;
+  }
+  .layer-content.dark-bg { background: #1a1a1a; }
+  .layer-content.pink-bg  { background: #fff8f9; }
+  .layer-content.blue-bg  { background: #f4f9fc; }
+
+  .layer-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+  .layer-title mark {
+    background: #fde68a;
+    color: #1a1a1a;
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+  .layer-content.dark-bg .layer-title { color: #faf2e0; }
+
+  .layer-tag {
+    font-size: 10px;
+    color: #aaa;
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+  .layer-tag.pink  { color: #c2637a; }
+  .layer-tag.blue  { color: #6b9ec4; }
+
+  .layer-desc {
+    font-size: 11px;
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+  .layer-content.dark-bg .layer-desc { color: #999; }
+
+  .layer-fill-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #555;
+    flex-wrap: wrap;
+  }
+  .layer-fill-row .seg {
+    border-bottom: 1px solid #c0b0a0;
+    flex: 1;
+    min-width: 80px;
+    height: 20px;
+  }
+  .layer-content.dark-bg .layer-fill-row { color: #aaa; }
+  .layer-content.dark-bg .layer-fill-row .seg { border-bottom-color: #555; }
+
+  /* KPI dark box */
+  .kpi-box {
+    background: #111;
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-top: 10px;
+  }
+  .kpi-box .kpi-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #6b9ec4;
+    margin-bottom: 10px;
+    letter-spacing: 0.08em;
+  }
+  .kpi-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 11px;
+  }
+  .kpi-row .kpi-mark {
+    font-weight: 700;
+    width: 16px;
+    flex-shrink: 0;
+  }
+  .kpi-row .kpi-mark.x { color: #c2637a; }
+  .kpi-row .kpi-mark.o { color: #6b9ec4; }
+  .kpi-row .kpi-label { color: #888; flex-shrink: 0; }
+  .kpi-row .kpi-field {
+    flex: 1;
+    border-bottom: 1px solid #444;
+    height: 18px;
+  }
+  .kpi-row .kpi-hint { color: #555; font-size: 10px; white-space: nowrap; }
+  .kpi-milestone {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #333;
+    font-size: 11px;
+    color: #888;
+  }
+  .kpi-milestone .kpi-field { flex: 1; border-bottom: 1px solid #444; height: 18px; }
+  .kpi-milestone .kpi-tail { white-space: nowrap; color: #555; }
+
+  /* Ritual flow */
+  .ritual-flow {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .ritual-cell {
+    text-align: center;
+  }
+  .ritual-cell .r-label {
+    font-size: 9px;
+    color: #6b9ec4;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .ritual-cell .r-label span { display: block; color: #aaa; font-weight: 400; margin-top: 1px; }
+  .ritual-cell .r-box {
+    border: 1px solid #c0d8e8;
+    border-radius: 5px;
+    height: 36px;
+    background: #fff;
+    margin-bottom: 4px;
+  }
+  .ritual-cell .r-sub {
+    font-size: 9px;
+    color: #aaa;
+  }
+  .ritual-arrow {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 12px;
+    font-size: 16px;
+    color: #c2637a;
+    margin-top: 20px;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    padding: 14px 36px;
+    border-top: 1px solid #f0e8e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #faf8f5;
+  }
+  .footer .brand { font-size: 11px; color: #6b9ec4; letter-spacing: 0.12em; font-family: 'Noto Serif TC', serif; }
+  .footer .note  { font-size: 10px; color: #bbb; font-style: italic; }
+
+  @media print {
+    body { background: #fff; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="num-badge">333</div>
+      <div class="header-title">
+        <h1>GPS設定好了，<span>你的引擎為什麼還沒啟動？</span></h1>
+        <p>以終為始 × 三不原則 × 三種類型 × 三層系統 —— 一套讓斜槓真的跑起來的執行設計圖</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="brand">楊楊教練 @yangyangcareer</div>
+      <div class="sub">時間管理課件 · LIVE IS OVER. ACTION STARTS NOW.</div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- TYPE SELECTION -->
+    <div class="type-row">
+      <div class="type-card">
+        <div class="type-icon icon-pink">焦</div>
+        <div class="type-content">
+          <div class="type-name">焦慮型</div>
+          <div class="type-desc">什麼都想做卻怕做不好，遲遲不敢出發</div>
+        </div>
+        <div class="type-checkbox"></div>
+      </div>
+      <div class="type-card">
+        <div class="type-icon icon-blue">散</div>
+        <div class="type-content">
+          <div class="type-name">散漫型</div>
+          <div class="type-desc">資訊量爆棚、無法聚焦，找不到下一步</div>
+        </div>
+        <div class="type-checkbox"></div>
+      </div>
+      <div class="type-card">
+        <div class="type-icon icon-slate">麻</div>
+        <div class="type-content">
+          <div class="type-name">麻木型</div>
+          <div class="type-desc">情感斷聯，感覺不到為何而做，提不起勁</div>
+        </div>
+        <div class="type-checkbox"></div>
+      </div>
+    </div>
+
+    <!-- STEP 01 -->
+    <div class="step-header">
+      <div class="step-header-left">
+        <span class="step-badge">STEP 01</span>
+        <span class="step-title">對號入座・今天回家的第一個行動</span>
+      </div>
+      <div class="step-hint">根據你的類型，找到今天就能執行的第一步<br>—— 不是系統，是立刻能動的那一件事</div>
+    </div>
+
+    <!-- SOLUTION GRID -->
+    <div class="solution-grid">
+
+      <!-- 焦慮型 -->
+      <div class="sol-col pink">
+        <div class="sol-header">
+          <div class="sol-header-icon">焦</div>
+          <div class="sol-header-text">
+            <div class="type-label">ANXIOUS TYPE · 解法</div>
+            <div class="sol-title">降低出發的威脅感</div>
+          </div>
+        </div>
+        <div class="sol-body pink">
+          <div class="method-badge">兩分鐘法則</div>
+          <div class="sol-main-title">告訴自己「只做兩分鐘，想停就停」</div>
+          <div class="sol-desc">開始是最難的關卡，一旦打開草稿開始做，大腦的阻力就消失了。出發本身就是解藥。</div>
+          <div class="fill-section">
+            <div class="fill-label">我用兩分鐘完成的第一件事</div>
+            <div class="fill-line"></div>
+            <div class="fill-line"></div>
+          </div>
+          <div class="fill-section">
+            <div class="fill-label">我能幫誰解決什麼問題（一句話）</div>
+            <div class="fill-row" style="margin-bottom:4px">
+              <span>我能幫</span><div class="fill-field"></div><span>，</span>
+            </div>
+            <div class="fill-row">
+              <span>解決</span><div class="fill-field"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 散漫型 -->
+      <div class="sol-col blue">
+        <div class="sol-header">
+          <div class="sol-header-icon">散</div>
+          <div class="sol-header-text">
+            <div class="type-label">SCATTERED TYPE · 解法</div>
+            <div class="sol-title">拆到有物理動作</div>
+          </div>
+        </div>
+        <div class="sol-body blue">
+          <div class="method-badge">任務具體化公式</div>
+          <div class="sol-main-title">GPS要有地址才能導航</div>
+          <div class="sol-desc">不是「要產出內容」，是「週三9點打開文件寫300字」。有物理動作，身體才知道怎麼動。</div>
+          <div class="fill-section">
+            <div class="fill-label">我的任務拆解</div>
+            <div class="fill-row" style="margin-bottom:5px">
+              <span>星期</span><div class="fill-field" style="max-width:48px"></div>
+              <span>晚上</span><div class="fill-field" style="max-width:48px"></div>
+              <span>點</span>
+            </div>
+            <div class="fill-row" style="margin-bottom:5px">
+              <span>打開</span><div class="fill-field"></div>
+            </div>
+            <div class="fill-row" style="margin-bottom:5px">
+              <span>做</span><div class="fill-field"></div>
+            </div>
+            <div class="fill-row">
+              <span>完成標準</span><div class="fill-field"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 麻木型 -->
+      <div class="sol-col slate">
+        <div class="sol-header">
+          <div class="sol-header-icon">麻</div>
+          <div class="sol-header-text">
+            <div class="type-label">NUMB TYPE · 解法</div>
+            <div class="sol-title">重新連結為什麼</div>
+          </div>
+        </div>
+        <div class="sol-body slate">
+          <div class="method-badge">先充電、再出發</div>
+          <div class="sol-main-title">不逼自己動，先找回那個畫面</div>
+          <div class="sol-desc">不是今天就強迫自己發文。先找到那則讓你有感覺的回饋，感受到了，明天再說。</div>
+          <div class="fill-section">
+            <div class="fill-label" style="--c:#546e7a">我當初決定開始斜槓，是因為</div>
+            <div class="fill-line"></div>
+            <div class="fill-line"></div>
+          </div>
+          <div class="fill-section">
+            <div class="fill-label" style="--c:#546e7a">我要去找的那則有感覺的回饋是</div>
+            <div class="fill-line"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="section-div">
+
+    <!-- STEP 02 -->
+    <div class="step-header">
+      <div class="step-header-left">
+        <span class="step-badge step-badge-blue">STEP 02</span>
+        <span class="step-title">三層系統・讓GPS持續導航的設計</span>
+      </div>
+      <div class="step-hint">填完帶走，今天回家就能啟動<br>—— 三層缺一不可，你的類型決定先從哪層下手</div>
+    </div>
+
+    <!-- LAYER STACK -->
+    <div class="layer-stack">
+
+      <!-- 第一層 -->
+      <div class="layer-row">
+        <div class="layer-tab pink">第一層</div>
+        <div class="layer-content pink-bg">
+          <div class="layer-tag pink">以終為始｜麻木型優先 —— GPS電源，沒有它後面兩層都沒用</div>
+          <div class="layer-title">找到讓你<mark>不得不動</mark>的理由</div>
+          <div class="layer-desc">不是正向目標，是「如果我五年後還在原地，我會失去什麼選擇權」。這個恐懼比夢想更有力量。</div>
+          <div class="layer-fill-row">
+            <span>我持續輸出斜槓，是因為我不想在</span>
+            <div class="seg" style="max-width:52px"></div>
+            <span>歲的時候，還是</span>
+            <div class="seg"></div>
+            <span>。</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 第二層 -->
+      <div class="layer-row">
+        <div class="layer-tab dark">第二層</div>
+        <div class="layer-content dark-bg">
+          <div class="layer-tag" style="color:#6b9ec4;">正向回饋迴路｜三種類型都需要 —— 沒有回饋迴路，第三週必斷</div>
+          <div class="layer-title">讓行動<mark>看得見回報</mark></div>
+          <div class="layer-desc">靠意志力是消耗，靠回饋是補充。設計一個只贏不輸的 KPI，先累積，再評估成效。</div>
+          <div class="kpi-box">
+            <div class="kpi-title">只贏不輸 KPI 設計
+              <span style="float:right;font-size:9px;color:#555;font-weight:400;">— 郝旭烈郝哥法則：先錄到100集再說</span>
+            </div>
+            <div class="kpi-row">
+              <span class="kpi-mark x">×</span>
+              <span class="kpi-label">不追</span>
+              <div class="kpi-field"></div>
+              <span class="kpi-hint">（觀看數 / 粉絲數 / 收入…）</span>
+            </div>
+            <div class="kpi-row">
+              <span class="kpi-mark o">✓</span>
+              <span class="kpi-label">只追</span>
+              <div class="kpi-field"></div>
+              <span class="kpi-hint">（發文篇數 / 集數 / 諮詢場次…）</span>
+            </div>
+            <div class="kpi-milestone">
+              <span>第一個里程碑：做到</span>
+              <div class="kpi-field"></div>
+              <span class="kpi-tail">再來評估成效</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 第三層 -->
+      <div class="layer-row">
+        <div class="layer-tab blue">第三層</div>
+        <div class="layer-content blue-bg">
+          <div class="layer-tag blue">啟動儀式｜焦慮型優先 —— 不靠決心，靠慣性帶動</div>
+          <div class="layer-title">讓輸出變成<mark>身體反應</mark></div>
+          <div class="layer-desc">把新行為掛在舊習慣後面，時間固定，門檻低到「沒理由不做」。不是新增一件事，是借用舊習慣的慣性。</div>
+          <div style="display:grid;grid-template-columns:repeat(5,1fr) repeat(4,24px) repeat(1,1fr);gap:0;align-items:end;margin-top:10px;display:flex;gap:6px;align-items:flex-end;">
+            <!-- ritual flow with arrows -->
+            <div style="flex:1;text-align:center;">
+              <div style="font-size:9px;color:#6b9ec4;font-weight:700;letter-spacing:0.08em;margin-bottom:6px;">TIME<br><span style="color:#aaa;font-weight:400;">時間點</span></div>
+              <div style="border:1px solid #93bdd4;border-radius:5px;height:34px;background:#fff;margin-bottom:4px;"></div>
+              <div style="font-size:9px;color:#aaa;">每天幾點</div>
+            </div>
+            <div style="color:#c2637a;font-size:16px;padding-bottom:16px;">→</div>
+            <div style="flex:1;text-align:center;">
+              <div style="font-size:9px;color:#6b9ec4;font-weight:700;letter-spacing:0.08em;margin-bottom:4px;">HABIT<br><span style="color:#aaa;font-weight:400;">舊習慣後</span></div>
+              <div style="border:1px solid #93bdd4;border-radius:5px;height:34px;background:#fff;margin-bottom:4px;"></div>
+              <div style="font-size:9px;color:#aaa;">做完什麼之後</div>
+            </div>
+            <div style="color:#c2637a;font-size:16px;padding-bottom:16px;">→</div>
+            <div style="flex:1;text-align:center;">
+              <div style="font-size:9px;color:#6b9ec4;font-weight:700;letter-spacing:0.08em;margin-bottom:4px;">TOOL<br><span style="color:#aaa;font-weight:400;">打開工具</span></div>
+              <div style="border:1px solid #93bdd4;border-radius:5px;height:34px;background:#fff;margin-bottom:4px;"></div>
+              <div style="font-size:9px;color:#aaa;">什麼平台/軟體</div>
+            </div>
+            <div style="color:#c2637a;font-size:16px;padding-bottom:16px;">→</div>
+            <div style="flex:1;text-align:center;">
+              <div style="font-size:9px;color:#6b9ec4;font-weight:700;letter-spacing:0.08em;margin-bottom:4px;">ACTION<br><span style="color:#aaa;font-weight:400;">最小動作</span></div>
+              <div style="border:1px solid #93bdd4;border-radius:5px;height:34px;background:#fff;margin-bottom:4px;"></div>
+              <div style="font-size:9px;color:#aaa;">做什麼</div>
+            </div>
+            <div style="color:#c2637a;font-size:16px;padding-bottom:16px;">→</div>
+            <div style="flex:1;text-align:center;">
+              <div style="font-size:9px;color:#6b9ec4;font-weight:700;letter-spacing:0.08em;margin-bottom:4px;">DURATION<br><span style="color:#aaa;font-weight:400;">時間</span></div>
+              <div style="border:1px solid #93bdd4;border-radius:5px;height:34px;background:#fff;margin-bottom:4px;"></div>
+              <div style="font-size:9px;color:#aaa;">持續＿＿分鐘</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /layer-stack -->
+
+  </div><!-- /body -->
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span class="brand">Yang Yang Career ｜ @yangyangcareer</span>
+    <span class="note">時間管理課件 · yangyangcareer.com</span>
+  </div>
+
+</div>
+</body>
+</html>
