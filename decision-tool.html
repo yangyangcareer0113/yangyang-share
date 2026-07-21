@@ -1,0 +1,1196 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>心煩意亂時的秒決神器｜楊楊教練</title>
+<style>
+  :root{
+    --ground:#f7f4ef;
+    --surface:#ffffff;
+    --surface-2:#fbf8f2;
+    --ink:#1a1a1a;
+    --ink-soft:#5c584f;
+    --ink-faint:#948f82;
+    --border:#e5ded2;
+    --rose:#c2637a;
+    --rose-soft:#fff0f3;
+    --rose-ink:#8f3d52;
+    --sky:#6b9ec4;
+    --sky-soft:#f0f7fc;
+    --sky-ink:#3f6b8c;
+    --teal:#0E6879;
+    --teal-soft:#eaf3f4;
+    --gold:#b9852c;
+    --gold-soft:#fbf3e4;
+    --sage:#6f8a5c;
+    --sage-soft:#eef1e9;
+    --shadow: 0 1px 2px rgba(26,20,10,0.04), 0 8px 24px rgba(26,20,10,0.06);
+    --font-display:'Noto Serif TC','Songti TC','PingFang TC',serif;
+    --font-body:'Noto Sans TC','PingFang TC','Hiragino Sans GB',sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --ground:#1c1815; --surface:#262019; --surface-2:#2c2520;
+      --ink:#f3ecdf; --ink-soft:#c9bfab; --ink-faint:#8d8272;
+      --border:#3c332a;
+      --rose:#e2879a; --rose-soft:#3a2229; --rose-ink:#f4b7c4;
+      --sky:#8fbbdd; --sky-soft:#1f2e38; --sky-ink:#bcdaef;
+      --teal:#5cbdcd; --teal-soft:#163338;
+      --gold:#e8bd6c; --gold-soft:#362a16;
+      --sage:#a3b892; --sage-soft:#232a1d;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 28px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#1c1815; --surface:#262019; --surface-2:#2c2520;
+    --ink:#f3ecdf; --ink-soft:#c9bfab; --ink-faint:#8d8272;
+    --border:#3c332a;
+    --rose:#e2879a; --rose-soft:#3a2229; --rose-ink:#f4b7c4;
+    --sky:#8fbbdd; --sky-soft:#1f2e38; --sky-ink:#bcdaef;
+    --teal:#5cbdcd; --teal-soft:#163338;
+    --gold:#e8bd6c; --gold-soft:#362a16;
+    --sage:#a3b892; --sage-soft:#232a1d;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 28px rgba(0,0,0,0.35);
+  }
+  :root[data-theme="light"]{
+    --ground:#f7f4ef; --surface:#ffffff; --surface-2:#fbf8f2;
+    --ink:#1a1a1a; --ink-soft:#5c584f; --ink-faint:#948f82;
+    --border:#e5ded2;
+    --rose:#c2637a; --rose-soft:#fff0f3; --rose-ink:#8f3d52;
+    --sky:#6b9ec4; --sky-soft:#f0f7fc; --sky-ink:#3f6b8c;
+    --teal:#0E6879; --teal-soft:#eaf3f4;
+    --gold:#b9852c; --gold-soft:#fbf3e4;
+    --sage:#6f8a5c; --sage-soft:#eef1e9;
+    --shadow: 0 1px 2px rgba(26,20,10,0.04), 0 8px 24px rgba(26,20,10,0.06);
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:var(--ground);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.6;
+    min-height:100vh;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; }
+  }
+
+  .wrap{
+    display:flex;
+    justify-content:center;
+    padding:clamp(20px,5vh,56px) clamp(14px,4vw,24px);
+  }
+  .book{
+    width:100%;
+    max-width:680px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    box-shadow:var(--shadow);
+    padding:clamp(22px,4vw,40px);
+  }
+
+  .top-row{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:clamp(14px,3vh,22px); }
+  .brand{ display:flex; flex-direction:column; gap:2px; }
+  .eyebrow{
+    font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--teal); font-weight:600;
+  }
+  .brand-title{
+    align-self:flex-start; font-family:var(--font-display); font-weight:700;
+    font-size:clamp(14px,2.2vw,18px); color:var(--rose-ink); background:var(--rose-soft);
+    border:1px solid var(--rose); padding:6px 16px; border-radius:999px; margin-top:3px;
+  }
+  .reset-btn{
+    background:none; border:none; color:var(--ink-faint); font-size:12px;
+    cursor:pointer; text-decoration:underline; padding:4px 0; font-family:var(--font-body);
+  }
+  .reset-btn:hover{ color:var(--ink-soft); }
+
+  h1.view-title{
+    font-family:var(--font-display); font-weight:700;
+    font-size:clamp(21px,3.4vw,28px);
+    line-height:1.4; text-wrap:balance; margin:0 0 8px;
+  }
+  p.view-sub{ color:var(--ink-soft); font-size:15px; margin:0 0 18px; max-width:60ch; }
+
+  .divider{ height:2px; width:44px; border-radius:2px; margin:0 0 20px; background:linear-gradient(90deg,var(--rose),var(--sky)); }
+
+  /* stepper */
+  .stepper{ display:flex; align-items:center; gap:8px; margin-bottom:22px; flex-wrap:wrap; }
+  .step-dot{
+    display:flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-faint);
+  }
+  .step-dot .num{
+    width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    border:1px solid var(--border); font-size:11px; font-weight:600; color:var(--ink-faint);
+    font-variant-numeric:tabular-nums;
+  }
+  .step-dot.active .num{ background:var(--rose); border-color:var(--rose); color:#fff; }
+  .step-dot.active{ color:var(--ink); font-weight:600; }
+  .step-dot.done .num{ background:var(--teal-soft); border-color:var(--teal); color:var(--teal); }
+  .step-line{ width:20px; height:1px; background:var(--border); }
+
+  /* form basics */
+  textarea, input[type=text], input[type=date]{
+    width:100%; font-family:var(--font-body); font-size:15px; color:var(--ink);
+    background:var(--surface-2); border:1px solid var(--border); border-radius:8px;
+    padding:12px 14px; resize:vertical;
+  }
+  textarea{ min-height:150px; line-height:1.8; }
+  textarea:focus, input:focus{ outline:2px solid var(--sky); outline-offset:1px; border-color:var(--sky); }
+  .field{ margin-bottom:16px; display:flex; flex-direction:column; gap:6px; }
+  .field label{ font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-faint); font-weight:600; }
+  .hint{ font-size:12.5px; color:var(--ink-faint); margin-top:8px; line-height:1.7; }
+  .hint b{ color:var(--ink-soft); }
+
+  .btn{
+    font-family:var(--font-body); font-size:14.5px; font-weight:600; cursor:pointer;
+    border-radius:7px; padding:11px 20px; border:1px solid transparent; transition:transform .12s ease, opacity .12s ease;
+  }
+  .btn:active{ transform:translateY(1px); }
+  .btn:focus-visible{ outline:2px solid var(--sky); outline-offset:2px; }
+  .btn-primary{ background:var(--rose); color:#fff; }
+  .btn-primary:hover{ opacity:0.92; }
+  .btn-secondary{ background:transparent; border-color:var(--border); color:var(--ink); }
+  .btn-secondary:hover{ border-color:var(--ink-faint); }
+  .btn-sage{ background:var(--sage); color:#fff; }
+  .btn-sage:hover{ opacity:0.92; }
+  .btn-ghost{ background:none; border:none; color:var(--ink-faint); text-decoration:underline; padding:6px 2px; }
+  .btn-row{ display:flex; gap:10px; margin-top:22px; flex-wrap:wrap; }
+
+  .btn-gcal{
+    background:#e8f0fe; color:#1967d2; border:1px solid #aecbfa;
+    display:inline-flex; align-items:center; gap:8px; text-decoration:none;
+  }
+  .btn-gcal:hover{ background:#d2e3fc; }
+  @media (prefers-color-scheme: dark){
+    .btn-gcal{ background:#1e3a5f; color:#8ab4f8; border-color:#3c6497; }
+    .btn-gcal:hover{ background:#254a75; }
+  }
+  :root[data-theme="dark"] .btn-gcal{ background:#1e3a5f; color:#8ab4f8; border-color:#3c6497; }
+  :root[data-theme="dark"] .btn-gcal:hover{ background:#254a75; }
+  :root[data-theme="light"] .btn-gcal{ background:#e8f0fe; color:#1967d2; border-color:#aecbfa; }
+  :root[data-theme="light"] .btn-gcal:hover{ background:#d2e3fc; }
+
+  .icon-btn.gcal{
+    background:#e8f0fe; color:#1967d2; border-color:#aecbfa;
+    display:inline-flex; align-items:center; gap:5px; text-decoration:none;
+  }
+  .icon-btn.gcal:hover{ background:#d2e3fc; color:#1967d2; }
+  @media (prefers-color-scheme: dark){
+    .icon-btn.gcal{ background:#1e3a5f; color:#8ab4f8; border-color:#3c6497; }
+    .icon-btn.gcal:hover{ background:#254a75; color:#8ab4f8; }
+  }
+  :root[data-theme="dark"] .icon-btn.gcal{ background:#1e3a5f; color:#8ab4f8; border-color:#3c6497; }
+  :root[data-theme="light"] .icon-btn.gcal{ background:#e8f0fe; color:#1967d2; border-color:#aecbfa; }
+
+  /* list / cards */
+  .list{ display:flex; flex-direction:column; gap:10px; margin:18px 0; }
+  .card-row{
+    display:flex; align-items:center; gap:12px;
+    background:var(--surface-2); border:1px solid var(--border); border-radius:8px;
+    padding:12px 14px; transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .card-row:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
+  .card-row.is-handled{ opacity:0.7; }
+  .rank{
+    width:22px; text-align:center; font-family:var(--font-display); font-weight:700;
+    font-size:15px; color:var(--ink-faint); font-variant-numeric:tabular-nums; flex-shrink:0;
+  }
+  .rank.top{ color:var(--gold); }
+  .row-main{ flex:1; min-width:0; display:flex; flex-direction:column; gap:5px; }
+  .row-text{ font-size:15px; color:var(--ink); word-break:break-word; }
+  .row-tags{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  .chip{
+    font-size:11.5px; padding:2px 9px; border-radius:999px; font-weight:600; letter-spacing:0.02em;
+    white-space:nowrap;
+  }
+  .chip-delay{ background:var(--gold-soft); color:var(--gold); }
+  .chip-avoid{ background:var(--rose-soft); color:var(--rose-ink); }
+  .chip-done{ background:var(--sage-soft); color:var(--sage); }
+  .chip-top{ background:var(--gold); color:#fff; }
+  .chip-q1{ background:var(--gold-soft); color:var(--gold); }
+  .chip-q2{ background:var(--sky-soft); color:var(--sky-ink); }
+  .chip-q3{ background:var(--teal-soft); color:var(--teal); }
+  .chip-q4{ background:var(--sage-soft); color:var(--sage); }
+  .chip-delegate{ background:var(--rose); color:#fff; }
+  .chip-delegated{ background:var(--rose-soft); color:var(--rose-ink); }
+  .row-actions{ display:flex; gap:6px; flex-shrink:0; }
+  .icon-btn{
+    background:none; border:1px solid var(--border); border-radius:6px; cursor:pointer;
+    font-size:12.5px; padding:7px 10px; color:var(--ink-soft); font-family:var(--font-body); font-weight:600;
+  }
+  .icon-btn:hover{ border-color:var(--rose); color:var(--rose); }
+  .icon-btn.danger:hover{ border-color:var(--ink-faint); color:var(--ink-faint); }
+
+  .empty{ color:var(--ink-faint); font-size:14px; padding:20px 0; text-align:center; }
+  .footer-note{ font-size:13px; color:var(--ink-faint); border-top:1px solid var(--border); padding-top:14px; margin-top:6px; }
+
+  /* QA specific */
+  .qa-item-banner{
+    background:var(--surface-2); border:1px solid var(--border); border-radius:8px;
+    padding:14px 16px; margin-bottom:18px; font-size:15px;
+  }
+  .qa-item-banner .label{ font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-faint); font-weight:600; margin-bottom:4px; display:block; }
+  .qa-item-banner.highlight{ background:var(--gold-soft); border-color:var(--gold); }
+  .qa-item-banner.highlight .label{ color:var(--gold); }
+
+  .vs-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:18px 0; }
+  .vs-card{ border-radius:8px; padding:16px; border:1px solid var(--border); }
+  .vs-card.dim{ background:var(--surface-2); color:var(--ink-faint); }
+  .vs-card.pink{ background:var(--rose-soft); border-color:var(--rose); }
+  .vs-title{ font-weight:700; font-size:13px; margin-bottom:8px; letter-spacing:0.03em; }
+  .vs-card.pink .vs-title{ color:var(--rose-ink); }
+  .vs-line{ font-size:14px; }
+  .vs-note{ font-size:12.5px; margin-top:8px; font-style:italic; }
+  .vs-card.pink .vs-note{ color:var(--rose-ink); font-style:normal; font-weight:600; }
+  .vs-example{ font-size:12.5px; margin-top:10px; padding-top:10px; border-top:1px dashed var(--rose); color:var(--ink-soft); line-height:1.6; }
+  .vs-example .tag{ font-weight:700; color:var(--rose-ink); margin-right:5px; }
+
+  .tier-list{ display:flex; flex-direction:column; gap:8px; margin:18px 0; }
+  .tier-card{
+    text-align:left; padding:14px 16px; border:1.5px solid var(--border); border-radius:8px;
+    background:var(--surface-2); font-family:var(--font-body); font-size:15px; font-weight:600;
+    color:var(--ink); cursor:pointer; transition:transform .12s ease, border-color .12s ease;
+  }
+  .tier-card:hover{ border-color:var(--rose); transform:translateX(2px); }
+  .tier-card:focus-visible{ outline:2px solid var(--sky); outline-offset:2px; }
+
+  .rec-banner{ border-radius:10px; padding:18px 20px; margin:18px 0 6px; }
+  .rec-label{ font-size:11px; text-transform:uppercase; letter-spacing:0.08em; font-weight:700; margin-bottom:8px; }
+  .rec-msg{ font-size:15px; color:var(--ink); margin-bottom:10px; line-height:1.75; }
+  .rec-verdict{ font-family:var(--font-display); font-weight:700; font-size:16px; }
+  .rec-delete{ background:var(--rose-soft); border:1px solid var(--rose); }
+  .rec-delete .rec-label, .rec-delete .rec-verdict{ color:var(--rose-ink); }
+  .rec-commit{ background:var(--sky-soft); border:1px solid var(--sky); }
+  .rec-commit .rec-label, .rec-commit .rec-verdict{ color:var(--sky-ink); }
+  .rec-delegate{ background:var(--rose-soft); border:1px solid var(--rose); }
+  .rec-delegate .rec-label, .rec-delegate .rec-verdict{ color:var(--rose-ink); }
+
+  .decision-card, .delegate-card{
+    border-radius:10px; padding:20px; margin:18px 0;
+  }
+  .decision-card{ background:var(--gold-soft); border:1px solid var(--gold); }
+  .delegate-card{ background:var(--rose-soft); border:1px solid var(--rose); }
+  .decision-card .d-row, .delegate-card .d-row{ margin-bottom:12px; }
+  .decision-card .d-label{ font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--gold); font-weight:700; margin-bottom:3px; }
+  .delegate-card .d-label{ font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--rose-ink); font-weight:700; margin-bottom:3px; }
+  .decision-card .d-val, .delegate-card .d-val{ font-size:15px; color:var(--ink); }
+  .decision-card .d-val.big, .delegate-card .d-val.big{ font-family:var(--font-display); font-size:18px; font-weight:700; }
+
+  .release-card{
+    background:var(--sage-soft); border:1px solid var(--sage); border-radius:10px;
+    padding:20px; margin:18px 0; text-align:center;
+  }
+  .release-card .r-quote{ font-family:var(--font-display); font-size:17px; color:var(--sage); font-weight:700; margin-bottom:6px; }
+  .release-card .r-sub{ font-size:13.5px; color:var(--ink-soft); }
+
+  /* classify screen */
+  .legend-card{
+    background:var(--surface-2); border:1px solid var(--border); border-radius:8px;
+    padding:14px 16px; margin:18px 0; display:flex; flex-direction:column; gap:9px;
+    font-size:13px; color:var(--ink-soft); line-height:1.7;
+  }
+  .legend-tag{
+    display:inline-block; font-size:11px; font-weight:700; padding:2px 8px; border-radius:999px;
+    margin-right:6px; letter-spacing:0.02em; white-space:nowrap;
+  }
+  .legend-urgent{ background:var(--gold-soft); color:var(--gold); }
+  .legend-important{ background:var(--sky-soft); color:var(--sky-ink); }
+  .legend-unimportant{ background:var(--sage-soft); color:var(--sage); }
+  .legend-noturgent{ background:var(--teal-soft); color:var(--teal); }
+  .legend-delegate{ background:var(--rose); color:#fff; }
+
+  .classify-list{ display:flex; flex-direction:column; gap:12px; margin:18px 0; }
+  .classify-row{ background:var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:14px 16px; }
+  .classify-text{ font-size:15px; margin-bottom:10px; }
+  .toggle-groups{ display:flex; gap:8px; flex-wrap:wrap; }
+  .toggle-group{ display:flex; border:1px solid var(--border); border-radius:999px; overflow:hidden; }
+  .toggle-btn{
+    border:none; background:var(--surface); color:var(--ink-soft); font-family:var(--font-body);
+    font-size:12.5px; font-weight:600; padding:6px 12px; cursor:pointer;
+  }
+  .toggle-btn.active{ background:var(--rose); color:#fff; }
+  .toggle-btn:focus-visible{ outline:2px solid var(--sky); outline-offset:1px; }
+
+  .hero-title{ font-size:clamp(26px,5vw,34px) !important; }
+  .hero-q-list{ display:flex; flex-direction:column; gap:14px; margin:24px 0; }
+  .hero-q{ display:flex; align-items:flex-start; gap:12px; font-size:16px; color:var(--ink); line-height:1.6; }
+  .hero-q .q-badge{
+    flex-shrink:0; width:28px; height:28px; border-radius:50%;
+    background:var(--rose-soft); color:var(--rose-ink); font-weight:700; font-size:12px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .hero-bridge{
+    font-size:15px; color:var(--ink-soft); font-weight:600; line-height:1.75;
+    margin:22px 0 6px; padding:16px 18px; background:var(--gold-soft);
+    border-left:3px solid var(--gold); border-radius:6px;
+  }
+  .hero-cta-row{ display:flex; justify-content:center; margin-top:28px; }
+  .pill-cta{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--rose); color:#fff; font-family:var(--font-body); font-weight:700;
+    font-size:16px; padding:14px 32px; border-radius:999px; border:none; cursor:pointer;
+    transition:transform .15s ease, opacity .15s ease;
+    box-shadow:0 6px 16px rgba(0,0,0,0.22);
+  }
+  .pill-cta:hover{ transform:translateY(-2px); opacity:0.95; }
+  .pill-cta:focus-visible{ outline:2px solid var(--sky); outline-offset:3px; }
+
+  .back-row{ display:flex; justify-content:flex-end; margin-bottom:16px; }
+  .back-link{
+    display:inline-flex; align-items:center; gap:4px;
+    background:var(--teal-soft); border:1px solid transparent; color:var(--teal);
+    font-family:var(--font-body); font-size:12.5px; font-weight:700; cursor:pointer;
+    padding:7px 16px; border-radius:999px;
+  }
+  .back-link:hover{ background:var(--teal); color:#fff; }
+  .back-link:focus-visible{ outline:2px solid var(--sky); outline-offset:2px; }
+
+  [hidden]{ display:none !important; }
+
+  @media (max-width:520px){
+    .vs-row{ grid-template-columns:1fr; }
+    .top-row{ flex-direction:column; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="book" id="book">
+    <div class="top-row">
+      <div class="brand">
+        <span class="eyebrow">時間管理神器 · 楊楊教練</span>
+        <span class="brand-title">心煩意亂時的秒決神器</span>
+      </div>
+      <button class="reset-btn" id="resetBtn">重新開始</button>
+    </div>
+    <div id="view"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var STORAGE_KEY = "decision-worksheet-state-v4";
+
+  var CATS = [
+    { key:"work",   label:"工作",  kws:["工作","案子","客戶","提案","報告","會議","專案","老闆","同事","績效","email","信件","文件"] },
+    { key:"health", label:"健康",  kws:["運動","睡覺","早起","健身","飲食","減重","體檢","看醫生","休息","跑步","瑜珈"] },
+    { key:"study",  label:"學習",  kws:["學","課程","讀書","考試","證照","英文","技能","上課"] },
+    { key:"social", label:"人際",  kws:["家人","朋友","約","聯絡","見面","溝通","吵架","爸媽","伴侶","聊天"] },
+    { key:"money",  label:"財務",  kws:["記帳","存錢","投資","報稅","繳費","理財","保險","帳單"] }
+  ];
+  var CAT_SUGGEST = {
+    work:   "建議排在你效率最高的工作時段，通常是上午",
+    health: "建議排在早上或既有的運動習慣時段，降低啟動阻力",
+    study:  "建議排一段不被打斷的時間，30–60 分鐘一個區塊",
+    social: "建議直接約定時間，別讓它停在『有空再』的模糊地帶",
+    money:  "建議排在頭腦清楚、不趕時間的時段，例如週末上午",
+    other:  "建議排在你今天最不容易被打斷的一段時間"
+  };
+  var AVOID_KWS = ["應該","有空再","改天","一直","拖","想到就煩","沒動力","懶","逃避","不敢","再說"];
+
+  var TIERS = [
+    { key:"d3",  label:"三天內" },
+    { key:"w1",  label:"一週內" },
+    { key:"w1p", label:"一週以上" },
+    { key:"w2p", label:"兩週以上" },
+    { key:"m1p", label:"一個月以上" }
+  ];
+  var TIER_WEEKS = { d3:0.3, w1:0.8, w1p:1.5, w2p:3, m1p:6 };
+  function tierLabel(key){
+    var f = TIERS.filter(function(t){ return t.key===key; })[0];
+    return f ? f.label : "";
+  }
+
+  var QUADRANT_WEIGHT = { q1:10, q2:6, q3:4, q4:-8 };
+  var DELEGATE_BONUS = 20;
+  function quadrant(it){
+    if(it.important===true && it.urgent===true) return { key:"q1", label:"立刻做" };
+    if(it.important===true && it.urgent===false) return { key:"q2", label:"排入行程" };
+    if(it.important===false && it.urgent===true) return { key:"q3", label:"快速處理" };
+    if(it.important===false && it.urgent===false) return { key:"q4", label:"建議捨棄" };
+    return null;
+  }
+
+  function getRecommendation(tierKey, avoidance, item, ignoreDelegate){
+    if(item.delegatable===true && !ignoreDelegate){
+      return { type:"delegate", msg:"這件事可以交給別人做——先發包出去，讓對方開始跑，你才能同步處理別的事，而不是自己一個人拖著。" };
+    }
+    var extra = item.important===false ? " 你自己也把它歸類成不重要，更沒有留著的理由。" : "";
+    if(item.important===true){
+      return { type:"commit", msg:"你自己判斷這件事是重要的——重要的事不該因為拖久了就刪除，該做的是排入行程。" };
+    }
+    if(tierKey==="w2p") return { type:"delete", msg:"拖了兩週以上還沒動——這通常不是沒空，是心裡已經有答案了。"+extra };
+    if(tierKey==="m1p") return { type:"delete", msg:"拖了一個月以上，這件事的答案大概早就出來了。"+extra };
+    if(tierKey==="w1p" && avoidance) return { type:"delete", msg:"才一週多，但你自己的描述裡就帶著『應該、有空再』這種話——這是迴避的訊號。"+extra };
+    if(tierKey==="w1p") return { type:"commit", msg:"一週多了，還在觀察期。與其繼續猶豫，不如現在直接決定。" };
+    if(tierKey==="w1") return { type:"commit", msg:"一週內，趁它還沒變成心理負擔，現在處理掉。" };
+    return { type:"commit", msg:"才拖三天內，這還算不上逃避，只是還沒排進去而已。" };
+  }
+
+  var NUM_MAP = { "半":0.5,"一":1,"二":2,"兩":2,"三":3,"四":4,"五":5,"六":6,"七":7,"八":8,"九":9,"十":10 };
+  var UNIT_WEEKS = { "天":1/7,"日":1/7,"週":1,"周":1,"月":4.33,"年":52 };
+  var DUR_RE = /(\d+|[一二三四五六七八九十半兩])\s*(天|日|週|周|月|年)/;
+
+  function parseWeeks(text){
+    var m = text.match(DUR_RE);
+    if(!m) return 0;
+    var n = /\d+/.test(m[1]) ? parseFloat(m[1]) : (NUM_MAP[m[1]]||0);
+    return +(n * UNIT_WEEKS[m[2]]).toFixed(2);
+  }
+  function hasAvoidance(text){ return AVOID_KWS.some(function(k){ return text.indexOf(k) > -1; }); }
+  function categorize(text){
+    for(var i=0;i<CATS.length;i++){
+      if(CATS[i].kws.some(function(k){ return text.indexOf(k) > -1; })) return CATS[i].key;
+    }
+    return "other";
+  }
+  function score(it){
+    var base = Math.min(it.weeks,12)*2 + (it.avoidance?4:0);
+    var q = quadrant(it);
+    var qw = q ? QUADRANT_WEIGHT[q.key] : 0;
+    var db = it.delegatable===true ? DELEGATE_BONUS : 0;
+    return base + qw + db;
+  }
+  function isCandidate(it){
+    var q = quadrant(it);
+    return it.weeks>=2 || it.avoidance || it.delegatable===true || (q && q.key==="q1");
+  }
+  function fmtWeeks(w){
+    if(w<=0) return null;
+    if(w<1) return "拖了不到1週";
+    if(w<4) return "拖了"+Math.round(w)+"週";
+    return "拖了約"+Math.round(w/4.33)+"個月";
+  }
+  function esc(s){ var d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
+
+  function gcalLink(title, dateStr, details){
+    if(!dateStr) return null;
+    var d = new Date(dateStr+"T00:00:00");
+    if(isNaN(d.getTime())) return null;
+    var d2 = new Date(d.getTime() + 86400000);
+    function pad(n){ return (n<10?"0":"")+n; }
+    function fmt(dt){ return dt.getFullYear()+pad(dt.getMonth()+1)+pad(dt.getDate()); }
+    var url = "https://calendar.google.com/calendar/render?action=TEMPLATE"
+      + "&text=" + encodeURIComponent(title)
+      + "&dates=" + fmt(d) + "/" + fmt(d2);
+    if(details) url += "&details=" + encodeURIComponent(details);
+    return url;
+  }
+
+  function gcalIcon(size){
+    size = size || 16;
+    return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;display:block;" aria-hidden="true">' +
+      '<rect x="3" y="4" width="18" height="17" rx="2" fill="#fff" stroke="#4285F4" stroke-width="1.6"/>' +
+      '<rect x="3.8" y="4.8" width="16.4" height="4.6" rx="1.4" fill="#4285F4"/>' +
+      '<line x1="7" y1="2.6" x2="7" y2="6.2" stroke="#4285F4" stroke-width="1.6" stroke-linecap="round"/>' +
+      '<line x1="17" y1="2.6" x2="17" y2="6.2" stroke="#4285F4" stroke-width="1.6" stroke-linecap="round"/>' +
+      '<rect x="6.4" y="12.2" width="3.2" height="3.2" rx="0.6" fill="#34A853"/>' +
+      '<rect x="10.4" y="12.2" width="3.2" height="3.2" rx="0.6" fill="#FBBC05"/>' +
+      '<rect x="14.4" y="12.2" width="3.2" height="3.2" rx="0.6" fill="#EA4335"/>' +
+    '</svg>';
+  }
+
+  function toggleGroupHtml(it, axis, labelTrue, labelFalse){
+    return (
+      '<div class="toggle-group">' +
+        '<button class="toggle-btn'+(it[axis]===true?' active':'')+'" data-axis="'+axis+'" data-id="'+it.id+'" data-val="true">'+labelTrue+'</button>' +
+        '<button class="toggle-btn'+(it[axis]===false?' active':'')+'" data-axis="'+axis+'" data-id="'+it.id+'" data-val="false">'+labelFalse+'</button>' +
+      '</div>'
+    );
+  }
+
+  var BACK_MAP = { input:"home", classify:"input", qa1:"overview", qa2:"qa1", qa3:"qa2", qa4:"qa3", pathA:"qa4", delegateForm:"qa4" };
+  function backLink(view){
+    var target = BACK_MAP[view];
+    if(!target) return "";
+    return '<div class="back-row"><button class="back-link" id="backStepBtn" data-back-target="'+target+'">← 上一步</button></div>';
+  }
+
+  var uid = 1;
+  function freshQa(itemId){
+    return { itemId:itemId, tier:null, recommendation:null, notDeleteReason:"", meaning:"", reminder:"", date:"", delegateTo:"", delegateDate:"" };
+  }
+  var state = {
+    view:"home",
+    items:[],
+    releasedCount:0,
+    qa: freshQa(null)
+  };
+
+  function save(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){} }
+  function load(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){ var parsed = JSON.parse(raw); if(parsed && parsed.items) state = parsed; }
+    }catch(e){}
+  }
+  function reset(){
+    if(!confirm("要清空目前的清單，重新開始嗎？")) return;
+    state = { view:"home", items:[], releasedCount:0, qa: freshQa(null) };
+    save(); render();
+  }
+
+  function sortedItems(){
+    var active = state.items.filter(function(i){ return !i.deleted; });
+    active.sort(function(a,b){
+      var ah = !!(a.decided||a.delegated), bh = !!(b.decided||b.delegated);
+      if(ah !== bh) return ah ? 1 : -1;
+      return score(b) - score(a);
+    });
+    return active;
+  }
+
+  function parseInput(raw){
+    var lines = raw.split("\n").map(function(s){ return s.trim(); }).filter(Boolean);
+    lines.forEach(function(line){
+      state.items.push({
+        id: uid++,
+        text: line,
+        category: categorize(line),
+        weeks: parseWeeks(line),
+        avoidance: hasAvoidance(line),
+        delayLabel: null,
+        urgent:null, important:null, delegatable:null,
+        decided:false, deleted:false, decision:null,
+        delegated:false, delegation:null
+      });
+    });
+  }
+
+  function goto(view){ state.view = view; save(); render(); }
+
+  /* ---------- views ---------- */
+
+  function renderHome(){
+    return (
+      '<h1 class="view-title hero-title">別再跟自己拉扯了</h1>' +
+      '<p class="view-sub">把腦子裡打結的待辦，走一遍系統，幾分鐘內決定「做」還是「刪」。</p>' +
+      '<div class="hero-q-list">' +
+        '<div class="hero-q"><span class="q-badge">Q1</span><span>你是不是明明知道該做正事，卻還是忍不住先滑一下手機？</span></div>' +
+        '<div class="hero-q"><span class="q-badge">Q2</span><span>打開待辦清單，看到滿滿的項目，卻不知道該先做哪一件？</span></div>' +
+        '<div class="hero-q"><span class="q-badge">Q3</span><span>心裡其實已經有答案，卻一直不敢承認、不敢刪除？</span></div>' +
+      '</div>' +
+      '<p class="hero-bridge">如果剛剛有一題點頭了——你需要的不是更長的待辦清單，是一個逼你做決定的系統。</p>' +
+      '<div class="hero-cta-row"><button class="pill-cta" id="goHomeToInput">趕緊去決定 →</button></div>'
+    );
+  }
+
+  function renderInput(){
+    return (
+      backLink("input") +
+      '<h1 class="view-title">先把腦子裡的清單倒出來</h1>' +
+      '<p class="view-sub">貼上你現在的待辦或行事曆項目，一行一項。有拖延多久就直接寫在括號裡，AI 會幫你抓出「那件事」並排優先順序。</p>' +
+      '<div class="divider"></div>' +
+      '<div class="field">' +
+        '<label for="dumpArea">待辦清單</label>' +
+        '<textarea id="dumpArea" placeholder="早起運動（拖了3週）\n回覆客戶信件\n跟媽媽聊天（拖了1個月，一直逃避）\n整理報稅資料"></textarea>' +
+      '</div>' +
+      '<div class="btn-row">' +
+        '<button class="btn btn-primary" id="parseBtn">整理清單</button>' +
+      '</div>' +
+      '<p class="hint">寫法範例：<b>「早起運動（拖了3週）」</b>。沒寫時長也沒關係，只要出現「應該、有空再、一直拖」這類字眼，也會被抓成拖延訊號。下一步會先幫每一項打分類。</p>'
+    );
+  }
+
+  function renderClassify(){
+    var items = state.items.filter(function(i){ return !i.deleted && !i.decided && !i.delegated; });
+    var classifiedCount = items.filter(function(i){ return i.urgent!==null && i.important!==null; }).length;
+
+    var rows = items.map(function(it){
+      return (
+        '<div class="classify-row">' +
+          '<div class="classify-text">'+esc(it.text)+'</div>' +
+          '<div class="toggle-groups">' +
+            toggleGroupHtml(it, "urgent", "緊急", "不緊急") +
+            toggleGroupHtml(it, "important", "重要", "不重要") +
+            toggleGroupHtml(it, "delegatable", "可發包", "自己做") +
+          '</div>' +
+        '</div>'
+      );
+    }).join("");
+
+    return (
+      backLink("classify") +
+      '<h1 class="view-title">幫每一項打分類</h1>' +
+      '<p class="view-sub">用四象限判斷「緊急 × 重要」，再看看能不能發包出去——這決定等一下誰該先做、誰該捨棄。</p>' +
+      '<div class="legend-card">' +
+        '<div><span class="legend-tag legend-urgent">緊急</span>不做會出事、等於被老闆砍頭的等級，通常要在 1–2 小時內交出成果</div>' +
+        '<div><span class="legend-tag legend-important">重要</span>對你的人生、品牌經營，或想達成的目標有幫助</div>' +
+        '<div><span class="legend-tag legend-unimportant">不重要</span>純娛樂耍廢，或還在摸索、方向不明確的嘗試</div>' +
+        '<div><span class="legend-tag legend-noturgent">不緊急</span>可以往後放——尤其是別人交辦拜託的事，除非攸關你自己的工作、升遷或交付任務</div>' +
+        '<div><span class="legend-tag legend-delegate">可發包</span>能不能交給別人做？可以的話先發包出去，讓對方同步開始跑</div>' +
+      '</div>' +
+      (items.length ? '<div class="classify-list">'+rows+'</div>' : '<div class="empty">目前沒有待分類的項目</div>') +
+      '<div class="btn-row">' +
+        '<button class="btn btn-primary" id="finishClassifyBtn">完成分類，看優先清單</button>' +
+      '</div>' +
+      (items.length ? '<p class="hint">已分類 '+classifiedCount+' / '+items.length+' 項。沒分類的項目會照拖延時長的舊邏輯排序，不影響操作。</p>' : "")
+    );
+  }
+
+  function renderOverview(){
+    var items = sortedItems();
+    var unhandled = items.filter(function(i){ return !i.decided && !i.delegated; });
+    var candidates = unhandled.filter(isCandidate);
+    var topId = candidates.length ? candidates[0].id : null;
+
+    var rows = items.length ? items.map(function(it, idx){
+      var tags = [];
+      var handled = it.decided || it.delegated;
+      if(it.decided){
+        tags.push('<span class="chip chip-done">已決定 · '+esc(it.decision.date||"")+'</span>');
+      } else if(it.delegated){
+        tags.push('<span class="chip chip-delegated">已發包 · 跟催 '+esc(it.delegation.date||"")+'</span>');
+      } else {
+        if(it.delegatable===true) tags.push('<span class="chip chip-delegate">可發包 · 優先</span>');
+        var q = quadrant(it);
+        if(q) tags.push('<span class="chip chip-'+q.key+'">'+q.label+'</span>');
+        var wl = it.delayLabel ? ("拖了"+it.delayLabel) : fmtWeeks(it.weeks);
+        if(wl) tags.push('<span class="chip chip-delay">'+wl+'</span>');
+        if(it.avoidance) tags.push('<span class="chip chip-avoid">迴避語氣</span>');
+        if(it.id===topId) tags.push('<span class="chip chip-top">建議從這開始</span>');
+      }
+      return (
+        '<div class="card-row'+(handled?' is-handled':'')+'">' +
+          '<div class="rank'+(it.id===topId?' top':'')+'">'+(idx+1)+'</div>' +
+          '<div class="row-main">' +
+            '<div class="row-text">'+esc(it.text)+'</div>' +
+            '<div class="row-tags">'+tags.join("")+'</div>' +
+          '</div>' +
+          '<div class="row-actions">' +
+            (handled ? "" :
+              '<button class="icon-btn" data-decide="'+it.id+'">決定</button>' +
+              '<button class="icon-btn danger" data-quickdrop="'+it.id+'" title="不想做，直接刪除">刪除</button>'
+            ) +
+          '</div>' +
+        '</div>'
+      );
+    }).join("") : '<div class="empty">清單是空的，先貼一些待辦進來吧</div>';
+
+    var startLabel = topId ? "開始決定：優先順序第 1 名" : (unhandled.length ? "任選一項開始決定" : "");
+    var startBtn = unhandled.length ?
+      '<button class="btn btn-primary" id="startTopBtn" data-target="'+(topId||unhandled[0].id)+'">'+startLabel+'</button>' : "";
+    var hasScheduled = state.items.some(function(i){ return !i.deleted && (i.decided || i.delegated); });
+
+    return (
+      '<h1 class="view-title">你的優先順序清單</h1>' +
+      '<p class="view-sub">已依「四象限 + 可發包 + 拖延時長」自動排序。<b style="color:var(--ink)">建議從這開始</b> 的那一項，就是工作表 STEP 1 說的「那件事」。這張清單會留著所有項目，一項一項決定，不是只處理第一名。</p>' +
+      '<div class="divider"></div>' +
+      '<div class="list">'+rows+'</div>' +
+      '<div class="btn-row">' + startBtn +
+        '<button class="btn btn-secondary" id="addMoreBtn">再加一些待辦</button>' +
+        (hasScheduled ? '<button class="btn btn-secondary" id="goToScheduleFromOverview">看已排定行程總覽</button>' : "") +
+      '</div>' +
+      (state.releasedCount>0 ? '<p class="footer-note">已經正式放下 '+state.releasedCount+' 件事——不想做不是失敗，是誠實的決定。</p>' : "")
+    );
+  }
+
+  function stepper(current){
+    var labels = ["找出那件事","想要 vs 決定","誠實面對拖延","做出決定"];
+    var html = '<div class="stepper">';
+    labels.forEach(function(l, i){
+      var n = i+1;
+      var cls = n===current ? "active" : (n<current ? "done" : "");
+      html += '<div class="step-dot '+cls+'"><span class="num">'+(n<current?"✓":n)+'</span><span>'+l+'</span></div>';
+      if(n<labels.length) html += '<div class="step-line"></div>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function currentQaItem(){
+    return state.items.filter(function(i){ return i.id===state.qa.itemId; })[0];
+  }
+
+  function renderQaStep1(){
+    var item = currentQaItem();
+    var others = sortedItems().filter(function(i){ return !i.decided && !i.delegated && i.id!==item.id; });
+    return (
+      backLink("qa1") +
+      stepper(1) +
+      '<h1 class="view-title">找出那件事</h1>' +
+      '<p class="view-sub">從你的清單上，找出一件說要做、卻拖了兩週以上的事。</p>' +
+      '<div class="qa-item-banner"><span class="label">目前選到的項目</span>'+esc(item.text)+'</div>' +
+      '<div class="legend-card">' +
+        '<div><span class="legend-tag legend-urgent">緊急</span>不做會出事、等於被老闆砍頭的等級，通常要在 1–2 小時內交出成果</div>' +
+        '<div><span class="legend-tag legend-important">重要</span>對你的人生、品牌經營，或想達成的目標有幫助</div>' +
+        '<div><span class="legend-tag legend-unimportant">不重要</span>純娛樂耍廢，或還在摸索、方向不明確的嘗試</div>' +
+        '<div><span class="legend-tag legend-noturgent">不緊急</span>可以往後放——尤其是別人交辦拜託的事，除非攸關你自己的工作、升遷或交付任務</div>' +
+        '<div><span class="legend-tag legend-delegate">可發包</span>能不能交給別人做？可以的話先發包出去，讓對方同步開始跑</div>' +
+      '</div>' +
+      '<div class="toggle-groups" style="margin:0 0 20px;">' +
+        toggleGroupHtml(item, "urgent", "緊急", "不緊急") +
+        toggleGroupHtml(item, "important", "重要", "不重要") +
+        toggleGroupHtml(item, "delegatable", "可發包", "自己做") +
+      '</div>' +
+      '<div class="btn-row">' +
+        '<button class="btn btn-primary" id="qaNext1">是，就是這件事</button>' +
+        (others.length ? '<button class="btn btn-secondary" id="qaPickOther">換一件</button>' : '') +
+      '</div>' +
+      (others.length ? (
+        '<div class="list" id="otherPicker" hidden style="margin-top:14px;">' +
+          others.map(function(o){
+            return '<div class="card-row"><div class="row-main"><div class="row-text">'+esc(o.text)+'</div></div>' +
+              '<div class="row-actions"><button class="icon-btn" data-pick="'+o.id+'">選這個</button></div></div>';
+          }).join("") +
+        '</div>'
+      ) : "")
+    );
+  }
+
+  function renderQaStep2(){
+    var item = currentQaItem();
+    return (
+      backLink("qa2") +
+      stepper(2) +
+      '<h1 class="view-title">想要 vs 決定</h1>' +
+      '<p class="view-sub">先分清楚這兩件事的差別，再往下走。</p>' +
+      '<div class="qa-item-banner"><span class="label">目前選到的項目</span>'+esc(item.text)+'</div>' +
+      '<div class="vs-row">' +
+        '<div class="vs-card dim">' +
+          '<div class="vs-title">想要</div>' +
+          '<div class="vs-line">「我想要『'+esc(item.text)+'』」</div>' +
+          '<div class="vs-note">沒有說明放棄什麼</div>' +
+        '</div>' +
+        '<div class="vs-card pink">' +
+          '<div class="vs-title">決定</div>' +
+          '<div class="vs-line">「我決定把『'+esc(item.text)+'』排進行程，並清楚知道我要放棄什麼」</div>' +
+          '<div class="vs-note">決定 = 包含你願意放棄什麼</div>' +
+          '<div class="vs-example"><span class="tag">例如</span>清楚知道要放棄中午滑手機的休息時間，換成拿來做這件事</div>' +
+        '</div>' +
+      '</div>' +
+      '<p class="hint">沒有放棄，就不是決定。</p>' +
+      '<div class="btn-row"><button class="btn btn-primary" id="qaNext2">往下走，誠實面對拖延</button></div>'
+    );
+  }
+
+  function renderQaStep3(){
+    var item = currentQaItem();
+    return (
+      backLink("qa3") +
+      stepper(3) +
+      '<h1 class="view-title">誠實面對：這件事拖多久了？</h1>' +
+      '<p class="view-sub">剛才丟清單時可能沒寫時長，現在誠實選一個——這決定接下來系統給你的建議。</p>' +
+      '<div class="qa-item-banner highlight"><span class="label">目前選到的項目</span>'+esc(item.text)+'</div>' +
+      '<div class="tier-list">' +
+        TIERS.map(function(t){ return '<button class="tier-card" data-tier="'+t.key+'">'+t.label+'</button>'; }).join("") +
+      '</div>'
+    );
+  }
+
+  function renderQaStep4(){
+    var item = currentQaItem();
+    var rec = state.qa.recommendation;
+
+    if(rec.type==="delegate"){
+      return (
+        backLink("qa4") +
+        stepper(4) +
+        '<h1 class="view-title">系統建議：發包出去</h1>' +
+        '<div class="qa-item-banner"><span class="label">項目</span>'+esc(item.text)+'</div>' +
+        '<div class="rec-banner rec-delegate">' +
+          '<div class="rec-label">系統建議</div>' +
+          '<div class="rec-msg">'+esc(rec.msg)+'</div>' +
+          '<div class="rec-verdict">建議：發包，優先啟動</div>' +
+        '</div>' +
+        '<div class="btn-row">' +
+          '<button class="btn btn-primary" id="confirmDelegateBtn">✓ 標記為已發包</button>' +
+          '<button class="btn btn-ghost" id="selfDoBtn">我還是想自己做</button>' +
+        '</div>'
+      );
+    }
+
+    if(rec.type==="delete"){
+      return (
+        backLink("qa4") +
+        stepper(4) +
+        '<h1 class="view-title">系統建議：刪除</h1>' +
+        '<div class="qa-item-banner"><span class="label">項目</span>'+esc(item.text)+'</div>' +
+        '<div class="rec-banner rec-delete">' +
+          '<div class="rec-label">系統建議</div>' +
+          '<div class="rec-msg">'+esc(rec.msg)+'</div>' +
+          '<div class="rec-verdict">建議：刪除</div>' +
+        '</div>' +
+        '<div class="btn-row">' +
+          '<button class="btn btn-sage" id="confirmDeleteBtn">✓ 確認刪除</button>' +
+          '<button class="btn btn-ghost" id="notDeleteBtn">我不想刪除，我要留著</button>' +
+        '</div>' +
+        '<div id="reasonBox" hidden style="margin-top:16px;">' +
+          '<div class="field"><label>寫下你不刪除的理由</label>' +
+            '<textarea id="notDeleteReasonInput" placeholder="誠實寫下來——這會直接變成你接下來的『意義』"></textarea></div>' +
+          '<div class="btn-row"><button class="btn btn-primary" id="submitReasonBtn">留著，直接排入行程</button></div>' +
+        '</div>'
+      );
+    }
+
+    return (
+      backLink("qa4") +
+      stepper(4) +
+      '<h1 class="view-title">系統建議：排入行程</h1>' +
+      '<div class="qa-item-banner"><span class="label">項目</span>'+esc(item.text)+'</div>' +
+      '<div class="rec-banner rec-commit">' +
+        '<div class="rec-label">系統建議</div>' +
+        '<div class="rec-msg">'+esc(rec.msg)+'</div>' +
+        '<div class="rec-verdict">建議：排入行程</div>' +
+      '</div>' +
+      '<div class="btn-row"><button class="btn btn-primary" id="continueToFormBtn">填寫決定</button></div>'
+    );
+  }
+
+  function renderPathA(){
+    var q = state.qa;
+    return (
+      backLink("pathA") +
+      stepper(4) +
+      '<h1 class="view-title">寫下你的決定</h1>' +
+      '<p class="view-sub">回答完，這件事就正式排進你的行程。</p>' +
+      (q.notDeleteReason ? '<p class="hint">已經帶入你剛剛寫的「不刪除的理由」到下面第一題，可以再修改。</p>' : "") +
+      '<div class="field"><label>這件事對你真正的意義是什麼？</label>' +
+        '<input type="text" id="ansMeaning" value="'+esc(q.meaning)+'" placeholder="寫下真正的理由，不是表面的理由"></div>' +
+      '<div class="field"><label>想逃跑時，你要記住……</label>' +
+        '<input type="text" id="ansReminder" value="'+esc(q.reminder)+'" placeholder="留一句話給未來想放棄的自己"></div>' +
+      '<div class="field"><label>排入具體日期</label>' +
+        '<input type="date" id="ansDate" value="'+esc(q.date)+'"></div>' +
+      '<div class="btn-row">' +
+        '<button class="btn btn-primary" id="submitPathA">完成決定</button>' +
+      '</div>'
+    );
+  }
+
+  function renderDelegateForm(){
+    var q = state.qa;
+    return (
+      backLink("delegateForm") +
+      stepper(4) +
+      '<h1 class="view-title">發包給誰？</h1>' +
+      '<p class="view-sub">先寫清楚，才是真的交出去，而不是放著不管。</p>' +
+      '<div class="field"><label>交辦對象</label>' +
+        '<input type="text" id="delegateTo" value="'+esc(q.delegateTo)+'" placeholder="例如：茹芸／助理／外包廠商"></div>' +
+      '<div class="field"><label>跟催確認日期</label>' +
+        '<input type="date" id="delegateDate" value="'+esc(q.delegateDate)+'"></div>' +
+      '<div class="btn-row"><button class="btn btn-primary" id="submitDelegate">完成，開始同步進行</button></div>'
+    );
+  }
+
+  function renderResultA(){
+    var item = currentQaItem();
+    var d = item.decision;
+    var gcal = gcalLink(item.text, d.date, "對你的意義："+(d.meaning||"")+(d.reminder?"\n想逃跑時記住："+d.reminder:""));
+    return (
+      '<h1 class="view-title">這件事，決定了</h1>' +
+      '<div class="decision-card">' +
+        '<div class="d-row"><div class="d-label">事項</div><div class="d-val big">'+esc(item.text)+'</div></div>' +
+        '<div class="d-row"><div class="d-label">對你的意義</div><div class="d-val">'+esc(d.meaning||"（未填寫）")+'</div></div>' +
+        '<div class="d-row"><div class="d-label">想逃跑時記住</div><div class="d-val">'+esc(d.reminder||"（未填寫）")+'</div></div>' +
+        '<div class="d-row"><div class="d-label">排入日期</div><div class="d-val big">'+esc(d.date||"（未填寫）")+'</div></div>' +
+        '<div class="d-row" style="margin-bottom:0;"><div class="d-label">行程建議</div><div class="d-val">'+esc(CAT_SUGGEST[item.category]||CAT_SUGGEST.other)+'</div></div>' +
+      '</div>' +
+      (gcal ? '<a class="btn btn-gcal" href="'+gcal+'" target="_blank" rel="noopener">'+gcalIcon(16)+'<span>加入 Google 日曆</span></a><p class="hint">會開新分頁到 Google 日曆的新增活動畫面，標題和日期都已經幫你填好，按「儲存」就會存進你自己登入的那個帳號。</p>' : "") +
+      '<div class="btn-row"><button class="btn btn-primary" id="backToList">回到優先清單</button>' +
+        '<button class="btn btn-secondary" id="goToSchedule">看已排定行程總覽</button></div>'
+    );
+  }
+
+  function renderResultB(){
+    return (
+      '<h1 class="view-title">正式放下了</h1>' +
+      '<div class="release-card">' +
+        '<div class="r-quote">不想做，不是失敗，是一個誠實的決定。</div>' +
+        '<div class="r-sub">這件事已經從清單刪除，不用再愧疚。</div>' +
+      '</div>' +
+      '<div class="btn-row"><button class="btn btn-primary" id="backToList">回到優先清單</button></div>'
+    );
+  }
+
+  function renderResultC(){
+    var item = currentQaItem();
+    var d = item.delegation;
+    var gcal = gcalLink("跟催："+item.text+(d.to?"（"+d.to+"）":""), d.date, "交辦對象："+(d.to||"未填寫"));
+    return (
+      '<h1 class="view-title">已經發包出去了</h1>' +
+      '<div class="delegate-card">' +
+        '<div class="d-row"><div class="d-label">事項</div><div class="d-val big">'+esc(item.text)+'</div></div>' +
+        '<div class="d-row"><div class="d-label">交辦對象</div><div class="d-val">'+esc(d.to||"（未填寫）")+'</div></div>' +
+        '<div class="d-row" style="margin-bottom:0;"><div class="d-label">跟催確認日期</div><div class="d-val big">'+esc(d.date)+'</div></div>' +
+      '</div>' +
+      (gcal ? '<a class="btn btn-gcal" href="'+gcal+'" target="_blank" rel="noopener">'+gcalIcon(16)+'<span>加入 Google 日曆（跟催提醒）</span></a><p class="hint">會開新分頁到 Google 日曆的新增活動畫面，標題和日期都已經幫你填好，按「儲存」就會存進你自己登入的那個帳號。</p>' : "") +
+      '<p class="hint">先發包，你才能同步處理別的事——現在去做下一件。</p>' +
+      '<div class="btn-row"><button class="btn btn-primary" id="backToList">回到優先清單</button>' +
+        '<button class="btn btn-secondary" id="goToSchedule">看已排定行程總覽</button></div>'
+    );
+  }
+
+  function renderSchedule(){
+    var items = state.items.filter(function(i){ return !i.deleted && (i.decided || i.delegated); });
+    items.sort(function(a,b){
+      var da = a.decided ? a.decision.date : a.delegation.date;
+      var db = b.decided ? b.decision.date : b.delegation.date;
+      return (da||"").localeCompare(db||"");
+    });
+    var rows = items.map(function(it){
+      var date, title, details, badge;
+      if(it.decided){
+        date = it.decision.date; title = it.text;
+        details = "對你的意義："+(it.decision.meaning||"")+(it.decision.reminder?"\n想逃跑時記住："+it.decision.reminder:"");
+        badge = '<span class="chip chip-done">已決定</span>';
+      } else {
+        date = it.delegation.date; title = "跟催："+it.text+(it.delegation.to?"（"+it.delegation.to+"）":"");
+        details = "交辦對象："+(it.delegation.to||"未填寫");
+        badge = '<span class="chip chip-delegated">已發包</span>';
+      }
+      var gcal = gcalLink(title, date, details);
+      return (
+        '<div class="card-row">' +
+          '<div class="row-main">' +
+            '<div class="row-text">'+esc(it.text)+'</div>' +
+            '<div class="row-tags">'+badge+'<span class="chip chip-delay">'+esc(date||"未排日期")+'</span></div>' +
+          '</div>' +
+          (gcal ? '<div class="row-actions"><a class="icon-btn gcal" href="'+gcal+'" target="_blank" rel="noopener">'+gcalIcon(14)+'<span>日曆</span></a></div>' : "") +
+        '</div>'
+      );
+    }).join("");
+
+    return (
+      '<h1 class="view-title">已排定行程總覽</h1>' +
+      '<p class="view-sub">收集所有已經決定或發包的事項，按日期排好，一項一項加進你的 Google 日曆。</p>' +
+      (items.length ? '<div class="list">'+rows+'</div>' : '<div class="empty">還沒有已經決定或發包的事項</div>') +
+      '<div class="btn-row"><button class="btn btn-secondary" id="backToListFromSchedule">回到優先清單</button></div>'
+    );
+  }
+
+  function render(){
+    var v = state.view, html = "";
+    if(v==="home") html = renderHome();
+    else if(v==="input") html = renderInput();
+    else if(v==="classify") html = renderClassify();
+    else if(v==="overview") html = renderOverview();
+    else if(v==="qa1") html = renderQaStep1();
+    else if(v==="qa2") html = renderQaStep2();
+    else if(v==="qa3") html = renderQaStep3();
+    else if(v==="qa4") html = renderQaStep4();
+    else if(v==="pathA") html = renderPathA();
+    else if(v==="delegateForm") html = renderDelegateForm();
+    else if(v==="resultA") html = renderResultA();
+    else if(v==="resultB") html = renderResultB();
+    else if(v==="resultC") html = renderResultC();
+    else if(v==="schedule") html = renderSchedule();
+    document.getElementById("view").innerHTML = html;
+    bind();
+  }
+
+  function bindToggles(){
+    Array.prototype.forEach.call(document.querySelectorAll(".toggle-btn"), function(b){
+      b.addEventListener("click", function(){
+        var id = parseInt(this.getAttribute("data-id"),10);
+        var axis = this.getAttribute("data-axis");
+        var val = this.getAttribute("data-val")==="true";
+        var item = state.items.filter(function(i){ return i.id===id; })[0];
+        if(item) item[axis] = val;
+        save(); render();
+      });
+    });
+  }
+
+  function bind(){
+    var view = state.view;
+
+    var backBtn = document.getElementById("backStepBtn");
+    if(backBtn) backBtn.addEventListener("click", function(){
+      goto(this.getAttribute("data-back-target"));
+    });
+
+    if(view==="home"){
+      var goInput = document.getElementById("goHomeToInput");
+      if(goInput) goInput.addEventListener("click", function(){ goto("input"); });
+    }
+
+    if(view==="input"){
+      var btn = document.getElementById("parseBtn");
+      if(btn) btn.addEventListener("click", function(){
+        var raw = document.getElementById("dumpArea").value;
+        if(!raw.trim()) return;
+        parseInput(raw);
+        goto("classify");
+      });
+    }
+
+    if(view==="classify"){
+      bindToggles();
+      var finishBtn = document.getElementById("finishClassifyBtn");
+      if(finishBtn) finishBtn.addEventListener("click", function(){ goto("overview"); });
+    }
+
+    if(view==="overview"){
+      var startBtn = document.getElementById("startTopBtn");
+      if(startBtn) startBtn.addEventListener("click", function(){
+        state.qa = freshQa(parseInt(this.getAttribute("data-target"),10));
+        goto("qa1");
+      });
+      var addMore = document.getElementById("addMoreBtn");
+      if(addMore) addMore.addEventListener("click", function(){ goto("input"); });
+      var goSched = document.getElementById("goToScheduleFromOverview");
+      if(goSched) goSched.addEventListener("click", function(){ goto("schedule"); });
+
+      Array.prototype.forEach.call(document.querySelectorAll("[data-decide]"), function(b){
+        b.addEventListener("click", function(){
+          state.qa = freshQa(parseInt(this.getAttribute("data-decide"),10));
+          goto("qa1");
+        });
+      });
+      Array.prototype.forEach.call(document.querySelectorAll("[data-quickdrop]"), function(b){
+        b.addEventListener("click", function(){
+          var id = parseInt(this.getAttribute("data-quickdrop"),10);
+          var it = state.items.filter(function(i){ return i.id===id; })[0];
+          if(it){ it.deleted = true; state.releasedCount++; }
+          save(); render();
+        });
+      });
+    }
+
+    if(view==="qa1"){
+      bindToggles();
+      var n1 = document.getElementById("qaNext1");
+      if(n1) n1.addEventListener("click", function(){ goto("qa2"); });
+      var pickOtherBtn = document.getElementById("qaPickOther");
+      if(pickOtherBtn) pickOtherBtn.addEventListener("click", function(){
+        document.getElementById("otherPicker").hidden = false;
+      });
+      Array.prototype.forEach.call(document.querySelectorAll("[data-pick]"), function(b){
+        b.addEventListener("click", function(){
+          state.qa.itemId = parseInt(this.getAttribute("data-pick"),10);
+          save(); render();
+        });
+      });
+    }
+
+    if(view==="qa2"){
+      var n2 = document.getElementById("qaNext2");
+      if(n2) n2.addEventListener("click", function(){ goto("qa3"); });
+    }
+
+    if(view==="qa3"){
+      Array.prototype.forEach.call(document.querySelectorAll("[data-tier]"), function(b){
+        b.addEventListener("click", function(){
+          var key = this.getAttribute("data-tier");
+          var item = currentQaItem();
+          item.weeks = TIER_WEEKS[key];
+          item.delayLabel = tierLabel(key);
+          state.qa.tier = key;
+          state.qa.recommendation = getRecommendation(key, item.avoidance, item);
+          goto("qa4");
+        });
+      });
+    }
+
+    if(view==="qa4"){
+      var rec = state.qa.recommendation;
+      if(rec.type==="delegate"){
+        var confirmDeleg = document.getElementById("confirmDelegateBtn");
+        if(confirmDeleg) confirmDeleg.addEventListener("click", function(){ goto("delegateForm"); });
+        var selfDo = document.getElementById("selfDoBtn");
+        if(selfDo) selfDo.addEventListener("click", function(){
+          var item = currentQaItem();
+          state.qa.recommendation = getRecommendation(state.qa.tier, item.avoidance, item, true);
+          goto("qa4");
+        });
+      } else if(rec.type==="delete"){
+        var confirmDel = document.getElementById("confirmDeleteBtn");
+        if(confirmDel) confirmDel.addEventListener("click", function(){
+          var item = currentQaItem();
+          item.deleted = true;
+          state.releasedCount++;
+          goto("resultB");
+        });
+        var notDel = document.getElementById("notDeleteBtn");
+        if(notDel) notDel.addEventListener("click", function(){
+          document.getElementById("reasonBox").hidden = false;
+        });
+        var submitReason = document.getElementById("submitReasonBtn");
+        if(submitReason) submitReason.addEventListener("click", function(){
+          var reason = document.getElementById("notDeleteReasonInput").value.trim();
+          if(!reason){ alert("留著可以，但要誠實寫下理由。"); return; }
+          state.qa.notDeleteReason = reason;
+          state.qa.meaning = reason;
+          goto("pathA");
+        });
+      } else {
+        var cont = document.getElementById("continueToFormBtn");
+        if(cont) cont.addEventListener("click", function(){ goto("pathA"); });
+      }
+    }
+
+    if(view==="pathA"){
+      var submit = document.getElementById("submitPathA");
+      if(submit) submit.addEventListener("click", function(){
+        var meaning = document.getElementById("ansMeaning").value.trim();
+        var reminder = document.getElementById("ansReminder").value.trim();
+        var date = document.getElementById("ansDate").value;
+        if(!date){ alert("請選一個具體日期——沒有日期就還不是決定。"); return; }
+        var item = currentQaItem();
+        item.decided = true;
+        item.decision = { meaning:meaning, reminder:reminder, date:date };
+        goto("resultA");
+      });
+      ["ansMeaning","ansReminder","ansDate"].forEach(function(id){
+        var el = document.getElementById(id);
+        if(el) el.addEventListener("input", function(){
+          if(id==="ansMeaning") state.qa.meaning = el.value;
+          if(id==="ansReminder") state.qa.reminder = el.value;
+          if(id==="ansDate") state.qa.date = el.value;
+          save();
+        });
+      });
+    }
+
+    if(view==="delegateForm"){
+      var submitD = document.getElementById("submitDelegate");
+      if(submitD) submitD.addEventListener("click", function(){
+        var to = document.getElementById("delegateTo").value.trim();
+        var date = document.getElementById("delegateDate").value;
+        if(!date){ alert("請選一個跟催確認日期——沒有日期，發包等於沒發包。"); return; }
+        var item = currentQaItem();
+        item.delegated = true;
+        item.delegation = { to:to, date:date };
+        goto("resultC");
+      });
+      ["delegateTo","delegateDate"].forEach(function(id){
+        var el = document.getElementById(id);
+        if(el) el.addEventListener("input", function(){
+          if(id==="delegateTo") state.qa.delegateTo = el.value;
+          if(id==="delegateDate") state.qa.delegateDate = el.value;
+          save();
+        });
+      });
+    }
+
+    if(view==="resultA" || view==="resultB" || view==="resultC"){
+      var bl = document.getElementById("backToList");
+      if(bl) bl.addEventListener("click", function(){ goto("overview"); });
+      var gs = document.getElementById("goToSchedule");
+      if(gs) gs.addEventListener("click", function(){ goto("schedule"); });
+    }
+
+    if(view==="schedule"){
+      var backSched = document.getElementById("backToListFromSchedule");
+      if(backSched) backSched.addEventListener("click", function(){ goto("overview"); });
+    }
+  }
+
+  document.getElementById("resetBtn").addEventListener("click", reset);
+
+  load();
+  if(state.items && state.items.length){
+    uid = Math.max.apply(null, state.items.map(function(i){return i.id;}).concat([1])) + 1;
+  }
+  render();
+})();
+</script>
+</body>
+</html>
