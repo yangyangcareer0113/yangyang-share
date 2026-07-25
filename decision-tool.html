@@ -348,12 +348,16 @@
   .steps-head{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px; }
   .steps-label{ font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-faint); font-weight:700; }
   .steps-progress{ font-size:12px; color:var(--teal); font-weight:700; white-space:nowrap; }
-  .steps-list{ display:flex; flex-direction:column; gap:9px; }
-  .step-row{ display:flex; align-items:flex-start; gap:9px; font-size:14px; color:var(--ink); cursor:pointer; line-height:1.5; }
+  .steps-list{ display:flex; flex-direction:column; gap:10px; }
+  .step-full{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .step-full.small{ font-size:13px; }
+  .step-full .icon-btn{ padding:4px 7px; flex-shrink:0; }
+  .step-row{ display:flex; align-items:flex-start; gap:9px; font-size:14px; color:var(--ink); cursor:pointer; line-height:1.5; flex:1; min-width:140px; }
   .step-row.small{ font-size:13px; }
   .step-row input[type=checkbox]{ margin-top:3px; width:16px; height:16px; accent-color:var(--rose); cursor:pointer; flex-shrink:0; }
   .step-done{ text-decoration:line-through; color:var(--ink-faint); }
-  .steps-mini{ margin-top:10px; padding-top:10px; border-top:1px dashed var(--border); display:flex; flex-direction:column; gap:7px; }
+  .step-date-badge{ font-size:11px; color:var(--ink-faint); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .steps-mini{ margin-top:10px; padding-top:10px; border-top:1px dashed var(--border); display:flex; flex-direction:column; gap:8px; }
   .steps-mini-progress{ font-size:11px; color:var(--teal); font-weight:700; }
 
   .back-row{ display:flex; justify-content:flex-end; margin-bottom:16px; }
@@ -407,6 +411,14 @@
     social: "建議直接約定時間，別讓它停在『有空再』的模糊地帶",
     money:  "建議排在頭腦清楚、不趕時間的時段，例如週末上午",
     other:  "建議排在你今天最不容易被打斷的一段時間"
+  };
+  var GIVEUP_SUGGEST = {
+    work:   "可能要放棄下班後滑手機耍廢的時間，先把這件事處理完再放鬆",
+    health: "可能要放棄多躺 20 分鐘的賴床時間，換成拿來做這件事",
+    study:  "可能要放棄滑社群媒體的零碎時間，換成拿來讀書、練習",
+    social: "可能要放棄『再拖幾天應該沒差』的僥倖心態，直接排時間聯絡對方",
+    money:  "可能要放棄先犒賞自己的衝動消費，先把這件事處理完",
+    other:  "可能要放棄中午滑手機的休息時間，換成拿來做這件事"
   };
   var AVOID_KWS = ["應該","有空再","改天","一直","拖","想到就煩","沒動力","懶","逃避","不敢","再說"];
 
@@ -512,13 +524,20 @@
     '</svg>';
   }
 
-  function stepsChecklistHtml(itemId, steps, compact){
+  function stepsChecklistHtml(itemId, parentText, steps, compact){
     var doneCount = steps.filter(function(s){ return s.done; }).length;
     var rows = steps.map(function(s, i){
-      return '<label class="step-row'+(compact?' small':'')+'">' +
-        '<input type="checkbox" data-step-item="'+itemId+'" data-step-index="'+i+'" '+(s.done?'checked':'')+'>' +
-        '<span class="'+(s.done?'step-done':'')+'">'+esc(s.text)+'</span>' +
-      '</label>';
+      var gcal = gcalLink(s.text, s.date, "來自「"+parentText+"」的小步驟");
+      return (
+        '<div class="step-full'+(compact?' small':'')+'">' +
+          '<label class="step-row">' +
+            '<input type="checkbox" data-step-item="'+itemId+'" data-step-index="'+i+'" '+(s.done?'checked':'')+'>' +
+            '<span class="'+(s.done?'step-done':'')+'">'+esc(s.text)+'</span>' +
+          '</label>' +
+          '<span class="step-date-badge">'+esc(s.date||"未排日期")+'</span>' +
+          (gcal ? '<a class="icon-btn gcal" href="'+gcal+'" target="_blank" rel="noopener" title="加入 Google 日曆">'+gcalIcon(12)+'</a>' : "") +
+        '</div>'
+      );
     }).join("");
     if(compact){
       return '<div class="steps-mini"><div class="steps-mini-progress">已完成 '+doneCount+' / '+steps.length+' 小步驟</div>'+rows+'</div>';
@@ -552,16 +571,20 @@
     );
   }
 
-  var BACK_MAP = { input:"home", classify:"input", qa1:"overview", qa2:"qa1", qa3:"qa2", qa4:"qa3", pathA:"qa4", delegateForm:"qa4" };
+  var BACK_MAP = { input:"home", classify:"input", qa1:"overview", qa2:"qa1", qa3:"qa2", qa4:"qa3", pathA:"qa4", pathASchedule:"pathA", delegateForm:"qa4" };
   function backLink(view){
     var target = BACK_MAP[view];
     if(!target) return "";
     return '<div class="back-row"><button class="back-link" id="backStepBtn" data-back-target="'+target+'">← 上一步</button></div>';
   }
 
+  function parseStepsRaw(raw){
+    return (raw||"").split("\n").map(function(s){ return s.trim(); }).filter(Boolean);
+  }
+
   var uid = 1;
   function freshQa(itemId){
-    return { itemId:itemId, tier:null, recommendation:null, notDeleteReason:"", meaning:"", reminder:"", date:"", stepsRaw:"", delegateTo:"", delegateDate:"" };
+    return { itemId:itemId, tier:null, recommendation:null, notDeleteReason:"", meaning:"", reminder:"", date:"", stepsRaw:"", stepDates:[], delegateTo:"", delegateDate:"" };
   }
   var state = {
     view:"home",
@@ -809,7 +832,7 @@
           '<div class="vs-title">決定</div>' +
           '<div class="vs-line">「我決定把『'+esc(item.text)+'』排進行程，並清楚知道我要放棄什麼」</div>' +
           '<div class="vs-note">決定 = 包含你願意放棄什麼</div>' +
-          '<div class="vs-example"><span class="tag">例如</span>清楚知道要放棄中午滑手機的休息時間，換成拿來做這件事</div>' +
+          '<div class="vs-example"><span class="tag">代價</span>'+esc(GIVEUP_SUGGEST[item.category]||GIVEUP_SUGGEST.other)+'</div>' +
         '</div>' +
       '</div>' +
       '<p class="hint">沒有放棄，就不是決定。</p>' +
@@ -904,10 +927,28 @@
         '<input type="text" id="ansReminder" value="'+esc(q.reminder)+'" placeholder="留一句話給未來想放棄的自己"></div>' +
       '<div class="field"><label>拆解成小步驟（選填）</label>' +
         '<textarea id="ansSteps" placeholder="如果這是一個大目標，拆成 2-5 個具體小步驟，一行一個。例如：\n列出想合作的3個對象\n寫一封邀約訊息草稿\n傳送給第一位">'+esc(q.stepsRaw)+'</textarea>' +
-        '<p class="hint">拆好之後，這會變成一份 to do list，完成的每一步都可以在「已排定行程總覽」打勾，逐步往目標靠近。不是大目標的話可以留空，直接排日期就好。</p>' +
+        '<p class="hint">拆好之後，這會變成一份 to do list，下一步會強迫每一步都排一個日期，逐步往目標靠近。不是大目標的話可以留空，直接排日期就好。</p>' +
       '</div>' +
-      '<div class="field"><label>排入具體日期</label>' +
+      '<div class="btn-row">' +
+        '<button class="btn btn-primary" id="pathANext">下一步：排進行事曆</button>' +
+      '</div>'
+    );
+  }
+
+  function renderPathASchedule(){
+    var q = state.qa;
+    var stepTexts = parseStepsRaw(q.stepsRaw);
+    return (
+      backLink("pathASchedule") +
+      stepper(4) +
+      '<h1 class="view-title">安排進行事曆</h1>' +
+      '<p class="view-sub">每一步都要有日期，才算真的排進行程——沒有日期，決定就只是想法。</p>' +
+      '<div class="field"><label>整體目標的日期</label>' +
         '<input type="date" id="ansDate" value="'+esc(q.date)+'"></div>' +
+      (stepTexts.length ? stepTexts.map(function(t, i){
+        return '<div class="field"><label>'+esc(t)+' — 完成日期</label>' +
+          '<input type="date" class="step-date-input" data-step-idx="'+i+'" value="'+esc(q.stepDates[i]||"")+'"></div>';
+      }).join("") : "") +
       '<div class="btn-row">' +
         '<button class="btn btn-primary" id="submitPathA">完成決定</button>' +
       '</div>'
@@ -933,7 +974,7 @@
     var item = currentQaItem();
     var d = item.decision;
     var hasSteps = d.steps && d.steps.length;
-    var stepsText = hasSteps ? ("\n\n小步驟：\n" + d.steps.map(function(s){ return "- "+s.text; }).join("\n")) : "";
+    var stepsText = hasSteps ? ("\n\n小步驟：\n" + d.steps.map(function(s){ return "- "+s.text+"（"+(s.date||"未排日期")+"）"; }).join("\n")) : "";
     var gcal = gcalLink(item.text, d.date, "對你的意義："+(d.meaning||"")+(d.reminder?"\n想逃跑時記住："+d.reminder:"")+stepsText);
     return (
       '<h1 class="view-title">這件事，決定了</h1>' +
@@ -944,7 +985,7 @@
         '<div class="d-row"><div class="d-label">排入日期</div><div class="d-val big">'+esc(d.date||"（未填寫）")+'</div></div>' +
         '<div class="d-row" style="margin-bottom:0;"><div class="d-label">行程建議</div><div class="d-val">'+esc(CAT_SUGGEST[item.category]||CAT_SUGGEST.other)+'</div></div>' +
       '</div>' +
-      (hasSteps ? stepsChecklistHtml(item.id, d.steps, false) : "") +
+      (hasSteps ? stepsChecklistHtml(item.id, item.text, d.steps, false) : "") +
       (gcal ? '<a class="btn btn-gcal" href="'+gcal+'" target="_blank" rel="noopener">'+gcalIcon(16)+'<span>加入 Google 日曆</span></a><p class="hint">會開新分頁到 Google 日曆的新增活動畫面，標題和日期都已經幫你填好（含小步驟清單），按「儲存」就會存進你自己登入的那個帳號。</p>' : "") +
       '<div class="btn-row"><button class="btn btn-primary" id="backToList">回到優先清單</button>' +
         '<button class="btn btn-secondary" id="goToSchedule">看已排定行程總覽</button></div>'
@@ -992,7 +1033,7 @@
       if(it.decided){
         date = it.decision.date; title = it.text;
         hasSteps = it.decision.steps && it.decision.steps.length;
-        var stepsText = hasSteps ? ("\n\n小步驟：\n" + it.decision.steps.map(function(s){ return "- "+s.text; }).join("\n")) : "";
+        var stepsText = hasSteps ? ("\n\n小步驟：\n" + it.decision.steps.map(function(s){ return "- "+s.text+"（"+(s.date||"未排日期")+"）"; }).join("\n")) : "";
         details = "對你的意義："+(it.decision.meaning||"")+(it.decision.reminder?"\n想逃跑時記住："+it.decision.reminder:"")+stepsText;
         badge = '<span class="chip chip-done">已決定</span>';
       } else {
@@ -1007,7 +1048,7 @@
           '<div class="row-main">' +
             '<div class="row-text">'+esc(it.text)+'</div>' +
             '<div class="row-tags">'+badge+'<span class="chip chip-delay">'+esc(date||"未排日期")+'</span></div>' +
-            (hasSteps ? stepsChecklistHtml(it.id, it.decision.steps, true) : "") +
+            (hasSteps ? stepsChecklistHtml(it.id, it.text, it.decision.steps, true) : "") +
           '</div>' +
           (gcal ? '<div class="row-actions"><a class="icon-btn gcal" href="'+gcal+'" target="_blank" rel="noopener">'+gcalIcon(14)+'<span>日曆</span></a></div>' : "") +
         '</div>'
@@ -1033,6 +1074,7 @@
     else if(v==="qa3") html = renderQaStep3();
     else if(v==="qa4") html = renderQaStep4();
     else if(v==="pathA") html = renderPathA();
+    else if(v==="pathASchedule") html = renderPathASchedule();
     else if(v==="delegateForm") html = renderDelegateForm();
     else if(v==="resultA") html = renderResultA();
     else if(v==="resultB") html = renderResultB();
@@ -1184,27 +1226,46 @@
     }
 
     if(view==="pathA"){
-      var submit = document.getElementById("submitPathA");
-      if(submit) submit.addEventListener("click", function(){
-        var meaning = document.getElementById("ansMeaning").value.trim();
-        var reminder = document.getElementById("ansReminder").value.trim();
-        var date = document.getElementById("ansDate").value;
-        if(!date){ alert("請選一個具體日期——沒有日期就還不是決定。"); return; }
-        var stepsRaw = document.getElementById("ansSteps").value;
-        var steps = stepsRaw.split("\n").map(function(s){ return s.trim(); }).filter(Boolean)
-          .map(function(s){ return { text:s, done:false }; });
-        var item = currentQaItem();
-        item.decided = true;
-        item.decision = { meaning:meaning, reminder:reminder, date:date, steps: steps.length ? steps : null };
-        goto("resultA");
-      });
-      ["ansMeaning","ansReminder","ansDate","ansSteps"].forEach(function(id){
+      var pathANext = document.getElementById("pathANext");
+      if(pathANext) pathANext.addEventListener("click", function(){ goto("pathASchedule"); });
+      ["ansMeaning","ansReminder","ansSteps"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.addEventListener("input", function(){
           if(id==="ansMeaning") state.qa.meaning = el.value;
           if(id==="ansReminder") state.qa.reminder = el.value;
-          if(id==="ansDate") state.qa.date = el.value;
           if(id==="ansSteps") state.qa.stepsRaw = el.value;
+          save();
+        });
+      });
+    }
+
+    if(view==="pathASchedule"){
+      var submit = document.getElementById("submitPathA");
+      if(submit) submit.addEventListener("click", function(){
+        var date = document.getElementById("ansDate").value;
+        if(!date){ alert("請選一個具體日期——沒有日期就還不是決定。"); return; }
+        var stepTexts = parseStepsRaw(state.qa.stepsRaw);
+        var stepDateEls = document.querySelectorAll(".step-date-input");
+        var missing = false;
+        var stepDates = [];
+        stepDateEls.forEach(function(el){
+          var idx = parseInt(el.getAttribute("data-step-idx"),10);
+          stepDates[idx] = el.value;
+          if(!el.value) missing = true;
+        });
+        if(stepTexts.length && missing){ alert("每一個小步驟都要排一個日期——沒有日期就還沒真的排進行事曆。"); return; }
+        var steps = stepTexts.length ? stepTexts.map(function(t,i){ return { text:t, date:stepDates[i], done:false }; }) : null;
+        var item = currentQaItem();
+        item.decided = true;
+        item.decision = { meaning:state.qa.meaning.trim(), reminder:state.qa.reminder.trim(), date:date, steps:steps };
+        goto("resultA");
+      });
+      var dateEl = document.getElementById("ansDate");
+      if(dateEl) dateEl.addEventListener("input", function(){ state.qa.date = dateEl.value; save(); });
+      Array.prototype.forEach.call(document.querySelectorAll(".step-date-input"), function(el){
+        el.addEventListener("input", function(){
+          var idx = parseInt(el.getAttribute("data-step-idx"),10);
+          state.qa.stepDates[idx] = el.value;
           save();
         });
       });
