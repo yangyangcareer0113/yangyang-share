@@ -420,6 +420,14 @@
     money:  "可能要放棄先犒賞自己的衝動消費，先把這件事處理完",
     other:  "可能要放棄中午滑手機的休息時間，換成拿來做這件事"
   };
+  var STEP_SUGGEST = {
+    work:   "列出這個專案需要的資料\n寫一版草稿\n找人確認或討論\n定稿並送出",
+    health: "買好需要的裝備或用品\n找到適合的時段或地點\n先做一次最小版本，例如運動10分鐘",
+    study:  "列出要學的範圍\n找一份教材或課程\n排出第一週的進度\n做第一次練習或小考",
+    social: "列出想聯絡的對象\n想好要說的內容\n傳出第一則訊息",
+    money:  "列出需要的資料或帳單\n選一個記帳或理財工具\n完成第一次實際操作",
+    other:  "列出這件事包含的幾個部分\n排出先後順序\n先完成最簡單的第一步"
+  };
   var AVOID_KWS = ["應該","有空再","改天","一直","拖","想到就煩","沒動力","懶","逃避","不敢","再說"];
 
   var TIERS = [
@@ -915,6 +923,8 @@
 
   function renderPathA(){
     var q = state.qa;
+    var item = currentQaItem();
+    var stepPlaceholder = "如果這是一個大目標，拆成 2-5 個具體小步驟，一行一個。例如：\n" + (STEP_SUGGEST[item.category]||STEP_SUGGEST.other);
     return (
       backLink("pathA") +
       stepper(4) +
@@ -926,8 +936,8 @@
       '<div class="field"><label>想逃跑時，你要記住……</label>' +
         '<input type="text" id="ansReminder" value="'+esc(q.reminder)+'" placeholder="留一句話給未來想放棄的自己"></div>' +
       '<div class="field"><label>拆解成小步驟（選填）</label>' +
-        '<textarea id="ansSteps" placeholder="如果這是一個大目標，拆成 2-5 個具體小步驟，一行一個。例如：\n列出想合作的3個對象\n寫一封邀約訊息草稿\n傳送給第一位">'+esc(q.stepsRaw)+'</textarea>' +
-        '<p class="hint">拆好之後，這會變成一份 to do list，下一步會強迫每一步都排一個日期，逐步往目標靠近。不是大目標的話可以留空，直接排日期就好。</p>' +
+        '<textarea id="ansSteps" placeholder="'+esc(stepPlaceholder)+'">'+esc(q.stepsRaw)+'</textarea>' +
+        '<p class="hint">沒想法可以先參考灰字範例，改成自己的版本。拆好之後，這會變成一份 to do list，下一步會強迫每一步都排一個日期，逐步往目標靠近。不是大目標的話可以留空，直接排日期就好。</p>' +
       '</div>' +
       '<div class="btn-row">' +
         '<button class="btn btn-primary" id="pathANext">下一步：排進行事曆</button>' +
@@ -937,13 +947,14 @@
 
   function renderPathASchedule(){
     var q = state.qa;
+    var item = currentQaItem();
     var stepTexts = parseStepsRaw(q.stepsRaw);
     return (
       backLink("pathASchedule") +
       stepper(4) +
       '<h1 class="view-title">安排進行事曆</h1>' +
       '<p class="view-sub">每一步都要有日期，才算真的排進行程——沒有日期，決定就只是想法。</p>' +
-      '<div class="field"><label>整體目標的日期</label>' +
+      '<div class="field"><label>'+esc(item.text)+' — 完成日期</label>' +
         '<input type="date" id="ansDate" value="'+esc(q.date)+'"></div>' +
       (stepTexts.length ? stepTexts.map(function(t, i){
         return '<div class="field"><label>'+esc(t)+' — 完成日期</label>' +
