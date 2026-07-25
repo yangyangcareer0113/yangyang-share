@@ -341,6 +341,21 @@
   .pill-cta:hover{ transform:translateY(-2px); opacity:0.95; }
   .pill-cta:focus-visible{ outline:2px solid var(--sky); outline-offset:3px; }
 
+  .steps-card{
+    background:var(--surface-2); border:1px solid var(--border); border-radius:10px;
+    padding:16px 18px; margin:0 0 18px;
+  }
+  .steps-head{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px; }
+  .steps-label{ font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-faint); font-weight:700; }
+  .steps-progress{ font-size:12px; color:var(--teal); font-weight:700; white-space:nowrap; }
+  .steps-list{ display:flex; flex-direction:column; gap:9px; }
+  .step-row{ display:flex; align-items:flex-start; gap:9px; font-size:14px; color:var(--ink); cursor:pointer; line-height:1.5; }
+  .step-row.small{ font-size:13px; }
+  .step-row input[type=checkbox]{ margin-top:3px; width:16px; height:16px; accent-color:var(--rose); cursor:pointer; flex-shrink:0; }
+  .step-done{ text-decoration:line-through; color:var(--ink-faint); }
+  .steps-mini{ margin-top:10px; padding-top:10px; border-top:1px dashed var(--border); display:flex; flex-direction:column; gap:7px; }
+  .steps-mini-progress{ font-size:11px; color:var(--teal); font-weight:700; }
+
   .back-row{ display:flex; justify-content:flex-end; margin-bottom:16px; }
   .back-link{
     display:inline-flex; align-items:center; gap:4px;
@@ -497,6 +512,37 @@
     '</svg>';
   }
 
+  function stepsChecklistHtml(itemId, steps, compact){
+    var doneCount = steps.filter(function(s){ return s.done; }).length;
+    var rows = steps.map(function(s, i){
+      return '<label class="step-row'+(compact?' small':'')+'">' +
+        '<input type="checkbox" data-step-item="'+itemId+'" data-step-index="'+i+'" '+(s.done?'checked':'')+'>' +
+        '<span class="'+(s.done?'step-done':'')+'">'+esc(s.text)+'</span>' +
+      '</label>';
+    }).join("");
+    if(compact){
+      return '<div class="steps-mini"><div class="steps-mini-progress">已完成 '+doneCount+' / '+steps.length+' 小步驟</div>'+rows+'</div>';
+    }
+    return (
+      '<div class="steps-card">' +
+        '<div class="steps-head"><span class="steps-label">拆解成小步驟</span><span class="steps-progress">已完成 '+doneCount+' / '+steps.length+'</span></div>' +
+        '<div class="steps-list">'+rows+'</div>' +
+      '</div>'
+    );
+  }
+
+  function bindStepCheckboxes(){
+    Array.prototype.forEach.call(document.querySelectorAll("[data-step-item]"), function(cb){
+      cb.addEventListener("change", function(){
+        var id = parseInt(this.getAttribute("data-step-item"),10);
+        var idx = parseInt(this.getAttribute("data-step-index"),10);
+        var item = state.items.filter(function(i){ return i.id===id; })[0];
+        if(item && item.decision && item.decision.steps) item.decision.steps[idx].done = this.checked;
+        save(); render();
+      });
+    });
+  }
+
   function toggleGroupHtml(it, axis, labelTrue, labelFalse){
     return (
       '<div class="toggle-group">' +
@@ -515,7 +561,7 @@
 
   var uid = 1;
   function freshQa(itemId){
-    return { itemId:itemId, tier:null, recommendation:null, notDeleteReason:"", meaning:"", reminder:"", date:"", delegateTo:"", delegateDate:"" };
+    return { itemId:itemId, tier:null, recommendation:null, notDeleteReason:"", meaning:"", reminder:"", date:"", stepsRaw:"", delegateTo:"", delegateDate:"" };
   }
   var state = {
     view:"home",
@@ -856,6 +902,10 @@
         '<input type="text" id="ansMeaning" value="'+esc(q.meaning)+'" placeholder="寫下真正的理由，不是表面的理由"></div>' +
       '<div class="field"><label>想逃跑時，你要記住……</label>' +
         '<input type="text" id="ansReminder" value="'+esc(q.reminder)+'" placeholder="留一句話給未來想放棄的自己"></div>' +
+      '<div class="field"><label>拆解成小步驟（選填）</label>' +
+        '<textarea id="ansSteps" placeholder="如果這是一個大目標，拆成 2-5 個具體小步驟，一行一個。例如：\n列出想合作的3個對象\n寫一封邀約訊息草稿\n傳送給第一位">'+esc(q.stepsRaw)+'</textarea>' +
+        '<p class="hint">拆好之後，這會變成一份 to do list，完成的每一步都可以在「已排定行程總覽」打勾，逐步往目標靠近。不是大目標的話可以留空，直接排日期就好。</p>' +
+      '</div>' +
       '<div class="field"><label>排入具體日期</label>' +
         '<input type="date" id="ansDate" value="'+esc(q.date)+'"></div>' +
       '<div class="btn-row">' +
@@ -882,7 +932,9 @@
   function renderResultA(){
     var item = currentQaItem();
     var d = item.decision;
-    var gcal = gcalLink(item.text, d.date, "對你的意義："+(d.meaning||"")+(d.reminder?"\n想逃跑時記住："+d.reminder:""));
+    var hasSteps = d.steps && d.steps.length;
+    var stepsText = hasSteps ? ("\n\n小步驟：\n" + d.steps.map(function(s){ return "- "+s.text; }).join("\n")) : "";
+    var gcal = gcalLink(item.text, d.date, "對你的意義："+(d.meaning||"")+(d.reminder?"\n想逃跑時記住："+d.reminder:"")+stepsText);
     return (
       '<h1 class="view-title">這件事，決定了</h1>' +
       '<div class="decision-card">' +
@@ -892,7 +944,8 @@
         '<div class="d-row"><div class="d-label">排入日期</div><div class="d-val big">'+esc(d.date||"（未填寫）")+'</div></div>' +
         '<div class="d-row" style="margin-bottom:0;"><div class="d-label">行程建議</div><div class="d-val">'+esc(CAT_SUGGEST[item.category]||CAT_SUGGEST.other)+'</div></div>' +
       '</div>' +
-      (gcal ? '<a class="btn btn-gcal" href="'+gcal+'" target="_blank" rel="noopener">'+gcalIcon(16)+'<span>加入 Google 日曆</span></a><p class="hint">會開新分頁到 Google 日曆的新增活動畫面，標題和日期都已經幫你填好，按「儲存」就會存進你自己登入的那個帳號。</p>' : "") +
+      (hasSteps ? stepsChecklistHtml(item.id, d.steps, false) : "") +
+      (gcal ? '<a class="btn btn-gcal" href="'+gcal+'" target="_blank" rel="noopener">'+gcalIcon(16)+'<span>加入 Google 日曆</span></a><p class="hint">會開新分頁到 Google 日曆的新增活動畫面，標題和日期都已經幫你填好（含小步驟清單），按「儲存」就會存進你自己登入的那個帳號。</p>' : "") +
       '<div class="btn-row"><button class="btn btn-primary" id="backToList">回到優先清單</button>' +
         '<button class="btn btn-secondary" id="goToSchedule">看已排定行程總覽</button></div>'
     );
@@ -935,13 +988,16 @@
       return (da||"").localeCompare(db||"");
     });
     var rows = items.map(function(it){
-      var date, title, details, badge;
+      var date, title, details, badge, hasSteps;
       if(it.decided){
         date = it.decision.date; title = it.text;
-        details = "對你的意義："+(it.decision.meaning||"")+(it.decision.reminder?"\n想逃跑時記住："+it.decision.reminder:"");
+        hasSteps = it.decision.steps && it.decision.steps.length;
+        var stepsText = hasSteps ? ("\n\n小步驟：\n" + it.decision.steps.map(function(s){ return "- "+s.text; }).join("\n")) : "";
+        details = "對你的意義："+(it.decision.meaning||"")+(it.decision.reminder?"\n想逃跑時記住："+it.decision.reminder:"")+stepsText;
         badge = '<span class="chip chip-done">已決定</span>';
       } else {
         date = it.delegation.date; title = "跟催："+it.text+(it.delegation.to?"（"+it.delegation.to+"）":"");
+        hasSteps = false;
         details = "交辦對象："+(it.delegation.to||"未填寫");
         badge = '<span class="chip chip-delegated">已發包</span>';
       }
@@ -951,6 +1007,7 @@
           '<div class="row-main">' +
             '<div class="row-text">'+esc(it.text)+'</div>' +
             '<div class="row-tags">'+badge+'<span class="chip chip-delay">'+esc(date||"未排日期")+'</span></div>' +
+            (hasSteps ? stepsChecklistHtml(it.id, it.decision.steps, true) : "") +
           '</div>' +
           (gcal ? '<div class="row-actions"><a class="icon-btn gcal" href="'+gcal+'" target="_blank" rel="noopener">'+gcalIcon(14)+'<span>日曆</span></a></div>' : "") +
         '</div>'
@@ -1133,17 +1190,21 @@
         var reminder = document.getElementById("ansReminder").value.trim();
         var date = document.getElementById("ansDate").value;
         if(!date){ alert("請選一個具體日期——沒有日期就還不是決定。"); return; }
+        var stepsRaw = document.getElementById("ansSteps").value;
+        var steps = stepsRaw.split("\n").map(function(s){ return s.trim(); }).filter(Boolean)
+          .map(function(s){ return { text:s, done:false }; });
         var item = currentQaItem();
         item.decided = true;
-        item.decision = { meaning:meaning, reminder:reminder, date:date };
+        item.decision = { meaning:meaning, reminder:reminder, date:date, steps: steps.length ? steps : null };
         goto("resultA");
       });
-      ["ansMeaning","ansReminder","ansDate"].forEach(function(id){
+      ["ansMeaning","ansReminder","ansDate","ansSteps"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.addEventListener("input", function(){
           if(id==="ansMeaning") state.qa.meaning = el.value;
           if(id==="ansReminder") state.qa.reminder = el.value;
           if(id==="ansDate") state.qa.date = el.value;
+          if(id==="ansSteps") state.qa.stepsRaw = el.value;
           save();
         });
       });
@@ -1170,6 +1231,10 @@
       });
     }
 
+    if(view==="resultA"){
+      bindStepCheckboxes();
+    }
+
     if(view==="resultA" || view==="resultB" || view==="resultC"){
       var bl = document.getElementById("backToList");
       if(bl) bl.addEventListener("click", function(){ goto("overview"); });
@@ -1178,6 +1243,7 @@
     }
 
     if(view==="schedule"){
+      bindStepCheckboxes();
       var backSched = document.getElementById("backToListFromSchedule");
       if(backSched) backSched.addEventListener("click", function(){ goto("overview"); });
     }
