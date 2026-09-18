@@ -12,7 +12,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="合作追蹤神器">
 <meta name="theme-color" content="#5f90ae">
-<meta http-equiv="refresh" content="0; url=https://claude.ai/artifact/YbBVk6ui9QjfddKDS1zePy">
 <style>
   html,body{
     margin:0;
@@ -40,11 +39,16 @@
 <body>
   <div class="wrap">
     <img src="icon-1024.png" alt="合作追蹤神器">
-    <p>正在開啟合作追蹤神器…</p>
-    <a class="btn" href="https://claude.ai/artifact/YbBVk6ui9QjfddKDS1zePy">如果沒有自動跳轉，點這裡</a>
+    <p id="hint">點下方按鈕開啟追蹤器</p>
+    <a class="btn" id="openBtn" href="https://claude.ai/artifact/YbBVk6ui9QjfddKDS1zePy">開啟合作追蹤神器 →</a>
   </div>
   <script>
-    location.replace("https://claude.ai/artifact/YbBVk6ui9QjfddKDS1zePy");
+    var TARGET = "https://claude.ai/artifact/YbBVk6ui9QjfddKDS1zePy";
+    var isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+    if (isStandalone){
+      document.getElementById("hint").textContent = "正在開啟合作追蹤神器…";
+      location.replace(TARGET);
+    }
   </script>
 </body>
 </html>
