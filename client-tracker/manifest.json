@@ -1,0 +1,12 @@
+{
+  "name": "合作追蹤神器",
+  "short_name": "業主追蹤",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#faf6ef",
+  "theme_color": "#5f90ae",
+  "icons": [
+    { "src": "icon-1024.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
+    { "src": "icon-1024.png", "sizes": "1024x1024", "type": "image/png", "purpose": "maskable" }
+  ]
+}
