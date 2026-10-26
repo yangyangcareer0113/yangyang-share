@@ -13,3 +13,4 @@
 | 檔案 | 說明 | 連結 |
 |---|---|---|
 | gps-handout.html | GPS 執行設計圖工作表（時間管理課件版） | https://yangyangcareer0113.github.io/yangyang-share/gps-handout.html |
+| client-planner.html | 客戶初步規劃試算（退休金／聰明買房，團隊內部＋現場示範） | https://yangyangcareer0113.github.io/yangyang-share/client-planner.html |

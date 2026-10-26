@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>客戶初步規劃試算</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0f2340; --navy-2:#1b3559; --navy-soft:#e8edf4;
+  --gold:#b08a46; --gold-soft:#f5ecdb;
+  --bg:#f6f4ef; --card:#ffffff; --ink:#1d2433; --muted:#6b7385; --line:#e3e0d8;
+  --good:#2f7d5b; --good-soft:#e4f2ea; --warn:#b5651d; --warn-soft:#fbeedd; --bad:#b23b3b;
+  --a:#8a93a6; --b:#b08a46;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;font-size:15px;line-height:1.6}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px 60px}
+header.top{background:var(--navy);color:#fff}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 16px;flex-wrap:wrap}
+header.top h1{font-family:"Noto Serif TC",serif;font-size:22px;margin:0;letter-spacing:.04em}
+header.top h1 small{display:block;font-family:"Noto Sans TC";font-size:12px;color:#c9d3e3;font-weight:400;letter-spacing:.08em}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid transparent;border-radius:999px;padding:7px 14px;font:inherit;font-size:13px;cursor:pointer;background:#fff;color:var(--navy);font-weight:500}
+.btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
+.btn.ghost.on{background:var(--gold);border-color:var(--gold);color:#fff}
+.btn.gold{background:var(--gold);color:#fff}
+.layout{display:grid;grid-template-columns:400px 1fr;gap:20px;margin-top:20px;align-items:start}
+@media (max-width:900px){.layout{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.inputs{position:sticky;top:12px}
+@media (max-width:900px){.inputs{position:static}}
+.step{margin-bottom:18px}
+.step:last-child{margin-bottom:0}
+.step-h{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}
+.step-h b{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;font-size:12px;flex:none}
+.step-h span{font-weight:700;font-size:15px}
+.step-h em{font-style:normal;color:var(--muted);font-size:12px;margin-left:auto}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 11px;font:inherit;font-size:13px;cursor:pointer;color:var(--ink)}
+.chip:hover{border-color:var(--navy-2)}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.chips.sm .chip{padding:3px 9px;font-size:12px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.row label{font-size:13px;color:var(--muted)}
+.field{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden}
+.field input,.field select{border:0;outline:0;font:inherit;padding:8px 10px;width:100%;min-width:0;background:transparent;color:var(--ink)}
+.field .unit{padding:0 10px;color:var(--muted);font-size:13px;white-space:nowrap}
+.field:focus-within{border-color:var(--navy-2);box-shadow:0 0 0 3px var(--navy-soft)}
+.field.big input{font-size:22px;font-weight:700;color:var(--navy);padding:10px 12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mini{font-size:12px;color:var(--muted)}
+.hint{font-size:12.5px;padding:8px 10px;border-radius:8px;margin-top:8px;background:var(--navy-soft);color:var(--navy-2)}
+.hint.warn{background:var(--warn-soft);color:var(--warn)}
+.hint.good{background:var(--good-soft);color:var(--good)}
+.mode{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mode button{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:12px;text-align:left;cursor:pointer;font:inherit}
+.mode button b{display:block;font-size:15px;color:var(--navy)}
+.mode button small{color:var(--muted);font-size:12px}
+.mode button.on{border-color:var(--gold);background:var(--gold-soft)}
+details.adv{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px}
+details.adv summary{cursor:pointer;font-size:13px;color:var(--navy-2);font-weight:500}
+details.adv .grid2{margin-top:10px}
+details.adv label{font-size:12px;color:var(--muted);display:block;margin-bottom:2px}
+.toggle{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink);cursor:pointer}
+/* results */
+.res-h{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.res-h h2{margin:0;font-family:"Noto Serif TC",serif;font-size:20px;color:var(--navy)}
+.profile{font-size:13px;color:var(--muted)}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:640px){.cards{grid-template-columns:1fr}}
+.plan{border:1.5px solid var(--line);border-radius:14px;padding:16px;background:#fff;cursor:pointer;position:relative}
+.plan.sel{border-color:var(--gold);box-shadow:0 6px 20px rgba(176,138,70,.15)}
+.plan .tag{position:absolute;top:-10px;right:12px;background:var(--gold);color:#fff;font-size:11px;padding:2px 10px;border-radius:999px}
+.plan h3{margin:0 0 2px;font-size:16px;color:var(--navy)}
+.plan .sub{font-size:12px;color:var(--muted)}
+.kv{display:flex;justify-content:space-between;gap:8px;font-size:13.5px;padding:5px 0;border-bottom:1px dashed var(--line)}
+.kv:last-of-type{border-bottom:0}
+.kv span{color:var(--muted)}
+.kv b{font-weight:600;text-align:right}
+.hero{margin:12px 0 6px;padding:12px;border-radius:10px;background:var(--navy);color:#fff}
+.hero small{display:block;font-size:12px;color:#c9d3e3}
+.hero strong{font-size:26px;font-weight:900;letter-spacing:.01em}
+.hero strong i{font-style:normal;font-size:14px;font-weight:500;margin-left:4px}
+.badge{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:999px;font-weight:500}
+.badge.ok{background:var(--good-soft);color:var(--good)}
+.badge.no{background:#f8e3e3;color:var(--bad)}
+.badge.mid{background:var(--warn-soft);color:var(--warn)}
+.section{margin-top:18px}
+.section h4{margin:0 0 10px;font-size:15px;color:var(--navy);display:flex;align-items:center;gap:8px}
+.section h4::before{content:"";width:4px;height:16px;background:var(--gold);border-radius:2px}
+table.tl{width:100%;border-collapse:collapse;font-size:13px}
+table.tl th,table.tl td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+table.tl th:first-child,table.tl td:first-child{text-align:left}
+table.tl th{color:var(--muted);font-weight:500;font-size:12px}
+table.tl tr.hl td{background:var(--gold-soft);font-weight:700}
+.scroll-x{overflow-x:auto}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+@media (max-width:640px){.vs{grid-template-columns:1fr}}
+.vs > div{padding:16px}
+.vs .without{background:#f3f3f1}
+.vs .with{background:linear-gradient(160deg,#fffaf0,#f5ecdb)}
+.vs h5{margin:0 0 8px;font-size:14px}
+.vs .without h5{color:#5b6272}
+.vs .with h5{color:var(--gold)}
+.vs ul{margin:0;padding-left:0;list-style:none}
+.vs li{padding:6px 0 6px 22px;position:relative;font-size:13.5px;border-bottom:1px dashed rgba(0,0,0,.07)}
+.vs li:last-child{border-bottom:0}
+.vs .without li::before{content:"–";position:absolute;left:4px;color:#8a8f99}
+.vs .with li::before{content:"✓";position:absolute;left:2px;color:var(--gold);font-weight:700}
+.vs .big{font-size:22px;font-weight:900;color:var(--navy);display:block;margin:4px 0 8px}
+.vs .without .big{color:#5b6272}
+.pills4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+@media (max-width:640px){.pills4{grid-template-columns:1fr 1fr}}
+.pill4{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px}
+.pill4 small{color:var(--gold);font-weight:700;font-size:12px;letter-spacing:.06em}
+.pill4 div{font-size:13px;margin-top:2px}
+.note{background:#fff;border-left:4px solid var(--gold);border-radius:8px;padding:12px 14px;font-size:13.5px}
+.note ul{margin:6px 0 0;padding-left:18px}
+.note li{margin:3px 0}
+.advisor{}
+body.client .advisor{display:none!important}
+.chart{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:6px;flex-wrap:wrap}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:5px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:#fff}
+.seg button{border:0;background:transparent;padding:6px 12px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--muted)}
+.seg button.on{background:var(--navy);color:#fff}
+footer.disc{margin-top:22px;font-size:12px;color:var(--muted);text-align:center;line-height:1.7}
+.empty{padding:40px 10px;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <h1>客戶初步規劃試算<small>退休金預備 · 聰明買房｜團隊內部試算＋現場示範</small></h1>
+    <div class="top-actions">
+      <button class="btn ghost" id="btnRandom" title="隨機產生一個客戶情境，給團隊練習">🎲 隨機個案練習</button>
+      <button class="btn ghost on" id="btnAdvisor">顧問模式</button>
+      <button class="btn ghost" id="btnClient">客戶模式</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="layout">
+
+<!-- ========== INPUTS ========== -->
+<aside class="panel inputs">
+  <div class="step">
+    <div class="step-h"><b>1</b><span>行業</span><em>決定收入穩定度</em></div>
+    <div class="chips" id="industry"></div>
+    <div class="row advisor">
+      <label>收入穩定度</label>
+      <div class="chips sm" id="stab"></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><b>2</b><span>年齡區間</span><em id="ageExactWrap"></em></div>
+    <div class="chips" id="ageBin"></div>
+    <div class="row">
+      <label>精確年齡</label>
+      <div class="field" style="width:96px"><input type="number" id="age" min="18" max="70"><span class="unit">歲</span></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><b>3</b><span>月收入</span><em>雙薪可合併家庭收入</em></div>
+    <div class="chips" id="incomeBin"></div>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><b>4</b><span>每月可存金額</span><em>手動輸入</em></div>
+    <div class="field big"><input type="number" id="monthly" inputmode="numeric" step="1000" placeholder="例如 20000"><span class="unit">元 / 月</span></div>
+    <div id="saveRatio"></div>
+    <div class="row">
+      <label>手上現有存款（可不填）</label>
+      <div class="field" style="flex:1;min-width:150px"><input type="number" id="lump" step="10000" placeholder="0"><span class="unit">元</span></div>
+    </div>
+    <div class="row"><label class="toggle"><input type="checkbox" id="useLump"> 存款也一起投入規劃</label></div>
+  </div>
+
+  <div class="step">
+    <div class="step-h"><b>5</b><span>規劃目的</span></div>
+    <div class="mode" id="mode">
+      <button data-v="retire"><b>退休金預備</b><small>現在開始存，退休每月有錢領</small></button>
+      <button data-v="house"><b>聰明買房</b><small>先存保單再買房，房貸變輕</small></button>
+    </div>
+
+    <div id="retireInputs">
+      <div class="grid2" style="margin-top:10px">
+        <div><label class="mini">預計開始領的年齡</label><div class="field"><input type="number" id="retireAge" min="30" max="80"><span class="unit">歲</span></div></div>
+        <div><label class="mini">目標每月退休金（可不填）</label><div class="field"><input type="number" id="target" step="1000" placeholder="例如 40000"><span class="unit">元</span></div></div>
+      </div>
+    </div>
+
+    <div id="houseInputs">
+      <div class="grid2" style="margin-top:10px">
+        <div><label class="mini">已準備頭期款</label><div class="field"><input type="number" id="down" step="100000"><span class="unit">元</span></div></div>
+        <div><label class="mini">頭期款成數</label>
+          <div class="seg" id="downRatio"><button data-v="0.2">2 成</button><button data-v="0.3">3 成</button></div>
+        </div>
+        <div><label class="mini">房貸利率</label><div class="field"><input type="number" id="rate" step="0.05"><span class="unit">%</span></div></div>
+        <div><label class="mini">寬限期</label><div class="field"><input type="number" id="grace" min="0" max="5"><span class="unit">年</span></div></div>
+        <div><label class="mini">貸款年期</label><div class="field"><input type="number" id="loanYears" min="10" max="40"><span class="unit">年</span></div></div>
+        <div><label class="mini">等待期間每月房租</label><div class="field"><input type="number" id="rent" step="1000" placeholder="住家裡填 0"><span class="unit">元</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <details class="adv advisor">
+    <summary>⚙️ 進階設定（匯率、門檻、提領率）</summary>
+    <div class="grid2">
+      <div><label>匯率（建議保守抓 31）</label><div class="field"><input type="number" id="fx" step="0.1"><span class="unit">TWD/USD</span></div></div>
+      <div><label>定存年利率（對照組）</label><div class="field"><input type="number" id="bank" step="0.1"><span class="unit">%</span></div></div>
+      <div><label>五年期門檻／年 <span id="th5note"></span></label><div class="field"><input type="number" id="th5" step="500"><span class="unit">USD</span></div></div>
+      <div><label>兩年期門檻／年</label><div class="field"><input type="number" id="th2" step="500"><span class="unit">USD</span></div></div>
+      <div><label>自訂五年期年繳（可不填）</label><div class="field"><input type="number" id="custom5" step="500" placeholder="自動"><span class="unit">USD</span></div></div>
+      <div><label>自訂兩年期年繳（可不填）</label><div class="field"><input type="number" id="custom2" step="500" placeholder="自動"><span class="unit">USD</span></div></div>
+    </div>
+    <div class="mini" style="margin-top:12px">五年期提領率（第 6／11／16 年，之後每 10 年翻倍）</div>
+    <div class="grid2" style="grid-template-columns:repeat(3,1fr)">
+      <div class="field"><input type="number" id="r5a" step="0.5"><span class="unit">%</span></div>
+      <div class="field"><input type="number" id="r5b" step="0.5"><span class="unit">%</span></div>
+      <div class="field"><input type="number" id="r5c" step="0.5"><span class="unit">%</span></div>
+    </div>
+    <div class="mini" style="margin-top:10px">兩年期提領率（第 3／6／11 年；安達第 3 年為 4%）</div>
+    <div class="grid2" style="grid-template-columns:repeat(3,1fr)">
+      <div class="field"><input type="number" id="r2a" step="0.5"><span class="unit">%</span></div>
+      <div class="field"><input type="number" id="r2b" step="0.5"><span class="unit">%</span></div>
+      <div class="field"><input type="number" id="r2c" step="0.5"><span class="unit">%</span></div>
+    </div>
+    <div class="row"><button class="btn" id="btnReset" style="border-color:var(--line)">恢復預設值</button></div>
+  </details>
+</aside>
+
+<!-- ========== RESULTS ========== -->
+<main class="panel" id="results"></main>
+
+</div>
+<footer class="disc">本工具依課程經驗法則（提領率「記前三個、之後每 10 年翻倍」）估算，僅供初步規劃與溝通使用，非保證收益。<br>實際保費、提領金額與保單價值，以保險公司正式建議書為準。</footer>
+</div>
+
+<script>
+/* ---------- 選項 ---------- */
+const INDUSTRIES = [
+  ['公務員／教職','high'],['醫師／牙醫師','high'],['醫事人員','high'],['工程師／科技業','high'],['金融業','high'],
+  ['行政／上班族','mid'],['業務（有底薪）','mid'],['服務業／餐飲','mid'],['自營商／老闆','mid'],
+  ['純業務／佣金制','low'],['直銷','low'],['自由接案／斜槓','low']
+];
+const STAB = {
+  high:{label:'穩定',rate:2.5,text:'收入穩定：兩年期、五年期都可以。負擔得起可以考慮兩年期，回本比較快。'},
+  mid:{label:'普通',rate:2.5,text:'收入普通：建議五年期，把壓力分散開。'},
+  low:{label:'波動大',rate:3,text:'收入波動大：連五年期都要保守，金額抓寬鬆一點，先求有再求好。房貸利率也抓高一點（3%）。'}
+};
+const AGE_BINS = [20,25,30,35,40,45,50,55,60];
+const INCOME_BINS = [['3 萬以下',2.5],['3–4 萬',3.5],['4–5 萬',4.5],['5–6 萬',5.5],['6–8 萬',7],['8–10 萬',9],['10–15 萬',12.5],['15 萬以上',18]];
+
+const th5Default = () => (new Date() < new Date('2027-01-01') ? 4000 : 6000);
+const DEFAULTS = {
+  industry:5, stab:'mid', ageBin:25, age:25, incomeBin:1, monthly:20000, lump:0, useLump:false,
+  mode:'retire', retireAge:65, target:'',
+  down:3000000, downRatio:0.2, rate:2.5, grace:3, loanYears:30, rent:0,
+  fx:31, bank:1.5, th5:th5Default(), th2:15000, custom5:'', custom2:'',
+  r5:[5,7,10], r2:[4.5,6,9], plan:null, houseUse:'offset'
+};
+let S = JSON.parse(JSON.stringify(DEFAULTS));
+try{ const saved = JSON.parse(localStorage.getItem('planner-v1')||'null'); if(saved) S = Object.assign(S, saved); }catch(e){}
+const save = () => { try{ localStorage.setItem('planner-v1', JSON.stringify(S)); }catch(e){} };
+
+/* ---------- 格式 ---------- */
+const $ = id => document.getElementById(id);
+const num = v => { const n = parseFloat(v); return isFinite(n) ? n : 0; };
+function twd(n){
+  n = Math.round(n);
+  const a = Math.abs(n);
+  if(a >= 1e8) return (n/1e8).toFixed(2).replace(/\.?0+$/,'') + ' 億';
+  if(a >= 1e6) return Math.round(n/1e4).toLocaleString() + ' 萬';
+  if(a >= 1e4) return (n/1e4).toFixed(1).replace(/\.0$/,'') + ' 萬';
+  return n.toLocaleString() + ' 元';
+}
+const twdFull = n => Math.round(n).toLocaleString() + ' 元';
+const usd = n => Math.round(n).toLocaleString() + ' 美';
+
+/* ---------- 提領率：記前三個，之後每 10 年翻倍 ---------- */
+function anchors(product){
+  return product === '5' ? [[6,S.r5[0]],[11,S.r5[1]],[16,S.r5[2]]] : [[3,S.r2[0]],[6,S.r2[1]],[11,S.r2[2]]];
+}
+function rateAt(product, py){
+  // 兩年期第 3 年只是「最快可領」的點，不往後翻倍（避免和第 6／11 年的序列重疊）
+  for(const [y,r] of anchors(product)){
+    if(product === '2' && y === 3){ if(py === 3) return r; continue; }
+    if(py >= y && (py - y) % 10 === 0) return r * Math.pow(2, (py - y) / 10);
+  }
+  return null;
+}
+// 不超過 py 的最近一個可提領年度
+function bestRate(product, py){
+  for(let y = Math.floor(py); y >= 1; y--){ const r = rateAt(product, y); if(r !== null) return {year:y, rate:r}; }
+  return null;
+}
+function rateSchedule(product, maxPy){
+  const out = [];
+  for(let y = 1; y <= maxPy; y++){ const r = rateAt(product, y); if(r !== null) out.push({year:y, rate:r}); }
+  return out;
+}
+
+/* ---------- 保單方案 ---------- */
+function plans(){
+  const fx = S.fx, m = num(S.monthly), lump = S.useLump ? num(S.lump) : 0;
+  const p5 = num(S.custom5) || (m*12 + lump/5) / fx;
+  const p2 = num(S.custom2) || (lump + m*12) / 2 / fx;
+  return {
+    '5': {key:'5', name:'五年期', years:5, annual:p5, total:p5*5, th:S.th5, custom:!!num(S.custom5)},
+    '2': {key:'2', name:'兩年期', years:2, annual:p2, total:p2*2, th:S.th2, custom:!!num(S.custom2)}
+  };
+}
+function recommendPlan(P){
+  if(S.stab === 'low') return '5';
+  if(S.stab === 'high' && P['2'].annual >= P['2'].th) return '2';
+  return '5';
+}
+
+/* ---------- 房貸 ---------- */
+function mortgage(loan, ratePct, years, grace){
+  const i = ratePct/100/12, gm = grace*12, n = years*12 - gm;
+  const pay = i === 0 ? loan/n : loan*i/(1 - Math.pow(1+i, -n));
+  const gracePay = loan*i;
+  const total = gracePay*gm + pay*n;
+  return {i, gm, n, pay, gracePay, total, interest: total - loan};
+}
+// 每年把提領金額拿去還本金，月付金額維持不變 → 提早還清
+function prepaySim(loan, M, prepayFromMonth, annualPrepay){
+  let bal = loan, interest = 0, m = 0;
+  while(bal > 0.5 && m < 600){
+    m++;
+    if(m >= prepayFromMonth && (m - prepayFromMonth) % 12 === 0){ bal = Math.max(0, bal - annualPrepay); if(bal <= 0.5) break; }
+    const it = bal*M.i; interest += it;
+    if(m <= M.gm){ continue; }
+    const principal = Math.min(bal, M.pay - it);
+    bal -= principal;
+  }
+  return {months:m, interest};
+}
+
+/* ---------- 輸入 UI ---------- */
+function chipGroup(el, items, isOn, onPick){
+  el.innerHTML = '';
+  items.forEach((it, idx) => {
+    const b = document.createElement('button');
+    b.className = 'chip' + (isOn(it, idx) ? ' on' : '');
+    b.textContent = it.label;
+    b.onclick = () => { onPick(it, idx); update(); };
+    el.appendChild(b);
+  });
+}
+function renderInputs(){
+  chipGroup($('industry'), INDUSTRIES.map(([label,stab])=>({label,stab})), (_,i)=>i===S.industry,
+    (it,i)=>{ S.industry=i; S.stab=it.stab; S.rate=STAB[it.stab].rate; S.plan=null; });
+  chipGroup($('stab'), Object.entries(STAB).map(([k,v])=>({label:v.label,k})), it=>it.k===S.stab,
+    it=>{ S.stab=it.k; S.rate=STAB[it.k].rate; S.plan=null; });
+  chipGroup($('ageBin'), AGE_BINS.map(a=>({label:`${a}–${a+5}`,a})), it=>it.a===S.ageBin,
+    it=>{ S.ageBin=it.a; S.age=it.a; });
+  chipGroup($('incomeBin'), INCOME_BINS.map(([label])=>({label})), (_,i)=>i===S.incomeBin,
+    (_,i)=>{ S.incomeBin=i; });
+  document.querySelectorAll('#mode button').forEach(b=>{
+    b.classList.toggle('on', b.dataset.v===S.mode);
+    b.onclick=()=>{ S.mode=b.dataset.v; update(); };
+  });
+  document.querySelectorAll('#downRatio button').forEach(b=>{
+    b.classList.toggle('on', +b.dataset.v===S.downRatio);
+    b.onclick=()=>{ S.downRatio=+b.dataset.v; update(); };
+  });
+  $('retireInputs').style.display = S.mode==='retire' ? '' : 'none';
+  $('houseInputs').style.display = S.mode==='house' ? '' : 'none';
+  $('th5note').textContent = new Date() < new Date('2027-01-01') ? '（2026 年底前 4,000，2027 起 6,000）' : '';
+}
+const FIELDS = ['age','monthly','lump','retireAge','target','down','rate','grace','loanYears','rent','fx','bank','th5','th2','custom5','custom2'];
+function fillFields(){
+  FIELDS.forEach(k => { const el=$(k); if(document.activeElement!==el) el.value = S[k]===''?'':S[k]; });
+  ['r5a','r5b','r5c'].forEach((k,i)=>{ if(document.activeElement!==$(k)) $(k).value=S.r5[i]; });
+  ['r2a','r2b','r2c'].forEach((k,i)=>{ if(document.activeElement!==$(k)) $(k).value=S.r2[i]; });
+  $('useLump').checked = S.useLump;
+}
+FIELDS.forEach(k => $(k).addEventListener('input', e => {
+  const v = e.target.value;
+  S[k] = (k==='target'||k==='custom5'||k==='custom2') ? (v===''?'':num(v)) : num(v);
+  if(k==='age'){ const b = AGE_BINS.filter(a=>a<=S.age).pop(); if(b!==undefined) S.ageBin=b; }
+  if(k==='custom5'||k==='custom2') S.plan=null;
+  update(false);
+}));
+['r5a','r5b','r5c'].forEach((k,i)=>$(k).addEventListener('input',e=>{S.r5[i]=num(e.target.value);update(false);}));
+['r2a','r2b','r2c'].forEach((k,i)=>$(k).addEventListener('input',e=>{S.r2[i]=num(e.target.value);update(false);}));
+$('useLump').addEventListener('change',e=>{S.useLump=e.target.checked;S.plan=null;update();});
+$('btnReset').onclick=()=>{ ['fx','bank','th5','th2','custom5','custom2','r5','r2'].forEach(k=>S[k]=JSON.parse(JSON.stringify(DEFAULTS[k]))); S.plan=null; update(); };
+$('btnAdvisor').onclick=()=>{document.body.classList.remove('client');$('btnAdvisor').classList.add('on');$('btnClient').classList.remove('on');};
+$('btnClient').onclick=()=>{document.body.classList.add('client');$('btnClient').classList.add('on');$('btnAdvisor').classList.remove('on');};
+$('btnRandom').onclick=()=>{
+  const pick = a => a[Math.floor(Math.random()*a.length)];
+  S.industry = Math.floor(Math.random()*INDUSTRIES.length); S.stab = INDUSTRIES[S.industry][1]; S.rate = STAB[S.stab].rate;
+  S.ageBin = pick(AGE_BINS.slice(0,7)); S.age = S.ageBin + Math.floor(Math.random()*5);
+  S.incomeBin = Math.floor(Math.random()*7);
+  const inc = INCOME_BINS[S.incomeBin][1]*1e4;
+  S.monthly = Math.max(5000, Math.round(inc*(0.15+Math.random()*0.35)/1000)*1000);
+  S.lump = pick([0,0,100000,300000,500000,1500000]); S.useLump = S.lump>0 && Math.random()<0.5;
+  S.mode = pick(['retire','house']); S.target = '';
+  S.down = pick([1500000,2000000,3000000,4000000]); S.rent = pick([0,0,12000,18000]);
+  S.custom5=''; S.custom2=''; S.plan=null;
+  update();
+};
+
+/* ---------- 圖表 ---------- */
+function lineChart(series, opts){
+  const W=720,H=240,pl=56,pr=14,pt=14,pb=30;
+  const xs = series[0].pts.map(p=>p[0]);
+  const xmin=Math.min(...xs), xmax=Math.max(...xs);
+  let ymax = Math.max(1,...series.flatMap(s=>s.pts.map(p=>p[1])));
+  const step = Math.pow(10, Math.floor(Math.log10(ymax)))/2; ymax = Math.ceil(ymax*1.08/step)*step;
+  const X = x => pl + (x-xmin)/(xmax-xmin||1)*(W-pl-pr);
+  const Y = y => pt + (1 - y/ymax)*(H-pt-pb);
+  let g = '';
+  for(let k=0;k<=4;k++){ const v=ymax*k/4, y=Y(v);
+    g += `<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" stroke="#e3e0d8"/>`;
+    g += `<text x="${pl-6}" y="${y+4}" font-size="11" text-anchor="end" fill="#6b7385">${opts.yfmt(v)}</text>`; }
+  const tickEvery = Math.ceil((xmax-xmin)/8/5)*5 || 1;
+  for(let x=xmin; x<=xmax; x++){ if((x-xmin)%tickEvery) continue;
+    g += `<text x="${X(x)}" y="${H-10}" font-size="11" text-anchor="middle" fill="#6b7385">${opts.xfmt(x)}</text>`; }
+  series.forEach(s=>{
+    const d = s.pts.map((p,i)=>{ const x=X(p[0]), y=Y(p[1]); if(!s.step) return (i?'L':'M')+x+','+y;
+      if(!i) return 'M'+x+','+y; const py=Y(s.pts[i-1][1]); return `L${x},${py}L${x},${y}`; }).join('');
+    g += `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${s.w||2.5}" ${s.dash?'stroke-dasharray="5 4"':''} stroke-linejoin="round"/>`;
+  });
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">${g}</svg>
+    <div class="legend">${series.map(s=>`<span><i style="background:${s.color}"></i>${s.name}</span>`).join('')}</div>`;
+}
+
+/* ---------- 結果：共用 ---------- */
+function profileLine(){
+  return `${INDUSTRIES[S.industry][0]}｜${S.age} 歲｜月收入 ${INCOME_BINS[S.incomeBin][0]}｜每月可存 ${twdFull(num(S.monthly))}`;
+}
+function planCard(p, selKey, recKey, extraHtml){
+  const ok = p.annual >= p.th;
+  const gapMonthly = (p.th - p.annual) * S.fx * (p.key==='2'?2:1) / 12;
+  return `<div class="plan ${p.key===selKey?'sel':''}" data-plan="${p.key}">
+    ${p.key===recKey?'<span class="tag">建議</span>':''}
+    <h3>${p.name} ${ok?'<span class="badge ok">達門檻</span>':'<span class="badge no">未達門檻</span>'}</h3>
+    <div class="sub">繳 ${p.years} 年${p.custom?'（自訂保費）':''}</div>
+    <div class="kv"><span>年繳保費</span><b>${usd(p.annual)}<br><small class="mini">約 ${twd(p.annual*S.fx)}</small></b></div>
+    <div class="kv"><span>總保費</span><b>${usd(p.total)}（約 ${twd(p.total*S.fx)}）</b></div>
+    ${ok?'':`<div class="hint warn">門檻 ${usd(p.th)}／年，每月還差約 ${twd(gapMonthly)}${p.key==='2'?'（含現有存款一起算）':''}</div>`}
+    ${extraHtml||''}
+  </div>`;
+}
+function bindPlanCards(){
+  document.querySelectorAll('.plan[data-plan]').forEach(el=>el.onclick=()=>{ S.plan=el.dataset.plan; update(); });
+}
+
+/* ---------- 退休模式 ---------- */
+function retireCalc(p){
+  const startPy = S.retireAge - S.age + 1;
+  const br = bestRate(p.key, startPy);
+  if(!br) return null;
+  const annualUsd = p.total * br.rate/100;
+  const monthlyTwd = annualUsd * S.fx / 12;
+  const startAge = S.age + br.year - 1;
+  const to85 = Math.max(0, 85 - startAge + 1) * annualUsd * S.fx;
+  return {py:br.year, rate:br.rate, annualUsd, monthlyTwd, startAge, to85};
+}
+function bankCompare(p, R){
+  const r = S.bank/100/12, months = p.years*12, dep = p.total*S.fx/months;
+  let bal = 0;
+  for(let m=0;m<months;m++) bal = bal*(1+r) + dep;
+  const growMonths = (R.startAge - (S.age + p.years)) * 12;
+  for(let m=0;m<growMonths;m++) bal *= (1+r);
+  const atStart = bal; let last = 0;
+  while(bal > 0 && last < 600){ bal = bal*(1+r) - R.monthlyTwd; last++; }
+  return {atStart, lastsYears:last/12, endAge:R.startAge + last/12};
+}
+function renderRetire(){
+  const P = plans(), rec = recommendPlan(P), sel = S.plan || rec, p = P[sel];
+  const R5 = retireCalc(P['5']), R2 = retireCalc(P['2']);
+  const extra = (R) => R ? `<div class="hero"><small>${R.startAge} 歲起每月可領（第 ${R.py} 年 · ${+R.rate.toFixed(2)}%）</small><strong>${twd(R.monthlyTwd)}<i>/ 月</i></strong></div>` : `<div class="hint warn">開始領的年齡太早，還不到可提領年度</div>`;
+  let html = `<div class="res-h"><h2>退休金預備試算</h2><div class="profile">${profileLine()}</div></div>`;
+  html += `<div class="hint advisor">${STAB[S.stab].text}${S.age>=50?'<br>⚠️ 50 歲以上做退休金試算意義較小，可改聊資產傳承或現金流配置。':''}</div>`;
+  html += `<div class="cards" style="margin-top:14px">${planCard(P['5'],sel,rec,extra(R5))}${planCard(P['2'],sel,rec,extra(R2))}</div>`;
+  html += `<div class="mini" style="margin-top:6px">點選方案卡，下面的時間表和對比會跟著切換。</div>`;
+
+  const R = sel==='5'?R5:R2;
+  if(!num(S.monthly) && !p.custom){ $('results').innerHTML = html + `<div class="empty">輸入「每月可存金額」就會開始試算</div>`; bindPlanCards(); return; }
+  if(!R){ $('results').innerHTML = html; bindPlanCards(); return; }
+
+  // 目標回推
+  const tgt = num(S.target);
+  if(tgt){
+    const needTotal = tgt*12/S.fx/(R.rate/100), needAnnual = needTotal/p.years;
+    const needMonthly = sel==='5' ? needAnnual*S.fx/12 : (needAnnual*2*S.fx - (S.useLump?num(S.lump):0))/12;
+    const okT = R.monthlyTwd >= tgt;
+    html += `<div class="section"><h4>目標回推</h4><div class="hint ${okT?'good':'warn'}">
+      想要 ${R.startAge} 歲起每月領 <b>${twdFull(tgt)}</b>，${p.name}年繳約需 <b>${usd(needAnnual)}</b>，換算每月要存約 <b>${twd(Math.max(0,needMonthly))}</b>。
+      ${okT?'目前的存款能力已經達標 👍':`目前每月 ${twd(num(S.monthly))}，${needMonthly>0?`還差約 ${twd(needMonthly-num(S.monthly))}／月`:''}；可以溝通調整目標、延後開始領的年齡，或先求有再求好。`}
+    </div></div>`;
+  }
+
+  // 提領時間表
+  const maxPy = Math.min(60, 90 - S.age + 1);
+  const sched = rateSchedule(sel, maxPy).filter(s => S.age + s.year - 1 >= Math.min(R.startAge, 45) || s.year >= R.py - 15);
+  html += `<div class="section"><h4>${p.name}｜越晚領，每月越多</h4><div class="scroll-x"><table class="tl">
+    <tr><th>開始領</th><th>保單第幾年</th><th>提領率</th><th>每年領</th><th>每月領</th></tr>
+    ${sched.map(s=>{ const a = p.total*s.rate/100; return `<tr class="${s.year===R.py?'hl':''}"><td>${S.age+s.year-1} 歲</td><td>第 ${s.year} 年</td><td>${+s.rate.toFixed(2)}%</td><td>${usd(a)}</td><td>${twd(a*S.fx/12)}</td></tr>`; }).join('')}
+  </table></div><div class="mini" style="margin-top:6px">提領率口訣：記住前三個數字，之後每 10 年翻一倍；提領金額以「總保費」計算，開始領之後每年固定領。</div></div>`;
+
+  // 對比
+  const B = bankCompare(p, R);
+  const totalTwd = p.total*S.fx;
+  const lastsTxt = B.lastsYears >= 50 ? '超過 50 年' : `約 ${B.lastsYears.toFixed(1)} 年，${Math.floor(B.endAge)} 歲就領完`;
+  html += `<div class="section"><h4>沒規劃 vs. 有規劃</h4>
+  <div class="vs">
+    <div class="without"><h5>同樣的錢放定存（年利率 ${S.bank}%）</h5>
+      <span class="big">${lastsTxt}</span>
+      <ul>
+        <li>一樣存 ${p.years} 年、共 ${twd(totalTwd)}</li>
+        <li>到 ${R.startAge} 歲本利和約 ${twd(B.atStart)}</li>
+        <li>每月領 ${twd(R.monthlyTwd)}，${B.lastsYears>=50?'可以撐很久，但金額不會成長':'很快就會坐吃山空'}</li>
+        <li>領完就沒有了，後面的日子要靠別的收入</li>
+      </ul></div>
+    <div class="with"><h5>用${p.name}保單規劃</h5>
+      <span class="big">每月 ${twd(R.monthlyTwd)}・領到終身</span>
+      <ul>
+        <li>只要繳 ${p.years} 年，總投入 ${twd(totalTwd)}</li>
+        <li>${R.startAge} 歲起每年領 ${usd(R.annualUsd)}（約 ${twd(R.annualUsd*S.fx)}）</li>
+        <li>領到 85 歲累積約 <b>${twd(R.to85)}</b>，是投入的 <b>${(R.to85/totalTwd).toFixed(1)} 倍</b></li>
+        <li>邊領邊滾，保單價值還在，可以留給家人（以建議書為準）</li>
+      </ul></div>
+  </div>
+  <div class="pills4">
+    <div class="pill4"><small>時間</small><div>只用 ${p.years} 年，完成別人要存幾十年的退休金</div></div>
+    <div class="pill4"><small>總金額</small><div>總投入 ${twd(totalTwd)}，到 85 歲領回約 ${twd(R.to85)}</div></div>
+    <div class="pill4"><small>現金流</small><div>${R.startAge} 歲起每月 ${twd(R.monthlyTwd)}，活多久領多久</div></div>
+    <div class="pill4"><small>生活品質</small><div>繳完之後不用再存退休金，之後賺的錢可以好好享受人生</div></div>
+  </div></div>`;
+
+  // 圖：累積領回 vs 定存餘額
+  const pts1=[],pts2=[]; let bal=B.atStart, cum=0; const r=S.bank/100/12;
+  for(let a=R.startAge; a<=90; a++){
+    pts1.push([a, cum]); pts2.push([a, Math.max(0,bal)]);
+    for(let m=0;m<12;m++){ bal = bal*(1+r) - R.monthlyTwd; }
+    cum += R.annualUsd*S.fx;
+  }
+  html += `<div class="section"><h4>領錢之後的變化</h4>${lineChart([
+    {name:'保單累積領回', color:'#b08a46', pts:pts1},
+    {name:'定存剩餘金額', color:'#8a93a6', pts:pts2, dash:true}
+  ], {xfmt:x=>x+'歲', yfmt:v=>v>=1e4?Math.round(v/1e4).toLocaleString()+'萬':v})}</div>`;
+
+  html += advisorNotesRetire(p);
+  $('results').innerHTML = html; bindPlanCards();
+}
+function advisorNotesRetire(p){
+  return `<div class="section advisor"><h4>顧問筆記（客戶模式會隱藏）</h4><div class="note"><ul>
+    <li>推薦適合他的，不是把自己懂的全部講出來。負擔不了兩年期就不要硬推，不然他會說「等我兩年後存到錢再來」，然後就沒有然後了。</li>
+    <li>兩年期的第二期在<b>第 13 個月</b>就要繳，不是第 24 個月。存款不夠的話，要確認他 12 個月內湊得出第二期。</li>
+    <li>保費抓不到時的順序：① 先確認他是不是真的沒有（客戶不一定會講出全部的財務狀況）→ ② 問他「你自己的打算是什麼」，讓他自己想辦法 → ③ 真的不行才降金額，先求有再求好。</li>
+    <li>客戶原本有在定期定額買 ETF 的話，不用叫他停掉，可以談「保底層＋成長層」的資產配置。</li>
+    <li>匯率保守抓 31～31.5；提領金額是估算，正式數字以建議書為準。</li>
+  </ul></div></div>`;
+}
+
+/* ---------- 買房模式 ---------- */
+function renderHouse(){
+  const P = plans(), p = P['5'];
+  const m = num(S.monthly), fx = S.fx;
+  const price = num(S.down)/S.downRatio, loan = price - num(S.down);
+  const M = mortgage(loan, S.rate, S.loanYears, S.grace);
+  const income = INCOME_BINS[S.incomeBin][1]*1e4;
+  const ratio = M.pay/income;
+  // 保單（買房模式只用每月可存金額，不含現有存款）
+  const annualPrem = num(S.custom5) || m*12/fx;
+  const totalPrem = annualPrem*5;
+  const w = bestRate('5', 11);
+  const wAnnualTwd = totalPrem*w.rate/100*fx, wMonthly = wAnnualTwd/12;
+  const ok = annualPrem >= S.th5;
+  const graceY = S.grace, Y = S.loanYears;
+  // B：第 6 年買房 → 保單第 11 年 = 房貸第 6 年
+  const wStartLoanMonth = 61;
+  const PP = prepaySim(loan, M, wStartLoanMonth, wAnnualTwd);
+  const offsetPct = Math.min(1, wMonthly/M.pay);
+  const prepay = S.houseUse==='prepay';
+  const ageA = S.age + Y, ageB = S.age + 5 + Y, ageBp = S.age + 5 + Math.ceil(PP.months/12);
+  const payoffAgeB = prepay ? ageBp : ageB;
+  const rentTotal = num(S.rent)*60;
+  const cumW = (toAge) => Math.max(0, toAge - (S.age+10) + 1) * wAnnualTwd; // 保單第 11 年（S.age+10 歲）起領
+
+  let html = `<div class="res-h"><h2>聰明買房試算</h2><div class="profile">${profileLine()}</div></div>`;
+  html += `<div class="cards">
+    <div class="plan" style="cursor:default"><h3>房子推算</h3><div class="sub">頭期款 ${twd(num(S.down))} ÷ ${S.downRatio*10} 成</div>
+      <div class="kv"><span>可買總價</span><b>${twd(price)}</b></div>
+      <div class="kv"><span>貸款金額</span><b>${twd(loan)}</b></div>
+      <div class="kv"><span>利率／年期</span><b>${S.rate}%／${Y} 年（寬限 ${graceY} 年）</b></div>
+      <div class="kv"><span>寬限期每月</span><b>${twdFull(M.gracePay)}</b></div>
+      <div class="kv"><span>寬限期後每月</span><b>${twdFull(M.pay)}</b></div>
+      <div class="kv"><span>總共要繳</span><b>${twd(M.total)}<br><small class="mini">其中利息 ${twd(M.interest)} 給銀行</small></b></div>
+      <div class="hint ${ratio>1/3?'warn':'good'}">房貸佔月收入約 ${(ratio*100).toFixed(0)}%${ratio>1/3?'，超過 1/3，生活品質會很吃緊；可以聊雙薪合併計算或降低總價':'，在 1/3 以內，負擔健康'}</div>
+    </div>
+    <div class="plan sel" style="cursor:default"><h3>保單（五年期）${ok?'<span class="badge ok">達門檻</span>':'<span class="badge no">未達門檻</span>'}</h3><div class="sub">頭 5 年把「每月可存 ${twd(m)}」先存進保單</div>
+      <div class="kv"><span>年繳保費</span><b>${usd(annualPrem)}（約 ${twd(annualPrem*fx)}）</b></div>
+      <div class="kv"><span>總保費</span><b>${usd(totalPrem)}（約 ${twd(totalPrem*fx)}）</b></div>
+      <div class="kv"><span>第 6～10 年</span><b>保單放著不動</b></div>
+      <div class="kv"><span>第 11 年起每年領</span><b>${+w.rate.toFixed(2)}%＝${twd(wAnnualTwd)}</b></div>
+      <div class="hero"><small>平均每月領回</small><strong>${twd(wMonthly)}<i>/ 月</i></strong></div>
+      ${ok?'':`<div class="hint warn">五年期門檻 ${usd(S.th5)}／年，每月還差約 ${twd((S.th5-annualPrem)*fx/12)}</div>`}
+      ${m < M.pay*0.9 ? `<div class="hint advisor">每月可存（${twd(m)}）比房貸月付（${twd(M.pay)}）少，代表他未來繳房貸也會吃緊，建議先確認還款能力。</div>`:''}
+    </div>
+  </div>`;
+  html += `<div class="hint advisor" style="margin-top:12px">${STAB[S.stab].text}</div>`;
+
+  html += `<div class="section"><h4>領到的錢怎麼用</h4>
+    <div class="seg" id="houseUse"><button data-v="offset">直接抵房貸</button><button data-v="prepay">拿去還本金（更划算）</button></div>
+    <div class="mini" style="margin-top:6px">${prepay?'每年領到的錢直接拿去還本金，每月照常繳，本金越還越少，可以提早還完。':'每月房貸減掉保單領回的錢，自己實際付的變少。'}</div></div>`;
+
+  // 時間軸
+  const rowsA = [
+    [`第 1～${graceY} 年（${S.age}～${S.age+graceY-1} 歲）`, `寬限期，每月 ${twd(M.gracePay)}`],
+    [`第 ${graceY+1}～${Y} 年`, `每月 ${twd(M.pay)}`],
+    [`第 ${Y} 年（${ageA} 歲）`, '繳清，只剩一間自住的房子']
+  ];
+  const rowsB = [
+    [`第 1～5 年（${S.age}～${S.age+4} 歲）`, `先不買房，每月 ${twd(m)} 存保單${num(S.rent)?`；房租每月 ${twd(num(S.rent))}`:'（住家裡最理想）'}`],
+    [`第 6 年（${S.age+5} 歲）`, `用同一筆頭期款買房，保單放著不動`],
+    [`第 6～${5+graceY} 年`, `寬限期，每月 ${twd(M.gracePay)}`],
+    [`第 11 年起（${S.age+10} 歲）`, prepay ? `每年領 ${twd(wAnnualTwd)} 拿去還本金，月付照常 ${twd(M.pay)}` : `每月房貸 ${twd(M.pay)} − 保單 ${twd(wMonthly)} ＝ 實付 ${twd(Math.max(0,M.pay-wMonthly))}`],
+    [`${payoffAgeB} 歲`, `房貸繳清${prepay?`（比正常提早 ${ageB-ageBp} 年）`:''}，保單每月 ${twd(wMonthly)} 繼續領`]
+  ];
+  html += `<div class="section"><h4>兩種走法的時間軸</h4><div class="cards">
+    <div class="plan" style="cursor:default"><h3 style="color:#5b6272">A｜直接買</h3>${rowsA.map(r=>`<div class="kv"><span>${r[0]}</span><b>${r[1]}</b></div>`).join('')}</div>
+    <div class="plan sel" style="cursor:default"><h3>B｜聰明買房</h3>${rowsB.map(r=>`<div class="kv"><span>${r[0]}</span><b>${r[1]}</b></div>`).join('')}</div>
+  </div></div>`;
+
+  // 圖：每月房貸自付
+  const ptsA=[], ptsB=[], horizon = Math.max(Y, 5 + (prepay?Math.ceil(PP.months/12):Y)) + 3;
+  const payoffYearB = prepay ? 5 + Math.ceil(PP.months/12) : 5 + Y;
+  for(let y=1; y<=horizon; y++){
+    ptsA.push([y, y<=graceY?M.gracePay : y<=Y?M.pay : 0]);
+    let b;
+    if(y<=5) b = num(S.rent);
+    else { const ly = y-5;
+      if(y > payoffYearB) b = 0;
+      else if(ly<=graceY) b = M.gracePay;
+      else b = (y>=11 && !prepay) ? Math.max(0, M.pay - wMonthly) : M.pay; }
+    ptsB.push([y,b]);
+  }
+  html += `<div class="section"><h4>每月實際付給房子的錢</h4>${lineChart([
+    {name:'A 直接買', color:'#8a93a6', pts:ptsA, step:true},
+    {name:'B 聰明買房'+(num(S.rent)?'（前 5 年為房租）':''), color:'#b08a46', pts:ptsB, step:true}
+  ], {xfmt:x=>`${S.age+x-1}歲`, yfmt:v=>v?(v/1e4).toFixed(1).replace(/\.0$/,'')+'萬':'0'})}</div>`;
+
+  // 對比
+  const interestSaved = M.interest - PP.interest;
+  const cum85 = cumW(85);
+  html += `<div class="section"><h4>沒用工具 vs. 用了聰明買房</h4>
+  <div class="vs">
+    <div class="without"><h5>A｜存好頭期款就直接買</h5>
+      <span class="big">${ageA} 歲：一間房子</span>
+      <ul>
+        <li>${Y} 年總共繳 ${twd(M.total)}，利息 ${twd(M.interest)} 給銀行</li>
+        <li>每月房貸 ${twd(M.pay)}，全部自己扛</li>
+        <li>繳完房貸沒有現金流，房子是自住的，也很難拿出來用</li>
+        <li>退休金常常被房貸壓縮掉</li>
+      </ul></div>
+    <div class="with"><h5>B｜先存 5 年保單，第 6 年再買</h5>
+      <span class="big">${payoffAgeB} 歲：房子＋每月 ${twd(wMonthly)}</span>
+      <ul>
+        ${prepay
+          ? `<li>每年領的錢拿去還本金，<b>提早 ${ageB-ageBp} 年</b>還清，少繳利息約 <b>${twd(interestSaved)}</b></li>`
+          : `<li>第 11 年起房貸壓力<b>減輕 ${(offsetPct*100).toFixed(0)}%</b>，每月少付 ${twd(wMonthly)}</li>`}
+        <li>房貸繳完之後，保單每月 ${twd(wMonthly)} 繼續領到終身</li>
+        <li>領到 85 歲累積約 <b>${twd(cum85)}</b>，總投入是 ${twd(totalPrem*fx)}</li>
+        <li>保單價值還在，有急用可以部分提領（以建議書為準）</li>
+      </ul></div>
+  </div>
+  <div class="note" style="margin-top:12px"><b>公平地說，B 方案的代價：</b><ul>
+    <li>晚 5 年入住自己的房子${rentTotal?`，等待期間房租共約 ${twd(rentTotal)}`:'（住家裡最理想，沒有房租支出）'}</li>
+    <li>比較適合房價漲幅有限的區域；如果是正在快速漲價的地段，要把 5 年後的房價一起考慮</li>
+    <li>頭期款要先準備好、放著不動，第 6 年買房時才用</li>
+  </ul></div></div>`;
+
+  html += `<div class="section advisor"><h4>顧問筆記（客戶模式會隱藏）</h4><div class="note"><ul>
+    <li>先確認他是要買自住還是投資。投資用的話，改用「收租約 2% vs 保單」的比較。</li>
+    <li>前提是他已經準備好頭期款，而且有能力每月繳房貸，才把「本來要繳房貸的錢」先存保單。</li>
+    <li>利率：工作穩定抓 2.5%，業務或收入不穩抓 3%。房貸月付抓在收入的 1/3 以內最健康。</li>
+    <li>專業加分：領到的錢拿去還本金，比單純抵每月房貸更划算，付的利息會越來越少。</li>
+    <li>總價可以用房貸試算 App 現場按給客戶看，對方會知道你的數字有根據。</li>
+  </ul></div></div>`;
+
+  $('results').innerHTML = html;
+  document.querySelectorAll('#houseUse button').forEach(b=>{
+    b.classList.toggle('on', b.dataset.v===S.houseUse);
+    b.onclick=()=>{ S.houseUse=b.dataset.v; update(); };
+  });
+}
+
+/* ---------- 每月可存比例 ---------- */
+function renderSaveRatio(){
+  const inc = INCOME_BINS[S.incomeBin][1]*1e4, m = num(S.monthly);
+  if(!m){ $('saveRatio').innerHTML=''; return; }
+  const r = m/inc;
+  const cls = r>0.6?'warn':r>=0.2?'good':'';
+  const txt = r>0.6 ? `佔收入約 ${(r*100).toFixed(0)}%，比例偏高，確認是否住家裡或有其他收入` : `約佔月收入 ${(r*100).toFixed(0)}%`;
+  $('saveRatio').innerHTML = `<div class="hint ${cls}">${txt}</div>`;
+}
+
+function update(full=true){
+  if(full) renderInputs();
+  fillFields();
+  renderSaveRatio();
+  if(S.mode==='retire') renderRetire(); else renderHouse();
+  save();
+}
+update();
+</script>
+</body>
+</html>
