@@ -30,8 +30,8 @@ header.top h1 small{display:block;font-family:"Noto Sans TC";font-size:12px;colo
 .layout{display:grid;grid-template-columns:400px 1fr;gap:20px;margin-top:20px;align-items:start}
 @media (max-width:900px){.layout{grid-template-columns:1fr}}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
-.inputs{position:sticky;top:12px}
-@media (max-width:900px){.inputs{position:static}}
+.inputs{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow-y:auto;overscroll-behavior:contain}
+@media (max-width:900px){.inputs{position:static;max-height:none;overflow:visible}}
 .step{margin-bottom:18px}
 .step:last-child{margin-bottom:0}
 .step-h{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}
@@ -182,6 +182,8 @@ details.needs:not([open]) > summary h2::after{content:" ▸"}
 .sb{position:absolute;top:0;bottom:0;display:flex;align-items:center;padding:0 8px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-right:2px solid #fff}
 .sb.s1{background:#6e7586;color:#fff}.sb.s2{background:#c9ccd3;color:#3b4150}.sb.s3{background:#f2d4d4;color:var(--bad)}
 .sb.t1{background:var(--gold);color:#fff}.sb.t2{background:#f5ecdb;color:var(--gold)}.sb.t3{background:var(--navy);color:#fff}
+.race-legend{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:6px;font-size:13px}
+.race-legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
 .axis{position:relative;height:18px;margin-left:120px;font-size:11px;color:var(--muted)}
 @media (max-width:640px){.axis{margin-left:0}}
 .axis span{position:absolute;transform:translateX(-50%);white-space:nowrap}
@@ -389,6 +391,12 @@ function bestRate(product, py){
   for(let y = Math.floor(py); y >= 1; y--){ const r = rateAt(product, y); if(r !== null) return {year:y, rate:r}; }
   return null;
 }
+// 退休那年不在提領點上 → 找最接近的提領點（一樣近取較早的）
+function nearestRate(product, py){
+  let best = null;
+  rateSchedule(product, 80).forEach(s => { if(!best || Math.abs(s.year-py) < Math.abs(best.year-py)) best = s; });
+  return best && best.year >= 1 ? best : null;
+}
 function rateSchedule(product, maxPy){
   const out = [];
   for(let y = 1; y <= maxPy; y++){ const r = rateAt(product, y); if(r !== null) out.push({year:y, rate:r}); }
@@ -399,7 +407,8 @@ function rateSchedule(product, maxPy){
 function plans(){
   const fx = S.fx, m = num(S.monthly), lump = S.useLump ? num(S.lump) : 0;
   const p5 = num(S.custom5) || (m*12 + lump/5) / fx;
-  const p2 = num(S.custom2) || (lump + m*12) / 2 / fx;
+  // 兩年期：有投入存款 → (存款＋12 個月存款) ÷ 2 期（第二期第 13 個月就要繳）；沒投入 → 每月可存 × 12
+  const p2 = num(S.custom2) || (lump ? (lump + m*12) / 2 : m*12) / fx;
   return {
     '5': {key:'5', name:'五年期', years:5, annual:p5, total:p5*5, th:S.th5, custom:!!num(S.custom5)},
     '2': {key:'2', name:'兩年期', years:2, annual:p2, total:p2*2, th:S.th2, custom:!!num(S.custom2)}
@@ -535,14 +544,16 @@ function profileLine(){
 }
 function planCard(p, selKey, recKey, extraHtml){
   const ok = p.annual >= p.th;
-  const gapMonthly = (p.th - p.annual) * S.fx * (p.key==='2'?2:1) / 12;
+  const withLump = p.key==='2' && S.useLump && num(S.lump) > 0 && !p.custom;
+  const gapMonthly = (p.th - p.annual) * S.fx * (withLump?2:1) / 12;
   return `<div class="plan ${p.key===selKey?'sel':''}" data-plan="${p.key}">
     ${p.key===recKey?'<span class="tag">建議</span>':''}
     <h3>${p.name} ${ok?'<span class="badge ok">達門檻</span>':'<span class="badge no">未達門檻</span>'}</h3>
     <div class="sub">繳 ${p.years} 年${p.custom?'（自訂保費）':''}</div>
     <div class="kv"><span>年繳保費</span><b>${usd(p.annual)}<br><small class="mini">約 ${twd(p.annual*S.fx)}</small></b></div>
     <div class="kv"><span>總保費</span><b>${usd(p.total)}（約 ${twd(p.total*S.fx)}）</b></div>
-    ${ok?'':`<div class="hint warn">門檻 ${usd(p.th)}／年，每月還差約 ${twd(gapMonthly)}${p.key==='2'?'（含現有存款一起算）':''}</div>`}
+    ${ok?'':`<div class="hint warn">門檻 ${usd(p.th)}／年，每月還差約 ${twd(gapMonthly)}${withLump?'（含現有存款一起算）':''}</div>`}
+    ${p.key==='2'?`<div class="mini" style="margin-top:6px">${withLump?'算法：（現有存款＋12 個月存款）÷ 2 期。第二期在第 13 個月就要繳。':`第一期要先準備一筆 ${twd(p.annual*S.fx)}，第二期在第 13 個月就要繳。`}</div>`:''}
     ${extraHtml||''}
   </div>`;
 }
@@ -552,12 +563,11 @@ function bindPlanCards(){
 
 /* ---------- 退休模式 ---------- */
 function retireCalc(p){
-  const startPy = S.retireAge - S.age + 1;
-  const br = bestRate(p.key, startPy);
+  const br = nearestRate(p.key, S.retireAge - S.age);
   if(!br) return null;
   const annualUsd = p.total * br.rate/100;
   const monthlyTwd = annualUsd * S.fx / 12;
-  const startAge = S.age + br.year - 1;
+  const startAge = S.age + br.year;
   const to85 = Math.max(0, S.life - startAge + 1) * annualUsd * S.fx;
   return {py:br.year, rate:br.rate, annualUsd, monthlyTwd, startAge, to85};
 }
@@ -672,9 +682,9 @@ function updateNeedsPanel(){
 /* ---------- 退休模式 ---------- */
 function goalSection(P, sel){
   const p = P[sel], tgt = num(S.target);
-  const br = bestRate(sel, S.retireAge - S.age + 1);
+  const br = nearestRate(sel, S.retireAge - S.age);
   if(!br) return `<div class="hint warn">退休年齡太早，還不到可提領年度</div>`;
-  const startAge = S.age + br.year - 1;
+  const startAge = S.age + br.year;
   const tgtAnnual = Math.ceil(tgt*12/S.fx/(br.rate/100)/p.years/100)*100;
   const tgtTotal = tgtAnnual*p.years, cur = p.annual;
   const curMonthlyOut = p.total*br.rate/100*S.fx/12;
@@ -684,7 +694,7 @@ function goalSection(P, sel){
     <div class="seg" id="goalPlan" style="margin-bottom:10px"><button data-v="5">五年期</button><button data-v="2">兩年期</button></div>
     <div class="goal">
       <div class="g-top">目標：<b>${S.retireAge} 歲</b>退休後每月領 <b>${twdFull(tgt)}</b>（每年 ${twd(tgt*12)}）${S.needsLink?'<span class="mini">　← 由退休生活試算帶入</span>':''}</div>
-      ${startAge<S.retireAge?`<div class="mini">提領點每 5 年一個，${S.retireAge} 歲之前最近的是保單第 ${br.year} 年（${startAge} 歲），用這個提領率計算，數字偏保守；實際 ${startAge} 歲就可以開始領。</div>`:''}
+      ${startAge!==S.retireAge?`<div class="mini">提領點每 5 年一個，最接近 ${S.retireAge} 歲的是保單第 ${br.year} 年（${startAge} 歲），以這個提領點計算。</div>`:''}
       <div class="g-big">每年建議存 ${usd(tgtAnnual)}<small>× ${p.years} 年</small></div>
       <div class="g-sub">約台幣 ${twd(tgtAnnual*S.fx)}／年 ・ 平均每月約 <b>${twdFull(tgtAnnual*S.fx/12)}</b> ・ 總存 ${usd(tgtTotal)}（約 ${twd(tgtTotal*S.fx)}）・ 第 ${br.year} 年提領率 ${+br.rate.toFixed(2)}%</div>
       ${below?`<div class="hint warn">低於${p.name}門檻 ${usd(p.th)}／年，實際至少要存到門檻。</div>`:''}
@@ -702,21 +712,22 @@ function raceSection(p, tgt, tgtAnnual, br, startAge){
   const toolMonthly = tgtAnnual*S.fx/12, toolTotal = tgtAnnual*p.years*S.fx;
   const a0 = S.age, aEnd = Math.max(S.life, startAge) + 8;
   const pos = a => ((Math.min(Math.max(a,a0),aEnd) - a0)/(aEnd - a0)*100).toFixed(2);
-  const seg = (cls, from, to, txt) => to > from ? `<div class="sb ${cls}" style="left:${pos(from)}%;width:${(pos(to)-pos(from)).toFixed(2)}%" title="${txt}">${txt}</div>` : '';
-  const ticks = [...new Set([S.age, S.age+p.years, S.retireAge, S.life])].sort((x,y)=>x-y);
+  const COL = {s1:'#6e7586',s2:'#c9ccd3',s3:'#f2d4d4',t1:'#b08a46',t2:'#f5ecdb',t3:'#0f2340'};
+  const seg = (cls, from, to, txt) => to > from ? `<div class="sb ${cls}" style="left:${pos(from)}%;width:${(pos(to)-pos(from)).toFixed(2)}%" title="${txt}"></div>` : '';
+  const lg = (cls, from, to, txt) => to > from ? `<span><i style="background:${COL[cls]};${cls==='t2'||cls==='s3'?'box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)':''}"></i><b>${from}${to>=aEnd?' 歲起':'–'+to+' 歲'}</b>｜${txt}</span>` : '';
+  const row = (title, sub, parts) => `<div class="race-row"><b>${title}<br><span class="mini">${sub}</span></b><div>
+      <div class="track">${parts.map(x=>seg(...x)).join('')}</div>
+      <div class="race-legend">${parts.map(x=>lg(...x)).join('')}</div></div></div>`;
   const lessYears = saveYears - p.years, lessMoney = selfTotal - toolTotal;
   return `<div class="section"><h4>自己存 vs. 用工具｜差在哪裡？</h4>
-    <div class="race-row"><b>不透過工具<br><span class="mini">自己存</span></b><div class="track">
-      ${seg('s1', S.age, S.retireAge, `每月存 ${twd(selfMonthly)} × ${saveYears} 年`)}
-      ${seg('s2', S.retireAge, S.life, `花存款到 ${S.life} 歲`)}
-      ${seg('s3', S.life, aEnd, '錢用完了')}
-    </div></div>
-    <div class="race-row"><b>用${p.name}<br><span class="mini">以終點為始</span></b><div class="track">
-      ${seg('t1', S.age, S.age+p.years, `每月存 ${twd(toolMonthly)} × ${p.years} 年`)}
-      ${seg('t2', S.age+p.years, startAge, '不用再存，錢自由運用')}
-      ${seg('t3', startAge, aEnd, `每月領 ${twd(tgt)}，領到終身 →`)}
-    </div></div>
-    <div class="axis">${ticks.map(a=>`<span style="left:${pos(a)}%">${a}歲</span>`).join('')}</div>
+    ${row('不透過工具','自己存',[
+      ['s1', S.age, S.retireAge, `每月存 ${twd(selfMonthly)} × ${saveYears} 年`],
+      ['s2', S.retireAge, S.life, `花存款到 ${S.life} 歲`],
+      ['s3', S.life, aEnd, '錢用完了']])}
+    ${row('用'+p.name,'以終點為始',[
+      ['t1', S.age, S.age+p.years, `每月存 ${twd(toolMonthly)} × ${p.years} 年`],
+      ['t2', S.age+p.years, startAge, '不用再存，錢自由運用'],
+      ['t3', startAge, aEnd, `每月領 ${twd(tgt)}，領到終身`]])}
     <div class="race-sum">
       <div class="a"><small>不透過工具</small><strong>每月 ${twd(selfMonthly)} × ${saveYears} 年</strong><small>總共要存 ${twd(selfTotal)}，${S.life} 歲就用完</small></div>
       <div class="b"><small>用${p.name}</small><strong>每月 ${twd(toolMonthly)} × ${p.years} 年</strong><small>總共存 ${twd(toolTotal)}，每月 ${twd(tgt)} 領到終身</small></div>
@@ -753,8 +764,8 @@ function ladderSection(p, sel, tgt, tgtAnnual, br){
   rows += `<tr class="grp"><td colspan="${cols.length+1}">若要提領（匯率 ${fx}）－台幣／年／萬</td></tr>`;
   const pts = [br.year-20, br.year-10, br.year].filter(y => y >= 1 && rateAt(sel, y) !== null);
   pts.forEach(y => { const r = rateAt(sel, y);
-    rows += `<tr><td>${y} 年（${S.age+y-1} 歲）${+r.toFixed(2)}%</td>${cols.map(c=>cell(c, w(c.v*p.years*r/100*fx), (y===br.year && c.cls==='tgt')?'hit':'')).join('')}</tr>`; });
-  rows += `<tr class="month"><td>${S.age+br.year-1} 歲起每月</td>${cols.map(c=>cell(c, '一個月 ' + twd(c.v*p.years*br.rate/100*fx/12))).join('')}</tr>`;
+    rows += `<tr><td>${y} 年（${S.age+y} 歲）${+r.toFixed(2)}%</td>${cols.map(c=>cell(c, w(c.v*p.years*r/100*fx), (y===br.year && c.cls==='tgt')?'hit':'')).join('')}</tr>`; });
+  rows += `<tr class="month"><td>${S.age+br.year} 歲起每月</td>${cols.map(c=>cell(c, '一個月 ' + twd(c.v*p.years*br.rate/100*fx/12))).join('')}</tr>`;
   return `<div class="section"><h4>降階推算表｜先求有，再求好</h4>
     <div class="mini" style="margin-bottom:8px">黃底＝達成目標所需；粉底＝客戶目前能力；灰字＝未達${p.name}門檻 ${usd(p.th)}。現階段做不到目標，可以等比例往下選一個做得到的金額。</div>
     <div class="scroll-x"><table class="ladder">
@@ -782,11 +793,11 @@ function renderRetire(){
   if(!num(S.monthly) && !p.custom){ $('results').innerHTML = html + `<div class="empty">輸入「每月可存金額」就會開始試算</div>`; bindRetire(); return; }
   if(!R){ $('results').innerHTML = html; bindRetire(); return; }
 
-  const maxPy = Math.min(60, 90 - S.age + 1);
-  const sched = rateSchedule(sel, maxPy).filter(s => S.age + s.year - 1 >= Math.min(R.startAge, 45) || s.year >= R.py - 15);
+  const maxPy = Math.min(60, 90 - S.age);
+  const sched = rateSchedule(sel, maxPy).filter(s => S.age + s.year >= Math.min(R.startAge, 45) || s.year >= R.py - 15);
   html += `<div class="section"><h4>${p.name}｜越晚領，每月越多</h4><div class="scroll-x"><table class="tl">
     <tr><th>開始領</th><th>保單第幾年</th><th>提領率</th><th>每年領</th><th>每月領</th></tr>
-    ${sched.map(s=>{ const a = p.total*s.rate/100; return `<tr class="${s.year===R.py?'hl':''}"><td>${S.age+s.year-1} 歲</td><td>第 ${s.year} 年</td><td>${+s.rate.toFixed(2)}%</td><td>${usd(a)}</td><td>${twd(a*S.fx/12)}</td></tr>`; }).join('')}
+    ${sched.map(s=>{ const a = p.total*s.rate/100; return `<tr class="${s.year===R.py?'hl':''}"><td>${S.age+s.year} 歲</td><td>第 ${s.year} 年</td><td>${+s.rate.toFixed(2)}%</td><td>${usd(a)}</td><td>${twd(a*S.fx/12)}</td></tr>`; }).join('')}
   </table></div><div class="mini" style="margin-top:6px">提領率口訣：記住前三個數字，之後每 10 年翻一倍；提領金額以「總保費」計算，開始領之後每年固定領。</div></div>`;
 
   const B = bankCompare(p, R);
@@ -873,7 +884,7 @@ function renderHouse(){
   const ageA = S.age + Y, ageB = S.age + 5 + Y, ageBp = S.age + 5 + Math.ceil(PP.months/12);
   const payoffAgeB = prepay ? ageBp : ageB;
   const rentTotal = num(S.rent)*60;
-  const cumW = (toAge) => Math.max(0, toAge - (S.age+10) + 1) * wAnnualTwd; // 保單第 11 年（S.age+10 歲）起領
+  const cumW = (toAge) => Math.max(0, toAge - (S.age+11) + 1) * wAnnualTwd; // 保單第 11 年（S.age+11 歲）起領
 
   let html = `<div class="res-h"><h2>聰明買房試算</h2><div class="profile">${profileLine()}</div></div>`;
   html += `<div class="cards">
@@ -904,15 +915,15 @@ function renderHouse(){
 
   // 時間軸
   const rowsA = [
-    [`第 1～${graceY} 年（${S.age}～${S.age+graceY-1} 歲）`, `寬限期，每月 ${twd(M.gracePay)}`],
+    [`第 1～${graceY} 年（${S.age+1}～${S.age+graceY} 歲）`, `寬限期，每月 ${twd(M.gracePay)}`],
     [`第 ${graceY+1}～${Y} 年`, `每月 ${twd(M.pay)}`],
     [`第 ${Y} 年（${ageA} 歲）`, '繳清，只剩一間自住的房子']
   ];
   const rowsB = [
-    [`第 1～5 年（${S.age}～${S.age+4} 歲）`, `先不買房，每月 ${twd(m)} 存保單${num(S.rent)?`；房租每月 ${twd(num(S.rent))}`:'（住家裡最理想）'}`],
-    [`第 6 年（${S.age+5} 歲）`, `用同一筆頭期款買房，保單放著不動`],
+    [`第 1～5 年（${S.age+1}～${S.age+5} 歲）`, `先不買房，每月 ${twd(m)} 存保單${num(S.rent)?`；房租每月 ${twd(num(S.rent))}`:'（住家裡最理想）'}`],
+    [`第 6 年（${S.age+6} 歲）`, `用同一筆頭期款買房，保單放著不動`],
     [`第 6～${5+graceY} 年`, `寬限期，每月 ${twd(M.gracePay)}`],
-    [`第 11 年起（${S.age+10} 歲）`, prepay ? `每年領 ${twd(wAnnualTwd)} 拿去還本金，月付照常 ${twd(M.pay)}` : `每月房貸 ${twd(M.pay)} − 保單 ${twd(wMonthly)} ＝ 實付 ${twd(Math.max(0,M.pay-wMonthly))}`],
+    [`第 11 年起（${S.age+11} 歲）`, prepay ? `每年領 ${twd(wAnnualTwd)} 拿去還本金，月付照常 ${twd(M.pay)}` : `每月房貸 ${twd(M.pay)} − 保單 ${twd(wMonthly)} ＝ 實付 ${twd(Math.max(0,M.pay-wMonthly))}`],
     [`${payoffAgeB} 歲`, `房貸繳清${prepay?`（比正常提早 ${ageB-ageBp} 年）`:''}，保單每月 ${twd(wMonthly)} 繼續領`]
   ];
   html += `<div class="section"><h4>兩種走法的時間軸</h4><div class="cards">
@@ -936,7 +947,7 @@ function renderHouse(){
   html += `<div class="section"><h4>每月實際付給房子的錢</h4>${lineChart([
     {name:'A 直接買', color:'#8a93a6', pts:ptsA, step:true},
     {name:'B 聰明買房'+(num(S.rent)?'（前 5 年為房租）':''), color:'#b08a46', pts:ptsB, step:true}
-  ], {xfmt:x=>`${S.age+x-1}歲`, yfmt:v=>v?(v/1e4).toFixed(1).replace(/\.0$/,'')+'萬':'0'})}</div>`;
+  ], {xfmt:x=>`${S.age+x}歲`, yfmt:v=>v?(v/1e4).toFixed(1).replace(/\.0$/,'')+'萬':'0'})}</div>`;
 
   // 對比
   const interestSaved = M.interest - PP.interest;
