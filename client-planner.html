@@ -497,8 +497,8 @@ $('useLump').addEventListener('change',e=>{S.useLump=e.target.checked;S.plan=nul
 ['cv5a','cv5b','cv5c'].forEach((k,i)=>$(k).addEventListener('input',e=>{S.cv5[i]=num(e.target.value);update(false);}));
 $('needsLink').addEventListener('change',e=>{S.needsLink=e.target.checked;update(false);});
 $('btnReset').onclick=()=>{ ['fx','bank','th5','th2','custom5','custom2','r5','r2','cv5'].forEach(k=>S[k]=JSON.parse(JSON.stringify(DEFAULTS[k]))); S.plan=null; update(); };
-$('btnAdvisor').onclick=()=>{document.body.classList.remove('client');$('btnAdvisor').classList.add('on');$('btnClient').classList.remove('on');};
-$('btnClient').onclick=()=>{document.body.classList.add('client');$('btnClient').classList.add('on');$('btnAdvisor').classList.remove('on');};
+$('btnAdvisor').onclick=()=>{document.body.classList.remove('client');$('btnAdvisor').classList.add('on');$('btnClient').classList.remove('on');update(false);};
+$('btnClient').onclick=()=>{document.body.classList.add('client');$('btnClient').classList.add('on');$('btnAdvisor').classList.remove('on');update(false);};
 $('btnRandom').onclick=()=>{
   const pick = a => a[Math.floor(Math.random()*a.length)];
   S.industry = Math.floor(Math.random()*INDUSTRIES.length); S.stab = INDUSTRIES[S.industry][1]; S.rate = STAB[S.stab].rate;
@@ -690,8 +690,8 @@ function goalSection(P, sel){
   const curMonthlyOut = p.total*br.rate/100*S.fx/12;
   const pct = Math.min(1, cur/tgtAnnual);
   const below = tgtAnnual < p.th;
-  let h = `<div class="section"><h4>以終點為始｜要達成目標，每年建議存多少？</h4>
-    <div class="seg" id="goalPlan" style="margin-bottom:10px"><button data-v="5">五年期</button><button data-v="2">兩年期</button></div>
+  let h = `<div class="section"><h4>以終為始｜要達成目標，每年建議存多少？</h4>
+    <div class="seg advisor" id="goalPlan" style="margin-bottom:10px"><button data-v="5">五年期</button><button data-v="2">兩年期</button></div>
     <div class="goal">
       <div class="g-top">目標：<b>${S.retireAge} 歲</b>退休後每月領 <b>${twdFull(tgt)}</b>（每年 ${twd(tgt*12)}）${S.needsLink?'<span class="mini">　← 由退休生活試算帶入</span>':''}</div>
       ${startAge!==S.retireAge?`<div class="mini">提領點每 5 年一個，最接近 ${S.retireAge} 歲的是保單第 ${br.year} 年（${startAge} 歲），以這個提領點計算。</div>`:''}
@@ -724,7 +724,7 @@ function raceSection(p, tgt, tgtAnnual, br, startAge){
       ['s1', S.age, S.retireAge, `每月存 ${twd(selfMonthly)} × ${saveYears} 年`],
       ['s2', S.retireAge, S.life, `花存款到 ${S.life} 歲`],
       ['s3', S.life, aEnd, '錢用完了']])}
-    ${row('用'+p.name,'以終點為始',[
+    ${row('用'+p.name,'以終為始',[
       ['t1', S.age, S.age+p.years, `每月存 ${twd(toolMonthly)} × ${p.years} 年`],
       ['t2', S.age+p.years, startAge, '不用再存，錢自由運用'],
       ['t3', startAge, aEnd, `每月領 ${twd(tgt)}，領到終身`]])}
@@ -775,8 +775,16 @@ function ladderSection(p, sel, tgt, tgtAnnual, br){
     <div class="row advisor"><label>加一欄自訂金額</label><div class="field" style="width:170px"><input type="number" id="ladderCustom" step="500" placeholder="例如 10000" value="${S.ladderCustom}"><span class="unit">美／年</span></div><span class="mini">輸入後按 Enter</span></div>
   </div>`;
 }
+// 客戶模式只給一個達門檻的方案：先看建議方案，不達標再看另一個
+function clientPick(P, rec){
+  const other = rec==='5' ? '2' : '5';
+  return P[rec].annual >= P[rec].th ? rec : P[other].annual >= P[other].th ? other : null;
+}
+const isClient = () => document.body.classList.contains('client');
 function renderRetire(){
-  const P = plans(), rec = recommendPlan(P), sel = S.plan || rec, p = P[sel];
+  const P = plans(), rec = recommendPlan(P);
+  const pick = clientPick(P, rec);
+  const sel = isClient() ? (pick || rec) : (S.plan || rec), p = P[sel];
   const R5 = retireCalc(P['5']), R2 = retireCalc(P['2']);
   const tgt = num(S.target);
   const extra = (R) => R ? `<div class="hero"><small>${R.startAge} 歲起每月可領（第 ${R.py} 年 · ${+R.rate.toFixed(2)}%）</small><strong>${twd(R.monthlyTwd)}<i>/ 月</i></strong></div>` : `<div class="hint warn">開始領的年齡太早，還不到可提領年度</div>`;
@@ -785,9 +793,16 @@ function renderRetire(){
 
   html += tgt ? goalSection(P, sel) : `<div class="hint" style="margin-top:12px">在上方「退休金試算」填食衣住行育樂，或在左邊填「目標每月退休金」，這裡就會算出每年建議存多少，並列出降階方案。</div>`;
 
-  html += `<div class="section"><h4>依目前每月可存 ${twd(num(S.monthly))} 的規劃</h4>
+  if(isClient()){
+    html += `<div class="section"><h4>依目前每月可存 ${twd(num(S.monthly))} 的建議方案</h4>` + (pick
+      ? `<div class="cards" style="grid-template-columns:1fr">${planCard(P[pick],pick,pick,extra(pick==='5'?R5:R2))}</div></div>`
+      : `<div class="hint warn">目前的金額還沒達到最低門檻，可以參考上方的降階方案，先求有再求好。</div></div>`);
+    if(!pick){ $('results').innerHTML = html; bindRetire(); return; }
+  } else {
+    html += `<div class="section"><h4>依目前每月可存 ${twd(num(S.monthly))} 的規劃</h4>
     <div class="cards">${planCard(P['5'],sel,rec,extra(R5))}${planCard(P['2'],sel,rec,extra(R2))}</div>
     <div class="mini" style="margin-top:6px">點選方案卡，整頁會切換成該年期試算。</div></div>`;
+  }
 
   const R = sel==='5'?R5:R2;
   if(!num(S.monthly) && !p.custom){ $('results').innerHTML = html + `<div class="empty">輸入「每月可存金額」就會開始試算</div>`; bindRetire(); return; }
@@ -846,7 +861,8 @@ function renderRetire(){
 }
 function bindRetire(){
   bindPlanCards();
-  const sel = S.plan || recommendPlan(plans());
+  const P = plans(), rec = recommendPlan(P);
+  const sel = isClient() ? (clientPick(P, rec) || rec) : (S.plan || rec);
   document.querySelectorAll('#goalPlan button').forEach(b => { b.classList.toggle('on', b.dataset.v===sel); b.onclick = () => { S.plan = b.dataset.v; update(); }; });
   const lc = $('ladderCustom');
   if(lc) lc.addEventListener('change', e => { S.ladderCustom = e.target.value===''?'':num(e.target.value); update(false); });
@@ -1009,8 +1025,8 @@ function update(full=true){
   if(full) renderInputs();
   fillFields();
   renderSaveRatio();
-  $('needsPanel').style.display = S.mode==='retire' ? '' : 'none';
-  if(S.mode==='retire'){ updateNeedsPanel(); renderRetire(); } else renderHouse();
+  $('needsPanel').style.display = (S.mode==='retire' && S.needsLink) ? '' : 'none';
+  if(S.mode==='retire'){ if(S.needsLink) updateNeedsPanel(); renderRetire(); } else renderHouse();
   save();
 }
 buildNeedsPanel();
