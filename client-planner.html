@@ -290,7 +290,7 @@ table.ladder tr.month td{font-weight:700;color:var(--navy)}
   <details class="adv advisor">
     <summary>⚙️ 進階設定（匯率、門檻、提領率）</summary>
     <div class="grid2">
-      <div><label>匯率（建議保守抓 31）</label><div class="field"><input type="number" id="fx" step="0.1"><span class="unit">TWD/USD</span></div></div>
+      <div><label>匯率（預設 30）</label><div class="field"><input type="number" id="fx" step="0.1"><span class="unit">TWD/USD</span></div></div>
       <div><label>定存年利率（對照組）</label><div class="field"><input type="number" id="bank" step="0.1"><span class="unit">%</span></div></div>
       <div><label>五年期門檻／年 <span id="th5note"></span></label><div class="field"><input type="number" id="th5" step="500"><span class="unit">USD</span></div></div>
       <div><label>兩年期門檻／年</label><div class="field"><input type="number" id="th2" step="500"><span class="unit">USD</span></div></div>
@@ -349,7 +349,7 @@ const DEFAULTS = {
   industry:5, stab:'mid', ageBin:25, age:25, incomeBin:1, monthly:20000, lump:0, useLump:false,
   mode:'retire', retireAge:65, target:'',
   down:3000000, downRatio:0.2, rate:2.5, grace:3, loanYears:30, rent:0,
-  fx:31, bank:1.5, th5:th5Default(), th2:15000, custom5:'', custom2:'',
+  fx:30, bank:1.5, th5:th5Default(), th2:15000, custom5:'', custom2:'',
   r5:[5,7,10], r2:[4.5,6,9], plan:null, houseUse:'offset',
   life:84, needsLink:true, cv5:[1.2,2.633,5.517], ladderCustom:'',
   needs:{meal:150, dine:1500, hair:3000, skin:3000, wear:2000, houseType:'rent', rent:25000, util:3000,
@@ -357,7 +357,7 @@ const DEFAULTS = {
          supp:4000, med:5000, ltc:3000, trips:0, tripCost:50000, domestic:2000, hobby:0}
 };
 let S = JSON.parse(JSON.stringify(DEFAULTS));
-try{ const saved = JSON.parse(localStorage.getItem('planner-v1')||'null'); if(saved){ const n = Object.assign({}, S.needs, saved.needs||{}); S = Object.assign(S, saved); S.needs = n; } }catch(e){}
+try{ const saved = JSON.parse(localStorage.getItem('planner-v1')||'null'); if(saved){ const n = Object.assign({}, S.needs, saved.needs||{}); if(!saved.fxV30 && saved.fx===31) saved.fx = 30; S = Object.assign(S, saved); S.needs = n; } S.fxV30 = true; }catch(e){}
 const save = () => { try{ localStorage.setItem('planner-v1', JSON.stringify(S)); }catch(e){} };
 
 /* ---------- 格式 ---------- */
@@ -873,7 +873,7 @@ function advisorNotesRetire(p){
     <li>兩年期的第二期在<b>第 13 個月</b>就要繳，不是第 24 個月。存款不夠的話，要確認他 12 個月內湊得出第二期。</li>
     <li>保費抓不到時的順序：① 先確認他是不是真的沒有（客戶不一定會講出全部的財務狀況）→ ② 問他「你自己的打算是什麼」，讓他自己想辦法 → ③ 真的不行才降金額，先求有再求好。</li>
     <li>客戶原本有在定期定額買 ETF 的話，不用叫他停掉，可以談「保底層＋成長層」的資產配置。</li>
-    <li>匯率保守抓 31～31.5；提領金額是估算，正式數字以建議書為準。</li>
+    <li>匯率預設 30，想更保守可以在進階設定改成 31；提領金額是估算，正式數字以建議書為準。</li>
   </ul></div></div>`;
 }
 
