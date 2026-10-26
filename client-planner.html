@@ -30,8 +30,18 @@ header.top h1 small{display:block;font-family:"Noto Sans TC";font-size:12px;colo
 .layout{display:grid;grid-template-columns:400px 1fr;gap:20px;margin-top:20px;align-items:start}
 @media (max-width:900px){.layout{grid-template-columns:1fr}}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
-.inputs{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow-y:auto;overscroll-behavior:contain}
-@media (max-width:900px){.inputs{position:static;max-height:none;overflow:visible}}
+.inputs{}
+/* 電腦版：標題列固定，左右兩欄各自捲動 */
+@media (min-width:901px){
+  html,body{height:100%}
+  body{display:flex;flex-direction:column;overflow:hidden}
+  header.top{flex:none}
+  .wrap.main{flex:1;min-height:0;width:100%;display:flex;flex-direction:column;padding-bottom:0}
+  .wrap.main .layout{flex:1;min-height:0;margin-top:16px;align-items:stretch;grid-template-rows:minmax(0,1fr)}
+  .inputs,.rightcol{overflow-y:auto;overscroll-behavior:contain;min-height:0}
+  .inputs{margin-bottom:16px}
+  .rightcol{padding-bottom:16px;align-content:start}
+}
 .step{margin-bottom:18px}
 .step:last-child{margin-bottom:0}
 .step-h{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}
@@ -128,7 +138,7 @@ body.client .advisor{display:none!important}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:#fff}
 .seg button{border:0;background:transparent;padding:6px 12px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--muted)}
 .seg button.on{background:var(--navy);color:#fff}
-footer.disc{margin-top:22px;font-size:12px;color:var(--muted);text-align:center;line-height:1.7}
+footer.disc{margin-top:2px;font-size:12px;color:var(--muted);text-align:center;line-height:1.7}
 .empty{padding:40px 10px;text-align:center;color:var(--muted)}
 .rightcol{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;min-width:0}
 details.needs > summary{list-style:none;cursor:pointer;display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
@@ -219,7 +229,7 @@ table.ladder tr.month td{font-weight:700;color:var(--navy)}
   </div>
 </header>
 
-<div class="wrap">
+<div class="wrap main">
 <div class="layout">
 
 <!-- ========== INPUTS ========== -->
@@ -323,10 +333,11 @@ table.ladder tr.month td{font-weight:700;color:var(--navy)}
 <div class="rightcol">
   <section class="panel" id="needsPanel"></section>
   <main class="panel" id="results"></main>
+  <footer class="disc">本工具依課程經驗法則（提領率「記前三個、之後每 10 年翻倍」）估算，僅供初步規劃與溝通使用，非保證收益。<br>實際保費、提領金額與保單價值，以保險公司正式建議書為準。</footer>
 </div>
 
 </div>
-<footer class="disc">本工具依課程經驗法則（提領率「記前三個、之後每 10 年翻倍」）估算，僅供初步規劃與溝通使用，非保證收益。<br>實際保費、提領金額與保單價值，以保險公司正式建議書為準。</footer>
+
 </div>
 
 <script>
