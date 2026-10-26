@@ -202,6 +202,8 @@ details.needs:not([open]) > summary h2::after{content:" ▸"}
 .race-sum .a{background:#ecebe7}.race-sum .b{background:var(--navy);color:#fff}
 .race-sum small{display:block;font-size:12px;opacity:.75}
 .race-sum strong{display:block;font-size:20px;font-weight:900;margin:2px 0}
+.race-sum .calc{margin-top:8px;padding-top:8px;border-top:1px dashed rgba(0,0,0,.15);font-size:12.5px;line-height:1.7}
+.race-sum .calc span{display:block}
 .punch{margin-top:10px;text-align:center;font-size:16px;font-weight:700;color:var(--navy);background:var(--gold-soft);border-radius:10px;padding:10px}
 .punch b{color:var(--gold);font-size:20px}
 table.ladder{width:100%;border-collapse:collapse;font-size:13.5px}
@@ -740,7 +742,12 @@ function raceSection(p, tgt, tgtAnnual, br, startAge){
       ['t2', S.age+p.years, startAge, '不用再存，錢自由運用'],
       ['t3', startAge, aEnd, `每月領 ${twd(tgt)}，領到終身`]])}
     <div class="race-sum">
-      <div class="a"><small>不透過工具</small><strong>每月 ${twd(selfMonthly)} × ${saveYears} 年</strong><small>總共要存 ${twd(selfTotal)}，${S.life} 歲就用完</small></div>
+      <div class="a"><small>不透過工具</small><strong>每月 ${twd(selfMonthly)} × ${saveYears} 年</strong><small>總共要存 ${twd(selfTotal)}，${S.life} 歲就用完</small>
+        <div class="calc">
+          <span>① 退休要用的錢：每月 ${twd(tgt)} × 12 個月 × ${useYears} 年（${S.retireAge}–${S.life} 歲）＝ <b>${twd(selfTotal)}</b></span>
+          <span>② 能存的時間：${S.retireAge} 歲 − ${S.age} 歲 ＝ <b>${saveYears} 年</b></span>
+          <span>③ 每月要存：${twd(selfTotal)} ÷ ${saveYears} 年 ÷ 12 個月 ＝ <b>${twd(selfMonthly)}</b></span>
+        </div></div>
       <div class="b"><small>用${p.name}</small><strong>每月 ${twd(toolMonthly)} × ${p.years} 年</strong><small>總共存 ${twd(toolTotal)}，每月 ${twd(tgt)} 領到終身</small></div>
     </div>
     ${lessYears>0 ? `<div class="punch">少存 <b>${lessYears} 年</b>${lessMoney>0?`，少拿出 <b>${twd(lessMoney)}</b>`:''}，而且錢不會有用完的一天</div>` : ''}
