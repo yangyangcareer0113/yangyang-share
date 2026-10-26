@@ -204,6 +204,7 @@ details.needs:not([open]) > summary h2::after{content:" ▸"}
 .race-sum strong{display:block;font-size:20px;font-weight:900;margin:2px 0}
 .race-sum .calc{margin-top:8px;padding-top:8px;border-top:1px dashed rgba(0,0,0,.15);font-size:12.5px;line-height:1.7}
 .race-sum .calc span{display:block}
+.race-sum .b .calc{border-top-color:rgba(255,255,255,.25)}
 .punch{margin-top:10px;text-align:center;font-size:16px;font-weight:700;color:var(--navy);background:var(--gold-soft);border-radius:10px;padding:10px}
 .punch b{color:var(--gold);font-size:20px}
 table.ladder{width:100%;border-collapse:collapse;font-size:13.5px}
@@ -748,7 +749,12 @@ function raceSection(p, tgt, tgtAnnual, br, startAge){
           <span>② 能存的時間：${S.retireAge} 歲 − ${S.age} 歲 ＝ <b>${saveYears} 年</b></span>
           <span>③ 每月要存：${twd(selfTotal)} ÷ ${saveYears} 年 ÷ 12 個月 ＝ <b>${twd(selfMonthly)}</b></span>
         </div></div>
-      <div class="b"><small>用${p.name}</small><strong>每月 ${twd(toolMonthly)} × ${p.years} 年</strong><small>總共存 ${twd(toolTotal)}，每月 ${twd(tgt)} 領到終身</small></div>
+      <div class="b"><small>用${p.name}</small><strong>每月 ${twd(toolMonthly)} × ${p.years} 年</strong><small>總共存 ${twd(toolTotal)}，每月 ${twd(tgt)} 領到終身</small>
+        <div class="calc">
+          <span>① 每年要領：每月 ${twd(tgt)} × 12 個月 ÷ 匯率 ${S.fx} ＝ <b>${usd(tgt*12/S.fx)}</b></span>
+          <span>② 每年保費：${usd(tgt*12/S.fx)} ÷ 提領率 ${+br.rate.toFixed(2)}%（第 ${br.year} 年起）÷ ${p.years} 年 ≈ <b>${usd(tgtAnnual)}</b></span>
+          <span>③ 每月要存：${usd(tgtAnnual)} × 匯率 ${S.fx} ÷ 12 個月 ＝ <b>${twd(toolMonthly)}</b></span>
+        </div></div>
     </div>
     ${lessYears>0 ? `<div class="punch">少存 <b>${lessYears} 年</b>${lessMoney>0?`，少拿出 <b>${twd(lessMoney)}</b>`:''}，而且錢不會有用完的一天</div>` : ''}
   </div>`;
