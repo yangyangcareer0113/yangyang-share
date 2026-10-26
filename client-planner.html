@@ -783,7 +783,7 @@ function ladderSection(p, sel, tgt, tgtAnnual, br){
       <tr><th>${p.name}</th>${cols.map(c=>`<th class="${c.cls||''}">${c.tags.join('／')}<small>${usd(c.v)}／年</small></th>`).join('')}</tr>
       ${rows}
     </table></div>
-    <div class="row advisor"><label>加一欄自訂金額</label><div class="field" style="width:170px"><input type="number" id="ladderCustom" step="500" placeholder="例如 10000" value="${S.ladderCustom}"><span class="unit">美／年</span></div><span class="mini">輸入後按 Enter</span></div>
+    <div class="row"><label>加一欄自訂金額</label><div class="field" style="width:170px"><input type="number" id="ladderCustom" step="500" placeholder="例如 10000" value="${S.ladderCustom}"><span class="unit">美／年</span></div><span class="mini">輸入後按 Enter</span></div>
   </div>`;
 }
 // 客戶模式只給一個達門檻的方案：先看建議方案，不達標再看另一個
