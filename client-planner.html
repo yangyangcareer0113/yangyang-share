@@ -130,6 +130,79 @@ body.client .advisor{display:none!important}
 .seg button.on{background:var(--navy);color:#fff}
 footer.disc{margin-top:22px;font-size:12px;color:var(--muted);text-align:center;line-height:1.7}
 .empty{padding:40px 10px;text-align:center;color:var(--muted)}
+.rightcol{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;min-width:0}
+details.needs > summary{list-style:none;cursor:pointer;display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+details.needs > summary::-webkit-details-marker{display:none}
+details.needs > summary h2{margin:0;font-family:"Noto Serif TC",serif;font-size:20px;color:var(--navy)}
+details.needs > summary h2::after{content:" ▾";font-size:14px;color:var(--muted)}
+details.needs:not([open]) > summary h2::after{content:" ▸"}
+.life-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+@media (max-width:640px){.life-row{grid-template-columns:1fr 1fr}}
+.life-row > div{background:var(--navy-soft);border-radius:10px;padding:8px 10px;min-width:0}
+.needs-grid > *,.race-sum > div,.needs-sum > div,.grades > *{min-width:0}
+.field input{min-width:0}
+.life-row label{display:block;font-size:12px;color:var(--muted)}
+.life-row .val{font-size:22px;font-weight:900;color:var(--navy)}
+.life-row .field{background:#fff;margin-top:2px}
+.life-row .field input{font-size:18px;font-weight:700;color:var(--navy);padding:4px 8px}
+.needs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:1100px){.needs-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.needs-grid{grid-template-columns:1fr}}
+.cat{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
+.cat h5{margin:0 0 2px;display:flex;justify-content:space-between;align-items:baseline;font-size:17px;color:var(--navy)}
+.cat h5 span{color:var(--gold);font-size:15px}
+.cat .q{font-size:12px;color:var(--muted);margin-bottom:6px;line-height:1.5}
+.sub-in{display:grid;grid-template-columns:1fr 128px;gap:6px;align-items:center;font-size:12.5px;margin-top:5px}
+.sub-in .field input{padding:5px 8px;text-align:right}
+.sub-in .field .unit{padding:0 6px;font-size:11px}
+.needs-sum{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+@media (max-width:640px){.needs-sum{grid-template-columns:1fr 1fr}}
+.stat{background:var(--navy-soft);border-radius:10px;padding:10px}
+.stat small{display:block;color:var(--muted);font-size:12px}
+.stat b{font-size:20px;color:var(--navy)}
+.stat.hl{background:var(--navy)}
+.stat.hl small{color:#c9d3e3}.stat.hl b{color:#fff}
+.stat.self{background:#ecebe7}.stat.self b{color:#4b5262}
+.grades{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;align-items:start}
+@media (max-width:640px){.grades{grid-template-columns:1fr}}
+.grades ol{list-style:none;margin:0;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:13px}
+.grades li{padding:3px 0}
+.grades li.me{background:var(--gold-soft);border-radius:6px;padding:4px 8px;margin:3px -8px;font-weight:700;color:var(--gold)}
+.goal{border:1.5px solid var(--gold);border-radius:14px;padding:16px;background:linear-gradient(160deg,#fffaf0,#f5ecdb)}
+.goal .g-top{font-size:14px;color:var(--ink)}
+.goal .g-big{font-size:30px;font-weight:900;color:var(--navy);line-height:1.2;margin:6px 0 2px}
+.goal .g-big small{font-size:14px;font-weight:500;color:var(--muted);margin-left:6px}
+.goal .g-sub{font-size:13px;color:var(--muted)}
+.bar{height:10px;background:#e7e2d6;border-radius:999px;overflow:hidden;margin:10px 0 4px}
+.bar i{display:block;height:100%;background:var(--gold);border-radius:999px}
+.race-row{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:center;margin:8px 0}
+@media (max-width:640px){.race-row{grid-template-columns:1fr}}
+.race-row > b{font-size:13px}
+.track{position:relative;height:38px;background:#f4f2ec;border-radius:8px;overflow:hidden}
+.sb{position:absolute;top:0;bottom:0;display:flex;align-items:center;padding:0 8px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-right:2px solid #fff}
+.sb.s1{background:#6e7586;color:#fff}.sb.s2{background:#c9ccd3;color:#3b4150}.sb.s3{background:#f2d4d4;color:var(--bad)}
+.sb.t1{background:var(--gold);color:#fff}.sb.t2{background:#f5ecdb;color:var(--gold)}.sb.t3{background:var(--navy);color:#fff}
+.axis{position:relative;height:18px;margin-left:120px;font-size:11px;color:var(--muted)}
+@media (max-width:640px){.axis{margin-left:0}}
+.axis span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.race-sum{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.race-sum > div{border-radius:12px;padding:12px}
+.race-sum .a{background:#ecebe7}.race-sum .b{background:var(--navy);color:#fff}
+.race-sum small{display:block;font-size:12px;opacity:.75}
+.race-sum strong{display:block;font-size:20px;font-weight:900;margin:2px 0}
+.punch{margin-top:10px;text-align:center;font-size:16px;font-weight:700;color:var(--navy);background:var(--gold-soft);border-radius:10px;padding:10px}
+.punch b{color:var(--gold);font-size:20px}
+table.ladder{width:100%;border-collapse:collapse;font-size:13.5px}
+table.ladder th,table.ladder td{border:1px solid var(--line);padding:7px 9px;text-align:right;white-space:nowrap}
+table.ladder td:first-child,table.ladder th:first-child{text-align:left;background:#faf9f6}
+table.ladder tr.grp td{background:#e9efe6;text-align:center;font-weight:700;color:#3d5a3d}
+table.ladder th{font-weight:700;color:var(--navy);background:#fff}
+table.ladder th small{display:block;font-weight:500;font-size:11px}
+table.ladder .cur{background:#fbe3d8}
+table.ladder .tgt{background:#fff6c7}
+table.ladder td.hit{background:#ffe866;color:var(--bad);font-weight:900}
+table.ladder .dim{color:#a3a7b0}
+table.ladder tr.month td{font-weight:700;color:var(--navy)}
 </style>
 </head>
 <body>
@@ -193,8 +266,9 @@ footer.disc{margin-top:22px;font-size:12px;color:var(--muted);text-align:center;
     <div id="retireInputs">
       <div class="grid2" style="margin-top:10px">
         <div><label class="mini">預計開始領的年齡</label><div class="field"><input type="number" id="retireAge" min="30" max="80"><span class="unit">歲</span></div></div>
-        <div><label class="mini">目標每月退休金（可不填）</label><div class="field"><input type="number" id="target" step="1000" placeholder="例如 40000"><span class="unit">元</span></div></div>
+        <div><label class="mini">目標每月退休金（現金流）</label><div class="field"><input type="number" id="target" step="1000" placeholder="例如 40000"><span class="unit">元</span></div></div>
       </div>
+      <label class="toggle" style="margin-top:8px"><input type="checkbox" id="needsLink"> 用右邊「退休生活試算」的每月花費當目標</label>
     </div>
 
     <div id="houseInputs">
@@ -233,12 +307,21 @@ footer.disc{margin-top:22px;font-size:12px;color:var(--muted);text-align:center;
       <div class="field"><input type="number" id="r2b" step="0.5"><span class="unit">%</span></div>
       <div class="field"><input type="number" id="r2c" step="0.5"><span class="unit">%</span></div>
     </div>
+    <div class="mini" style="margin-top:10px">五年期「完全不提領」保單價值＝總保費 × 倍數（第 10／20／30 年）</div>
+    <div class="grid2" style="grid-template-columns:repeat(3,1fr)">
+      <div class="field"><input type="number" id="cv5a" step="0.01"><span class="unit">倍</span></div>
+      <div class="field"><input type="number" id="cv5b" step="0.01"><span class="unit">倍</span></div>
+      <div class="field"><input type="number" id="cv5c" step="0.01"><span class="unit">倍</span></div>
+    </div>
     <div class="row"><button class="btn" id="btnReset" style="border-color:var(--line)">恢復預設值</button></div>
   </details>
 </aside>
 
 <!-- ========== RESULTS ========== -->
-<main class="panel" id="results"></main>
+<div class="rightcol">
+  <section class="panel" id="needsPanel"></section>
+  <main class="panel" id="results"></main>
+</div>
 
 </div>
 <footer class="disc">本工具依課程經驗法則（提領率「記前三個、之後每 10 年翻倍」）估算，僅供初步規劃與溝通使用，非保證收益。<br>實際保費、提領金額與保單價值，以保險公司正式建議書為準。</footer>
@@ -265,10 +348,14 @@ const DEFAULTS = {
   mode:'retire', retireAge:65, target:'',
   down:3000000, downRatio:0.2, rate:2.5, grace:3, loanYears:30, rent:0,
   fx:31, bank:1.5, th5:th5Default(), th2:15000, custom5:'', custom2:'',
-  r5:[5,7,10], r2:[4.5,6,9], plan:null, houseUse:'offset'
+  r5:[5,7,10], r2:[4.5,6,9], plan:null, houseUse:'offset',
+  life:84, needsLink:true, cv5:[1.2,2.633,5.517], ladderCustom:'',
+  needs:{meal:150, dine:1500, hair:3000, skin:3000, wear:2000, houseType:'rent', rent:25000, util:3000,
+         car:'none', transit:7000, fuel:3000, park:1500, maint:12000, tax:15000, carIns:20000,
+         supp:4000, med:5000, ltc:3000, trips:0, tripCost:50000, domestic:2000, hobby:0}
 };
 let S = JSON.parse(JSON.stringify(DEFAULTS));
-try{ const saved = JSON.parse(localStorage.getItem('planner-v1')||'null'); if(saved) S = Object.assign(S, saved); }catch(e){}
+try{ const saved = JSON.parse(localStorage.getItem('planner-v1')||'null'); if(saved){ const n = Object.assign({}, S.needs, saved.needs||{}); S = Object.assign(S, saved); S.needs = n; } }catch(e){}
 const save = () => { try{ localStorage.setItem('planner-v1', JSON.stringify(S)); }catch(e){} };
 
 /* ---------- 格式 ---------- */
@@ -384,6 +471,9 @@ function fillFields(){
   ['r5a','r5b','r5c'].forEach((k,i)=>{ if(document.activeElement!==$(k)) $(k).value=S.r5[i]; });
   ['r2a','r2b','r2c'].forEach((k,i)=>{ if(document.activeElement!==$(k)) $(k).value=S.r2[i]; });
   $('useLump').checked = S.useLump;
+  ['cv5a','cv5b','cv5c'].forEach((k,i)=>{ if(document.activeElement!==$(k)) $(k).value=S.cv5[i]; });
+  $('needsLink').checked = S.needsLink;
+  $('target').disabled = S.needsLink;
 }
 FIELDS.forEach(k => $(k).addEventListener('input', e => {
   const v = e.target.value;
@@ -395,7 +485,9 @@ FIELDS.forEach(k => $(k).addEventListener('input', e => {
 ['r5a','r5b','r5c'].forEach((k,i)=>$(k).addEventListener('input',e=>{S.r5[i]=num(e.target.value);update(false);}));
 ['r2a','r2b','r2c'].forEach((k,i)=>$(k).addEventListener('input',e=>{S.r2[i]=num(e.target.value);update(false);}));
 $('useLump').addEventListener('change',e=>{S.useLump=e.target.checked;S.plan=null;update();});
-$('btnReset').onclick=()=>{ ['fx','bank','th5','th2','custom5','custom2','r5','r2'].forEach(k=>S[k]=JSON.parse(JSON.stringify(DEFAULTS[k]))); S.plan=null; update(); };
+['cv5a','cv5b','cv5c'].forEach((k,i)=>$(k).addEventListener('input',e=>{S.cv5[i]=num(e.target.value);update(false);}));
+$('needsLink').addEventListener('change',e=>{S.needsLink=e.target.checked;update(false);});
+$('btnReset').onclick=()=>{ ['fx','bank','th5','th2','custom5','custom2','r5','r2','cv5'].forEach(k=>S[k]=JSON.parse(JSON.stringify(DEFAULTS[k]))); S.plan=null; update(); };
 $('btnAdvisor').onclick=()=>{document.body.classList.remove('client');$('btnAdvisor').classList.add('on');$('btnClient').classList.remove('on');};
 $('btnClient').onclick=()=>{document.body.classList.add('client');$('btnClient').classList.add('on');$('btnAdvisor').classList.remove('on');};
 $('btnRandom').onclick=()=>{
@@ -466,7 +558,7 @@ function retireCalc(p){
   const annualUsd = p.total * br.rate/100;
   const monthlyTwd = annualUsd * S.fx / 12;
   const startAge = S.age + br.year - 1;
-  const to85 = Math.max(0, 85 - startAge + 1) * annualUsd * S.fx;
+  const to85 = Math.max(0, S.life - startAge + 1) * annualUsd * S.fx;
   return {py:br.year, rate:br.rate, annualUsd, monthlyTwd, startAge, to85};
 }
 function bankCompare(p, R){
@@ -479,32 +571,217 @@ function bankCompare(p, R){
   while(bal > 0 && last < 600){ bal = bal*(1+r) - R.monthlyTwd; last++; }
   return {atStart, lastsYears:last/12, endAge:R.startAge + last/12};
 }
+/* ---------- 退休生活試算（食衣住行育樂） ---------- */
+const NEEDS = [
+  {k:'food', t:'食', q:'每餐多少 × 3 餐，加上跟朋友聚餐', items:[['meal','每餐平均','元/餐'],['dine','朋友聚餐','元/月']]},
+  {k:'clothes', t:'衣', q:'跟外表有關的都算：美甲、美髮、保養品、醫美', items:[['hair','美髮／美甲','元/月'],['skin','保養品／醫美','元/月'],['wear','服飾','元/月']]},
+  {k:'house', t:'住', q:'租屋還是自住房？基本開銷：水電瓦斯、物業費', chips:['houseType',[['rent','租屋'],['own','自住房']]],
+    items:[['rent','房租','元/月'],['util','水電瓦斯','元/月']]},
+  {k:'move', t:'行', q:'會不會用車（進口／國產）、搭高鐵？用車的話：油錢、停車、保養輪胎、燃料牌照稅（約一年 15,000）、保險費（進口約一年 4 萬、國產約 2 萬）', chips:['car',[['none','不用車'],['local','國產車'],['import','進口車']]],
+    items:[['transit','大眾運輸／高鐵','元/月'],['fuel','油錢','元/月',1],['park','停車費','元/月',1],['maint','保養／輪胎','元/年',1],['tax','燃料牌照稅','元/年',1],['carIns','汽車保險費','元/年',1]]},
+  {k:'edu', t:'育＋醫', q:'保健食品、醫療、長照', items:[['supp','保健食品','元/月'],['med','醫療','元/月'],['ltc','長照','元/月']]},
+  {k:'fun', t:'樂', q:'會不會想出國？一年幾次？國內旅遊？', items:[['trips','出國次數','次/年'],['tripCost','每次出國花費','元/次'],['domestic','國內旅遊','元/月'],['hobby','其他娛樂','元/月']]}
+];
+const GRADES = [['A','上流老人',5000e4,'約需 5,000 萬'],['B','滿意的生活',3000e4,'約需 3,000 萬'],['C','普通的生活',1500e4,'需 1,500 萬'],['D','不滿意的生活',1000e4,'1,000 萬以下'],['E','下流老人',0,'依靠勞退、親友救濟']];
+
+function needsCalc(){
+  const n = {}; Object.keys(S.needs).forEach(k => n[k] = typeof S.needs[k]==='string' ? S.needs[k] : num(S.needs[k]));
+  const car = n.car !== 'none';
+  const cats = {
+    food: n.meal*3*30 + n.dine,
+    clothes: n.hair + n.skin + n.wear,
+    house: n.rent + n.util,
+    move: n.transit + (car ? n.fuel + n.park + (n.maint + n.tax + n.carIns)/12 : 0),
+    edu: n.supp + n.med + n.ltc,
+    fun: n.trips*n.tripCost/12 + n.domestic + n.hobby
+  };
+  const monthly = Object.values(cats).reduce((a,b)=>a+b, 0);
+  const years = Math.max(0, S.life - S.retireAge);
+  const yearly = monthly*12, total = yearly*years;
+  const saveYears = Math.max(1, S.retireAge - S.age);
+  return {cats, monthly, yearly, years, total, saveYears, perYear: total/saveYears, perMonth: total/saveYears/12};
+}
+function buildNeedsPanel(){
+  const cats = NEEDS.map(c => `<div class="cat">
+    <h5>${c.t}<span id="sub_${c.k}"></span></h5>
+    <div class="q">${c.q}</div>
+    ${c.chips ? `<div class="chips sm" data-chip="${c.chips[0]}">${c.chips[1].map(([v,l])=>`<button class="chip" data-v="${v}">${l}</button>`).join('')}</div>` : ''}
+    ${c.items.map(([k,l,u,car]) => `<div class="sub-in" ${car?'data-car':''}><span id="lb_${k}">${l}</span><div class="field"><input type="number" id="n_${k}" min="0"><span class="unit">${u}</span></div></div>`).join('')}
+  </div>`).join('');
+  $('needsPanel').innerHTML = `<details class="needs" open>
+    <summary><h2>退休金試算｜你想過怎樣的退休生活？</h2><span class="mini">問清楚退休後每個月的食衣住行育樂</span></summary>
+    <div class="life-row">
+      <div><label>目前年齡</label><div class="val" id="nAge"></div></div>
+      <div><label>預計退休年齡（官方 65 歲）</label><div class="field"><input type="number" id="retireAge2" min="30" max="80"><span class="unit">歲</span></div></div>
+      <div><label>預估壽命（男 78／女 84）</label><div class="field"><input type="number" id="life" min="60" max="110"><span class="unit">歲</span></div>
+        <div class="chips sm" style="margin-top:4px"><button class="chip" data-life="78">男 78</button><button class="chip" data-life="84">女 84</button></div></div>
+      <div><label>退休後要用錢的年數</label><div class="val" id="nYears"></div></div>
+    </div>
+    <div class="needs-grid">${cats}</div>
+    <div class="needs-sum">
+      <div class="stat"><small>每月花費總和</small><b id="sMonthly"></b></div>
+      <div class="stat"><small>年開銷加總</small><b id="sYearly"></b></div>
+      <div class="stat hl"><small id="sTotalL"></small><b id="sTotal"></b></div>
+      <div class="stat self"><small id="sSaveL"></small><b id="sSave"></b><small id="sSaveY"></small></div>
+    </div>
+    <div class="grades">
+      <ol id="gradeList"></ol>
+      <div class="note"><b>不透過工具，要怎麼存到這筆錢？</b><div id="selfFormula" style="margin-top:6px"></div></div>
+    </div>
+  </details>`;
+  NEEDS.forEach(c => c.items.forEach(([k]) => $('n_'+k).addEventListener('input', e => { S.needs[k] = num(e.target.value); update(false); })));
+  document.querySelectorAll('#needsPanel [data-chip]').forEach(g => g.querySelectorAll('button').forEach(b => b.onclick = () => {
+    const key = g.dataset.chip; S.needs[key] = b.dataset.v;
+    if(key==='car' && b.dataset.v!=='none'){
+      S.needs.carIns = b.dataset.v==='import' ? 40000 : 20000;
+      if(!num(S.needs.tax)) S.needs.tax = 15000;
+    }
+    update(false);
+  }));
+  $('retireAge2').addEventListener('input', e => { S.retireAge = num(e.target.value); update(false); });
+  $('life').addEventListener('input', e => { S.life = num(e.target.value); update(false); });
+  document.querySelectorAll('#needsPanel [data-life]').forEach(b => b.onclick = () => { S.life = +b.dataset.life; update(false); });
+}
+function updateNeedsPanel(){
+  const N = needsCalc();
+  const setV = (id, v) => { const el = $(id); if(document.activeElement !== el) el.value = v; };
+  NEEDS.forEach(c => { $('sub_'+c.k).textContent = twdFull(N.cats[c.k]) + '／月'; c.items.forEach(([k]) => setV('n_'+k, S.needs[k])); });
+  document.querySelectorAll('#needsPanel [data-chip]').forEach(g => g.querySelectorAll('button').forEach(b => b.classList.toggle('on', S.needs[g.dataset.chip]===b.dataset.v)));
+  document.querySelectorAll('#needsPanel [data-car]').forEach(el => el.style.display = S.needs.car==='none' ? 'none' : '');
+  $('lb_rent').textContent = S.needs.houseType==='own' ? '房屋稅＋管理費' : '房租';
+  document.querySelectorAll('#needsPanel [data-life]').forEach(b => b.classList.toggle('on', +b.dataset.life===S.life));
+  $('nAge').textContent = S.age + ' 歲';
+  setV('retireAge2', S.retireAge); setV('life', S.life);
+  $('nYears').textContent = N.years + ' 年';
+  $('sMonthly').textContent = twdFull(N.monthly);
+  $('sYearly').textContent = twdFull(N.yearly);
+  $('sTotalL').textContent = `退休金加總（年開銷 × ${N.years} 年）`;
+  $('sTotal').textContent = twd(N.total);
+  $('sSaveL').textContent = '不透過工具：平均每月需存';
+  $('sSave').textContent = twdFull(N.perMonth);
+  $('sSaveY').textContent = `從現在存到 ${S.retireAge} 歲，共 ${N.saveYears} 年`;
+  let placed = false;
+  $('gradeList').innerHTML = '<li style="font-weight:700;color:var(--navy)">你想過怎麼樣的退休生活？</li>' + GRADES.map(([g,name,th,txt]) => {
+    let me = '';
+    if(!placed && N.total >= th){ placed = true; me = `<li class="me">▶ 你的估算：${twd(N.total)}</li>`; }
+    return me + `<li>${g}｜${name}——${txt}</li>`;
+  }).join('');
+  $('selfFormula').innerHTML = `每年應義務存的錢 ＝ 退休金加總 ${twd(N.total)} ÷ ${N.saveYears} 年 ＝ <b>${twdFull(N.perYear)}</b><br>平均每月需存 <b>${twdFull(N.perMonth)}</b>，而且要<b>一直存到 ${S.retireAge} 歲</b>，中間不能停。`;
+}
+
+/* ---------- 退休模式 ---------- */
+function goalSection(P, sel){
+  const p = P[sel], tgt = num(S.target);
+  const br = bestRate(sel, S.retireAge - S.age + 1);
+  if(!br) return `<div class="hint warn">退休年齡太早，還不到可提領年度</div>`;
+  const startAge = S.age + br.year - 1;
+  const tgtAnnual = Math.ceil(tgt*12/S.fx/(br.rate/100)/p.years/100)*100;
+  const tgtTotal = tgtAnnual*p.years, cur = p.annual;
+  const curMonthlyOut = p.total*br.rate/100*S.fx/12;
+  const pct = Math.min(1, cur/tgtAnnual);
+  const below = tgtAnnual < p.th;
+  let h = `<div class="section"><h4>以終點為始｜要達成目標，每年建議存多少？</h4>
+    <div class="seg" id="goalPlan" style="margin-bottom:10px"><button data-v="5">五年期</button><button data-v="2">兩年期</button></div>
+    <div class="goal">
+      <div class="g-top">目標：<b>${S.retireAge} 歲</b>退休後每月領 <b>${twdFull(tgt)}</b>（每年 ${twd(tgt*12)}）${S.needsLink?'<span class="mini">　← 由退休生活試算帶入</span>':''}</div>
+      ${startAge<S.retireAge?`<div class="mini">提領點每 5 年一個，${S.retireAge} 歲之前最近的是保單第 ${br.year} 年（${startAge} 歲），用這個提領率計算，數字偏保守；實際 ${startAge} 歲就可以開始領。</div>`:''}
+      <div class="g-big">每年建議存 ${usd(tgtAnnual)}<small>× ${p.years} 年</small></div>
+      <div class="g-sub">約台幣 ${twd(tgtAnnual*S.fx)}／年 ・ 平均每月約 <b>${twdFull(tgtAnnual*S.fx/12)}</b> ・ 總存 ${usd(tgtTotal)}（約 ${twd(tgtTotal*S.fx)}）・ 第 ${br.year} 年提領率 ${+br.rate.toFixed(2)}%</div>
+      ${below?`<div class="hint warn">低於${p.name}門檻 ${usd(p.th)}／年，實際至少要存到門檻。</div>`:''}
+      <div class="bar"><i style="width:${(pct*100).toFixed(1)}%"></i></div>
+      <div class="mini">目前能力 ${usd(cur)}／年，達成 <b>${(cur/tgtAnnual*100).toFixed(0)}%</b> → ${startAge} 歲起每月可領約 ${twd(curMonthlyOut)}。${cur<tgtAnnual?'可以先求有再求好，看下面的降階方案。':'已經可以達成目標 👍'}</div>
+    </div></div>`;
+  h += raceSection(p, tgt, tgtAnnual, br, startAge);
+  h += ladderSection(p, sel, tgt, tgtAnnual, br);
+  return h;
+}
+function raceSection(p, tgt, tgtAnnual, br, startAge){
+  const saveYears = Math.max(1, S.retireAge - S.age);
+  const useYears = Math.max(0, S.life - S.retireAge);
+  const selfTotal = tgt*12*useYears, selfMonthly = selfTotal/saveYears/12;
+  const toolMonthly = tgtAnnual*S.fx/12, toolTotal = tgtAnnual*p.years*S.fx;
+  const a0 = S.age, aEnd = Math.max(S.life, startAge) + 8;
+  const pos = a => ((Math.min(Math.max(a,a0),aEnd) - a0)/(aEnd - a0)*100).toFixed(2);
+  const seg = (cls, from, to, txt) => to > from ? `<div class="sb ${cls}" style="left:${pos(from)}%;width:${(pos(to)-pos(from)).toFixed(2)}%" title="${txt}">${txt}</div>` : '';
+  const ticks = [...new Set([S.age, S.age+p.years, S.retireAge, S.life])].sort((x,y)=>x-y);
+  const lessYears = saveYears - p.years, lessMoney = selfTotal - toolTotal;
+  return `<div class="section"><h4>自己存 vs. 用工具｜差在哪裡？</h4>
+    <div class="race-row"><b>不透過工具<br><span class="mini">自己存</span></b><div class="track">
+      ${seg('s1', S.age, S.retireAge, `每月存 ${twd(selfMonthly)} × ${saveYears} 年`)}
+      ${seg('s2', S.retireAge, S.life, `花存款到 ${S.life} 歲`)}
+      ${seg('s3', S.life, aEnd, '錢用完了')}
+    </div></div>
+    <div class="race-row"><b>用${p.name}<br><span class="mini">以終點為始</span></b><div class="track">
+      ${seg('t1', S.age, S.age+p.years, `每月存 ${twd(toolMonthly)} × ${p.years} 年`)}
+      ${seg('t2', S.age+p.years, startAge, '不用再存，錢自由運用')}
+      ${seg('t3', startAge, aEnd, `每月領 ${twd(tgt)}，領到終身 →`)}
+    </div></div>
+    <div class="axis">${ticks.map(a=>`<span style="left:${pos(a)}%">${a}歲</span>`).join('')}</div>
+    <div class="race-sum">
+      <div class="a"><small>不透過工具</small><strong>每月 ${twd(selfMonthly)} × ${saveYears} 年</strong><small>總共要存 ${twd(selfTotal)}，${S.life} 歲就用完</small></div>
+      <div class="b"><small>用${p.name}</small><strong>每月 ${twd(toolMonthly)} × ${p.years} 年</strong><small>總共存 ${twd(toolTotal)}，每月 ${twd(tgt)} 領到終身</small></div>
+    </div>
+    ${lessYears>0 ? `<div class="punch">少存 <b>${lessYears} 年</b>${lessMoney>0?`，少拿出 <b>${twd(lessMoney)}</b>`:''}，而且錢不會有用完的一天</div>` : ''}
+  </div>`;
+}
+function ladderSection(p, sel, tgt, tgtAnnual, br){
+  const r100 = v => Math.round(v/100)*100;
+  let cols = [
+    {v:p.th, tags:['最低門檻']},
+    {v:r100(p.annual), tags:['目前能力'], cls:'cur'},
+    {v:r100(tgtAnnual/2), tags:['目標一半']},
+    {v:tgtAnnual, tags:['目標'], cls:'tgt'}
+  ];
+  if(num(S.ladderCustom)) cols.push({v:num(S.ladderCustom), tags:['自訂']});
+  cols = cols.filter(c => c.v > 0).sort((a,b) => a.v - b.v);
+  const merged = [];
+  cols.forEach(c => { const last = merged[merged.length-1];
+    if(last && Math.abs(last.v - c.v)/c.v < 0.03){ last.tags.push(...c.tags); last.cls = last.cls || c.cls; if(c.cls==='tgt'){ last.cls='tgt'; last.v=c.v; } }
+    else merged.push({...c, tags:[...c.tags]}); });
+  cols = merged;
+  const fx = S.fx, w = v => (v/1e4).toFixed(0);
+  const cell = (c, inner, extra='') => `<td class="${c.cls||''} ${c.v<p.th?'dim':''} ${extra}">${inner}</td>`;
+  let rows = '';
+  rows += `<tr><td>每年存入（美金）</td>${cols.map(c=>cell(c, c.v.toLocaleString())).join('')}</tr>`;
+  rows += `<tr><td>總存（美金）</td>${cols.map(c=>cell(c, (c.v*p.years).toLocaleString())).join('')}</tr>`;
+  rows += `<tr><td>平均每月要存（台幣）</td>${cols.map(c=>cell(c, Math.round(c.v*fx/12).toLocaleString())).join('')}</tr>`;
+  if(sel==='5' && S.cv5.some(x=>num(x))){
+    rows += `<tr class="grp"><td colspan="${cols.length+1}">完全不提領（匯率 ${fx}）－台幣／萬</td></tr>`;
+    [10,20,30].forEach((y,i)=>{ if(!num(S.cv5[i])) return;
+      rows += `<tr><td>${y} 年（${S.age+y} 歲）</td>${cols.map(c=>cell(c, w(c.v*5*S.cv5[i]*fx))).join('')}</tr>`; });
+  }
+  rows += `<tr class="grp"><td colspan="${cols.length+1}">若要提領（匯率 ${fx}）－台幣／年／萬</td></tr>`;
+  const pts = [br.year-20, br.year-10, br.year].filter(y => y >= 1 && rateAt(sel, y) !== null);
+  pts.forEach(y => { const r = rateAt(sel, y);
+    rows += `<tr><td>${y} 年（${S.age+y-1} 歲）${+r.toFixed(2)}%</td>${cols.map(c=>cell(c, w(c.v*p.years*r/100*fx), (y===br.year && c.cls==='tgt')?'hit':'')).join('')}</tr>`; });
+  rows += `<tr class="month"><td>${S.age+br.year-1} 歲起每月</td>${cols.map(c=>cell(c, '一個月 ' + twd(c.v*p.years*br.rate/100*fx/12))).join('')}</tr>`;
+  return `<div class="section"><h4>降階推算表｜先求有，再求好</h4>
+    <div class="mini" style="margin-bottom:8px">黃底＝達成目標所需；粉底＝客戶目前能力；灰字＝未達${p.name}門檻 ${usd(p.th)}。現階段做不到目標，可以等比例往下選一個做得到的金額。</div>
+    <div class="scroll-x"><table class="ladder">
+      <tr><th>${p.name}</th>${cols.map(c=>`<th class="${c.cls||''}">${c.tags.join('／')}<small>${usd(c.v)}／年</small></th>`).join('')}</tr>
+      ${rows}
+    </table></div>
+    <div class="row advisor"><label>加一欄自訂金額</label><div class="field" style="width:170px"><input type="number" id="ladderCustom" step="500" placeholder="例如 10000" value="${S.ladderCustom}"><span class="unit">美／年</span></div><span class="mini">輸入後按 Enter</span></div>
+  </div>`;
+}
 function renderRetire(){
   const P = plans(), rec = recommendPlan(P), sel = S.plan || rec, p = P[sel];
   const R5 = retireCalc(P['5']), R2 = retireCalc(P['2']);
+  const tgt = num(S.target);
   const extra = (R) => R ? `<div class="hero"><small>${R.startAge} 歲起每月可領（第 ${R.py} 年 · ${+R.rate.toFixed(2)}%）</small><strong>${twd(R.monthlyTwd)}<i>/ 月</i></strong></div>` : `<div class="hint warn">開始領的年齡太早，還不到可提領年度</div>`;
   let html = `<div class="res-h"><h2>退休金預備試算</h2><div class="profile">${profileLine()}</div></div>`;
   html += `<div class="hint advisor">${STAB[S.stab].text}${S.age>=50?'<br>⚠️ 50 歲以上做退休金試算意義較小，可改聊資產傳承或現金流配置。':''}</div>`;
-  html += `<div class="cards" style="margin-top:14px">${planCard(P['5'],sel,rec,extra(R5))}${planCard(P['2'],sel,rec,extra(R2))}</div>`;
-  html += `<div class="mini" style="margin-top:6px">點選方案卡，下面的時間表和對比會跟著切換。</div>`;
+
+  html += tgt ? goalSection(P, sel) : `<div class="hint" style="margin-top:12px">在上方「退休金試算」填食衣住行育樂，或在左邊填「目標每月退休金」，這裡就會算出每年建議存多少，並列出降階方案。</div>`;
+
+  html += `<div class="section"><h4>依目前每月可存 ${twd(num(S.monthly))} 的規劃</h4>
+    <div class="cards">${planCard(P['5'],sel,rec,extra(R5))}${planCard(P['2'],sel,rec,extra(R2))}</div>
+    <div class="mini" style="margin-top:6px">點選方案卡，整頁會切換成該年期試算。</div></div>`;
 
   const R = sel==='5'?R5:R2;
-  if(!num(S.monthly) && !p.custom){ $('results').innerHTML = html + `<div class="empty">輸入「每月可存金額」就會開始試算</div>`; bindPlanCards(); return; }
-  if(!R){ $('results').innerHTML = html; bindPlanCards(); return; }
+  if(!num(S.monthly) && !p.custom){ $('results').innerHTML = html + `<div class="empty">輸入「每月可存金額」就會開始試算</div>`; bindRetire(); return; }
+  if(!R){ $('results').innerHTML = html; bindRetire(); return; }
 
-  // 目標回推
-  const tgt = num(S.target);
-  if(tgt){
-    const needTotal = tgt*12/S.fx/(R.rate/100), needAnnual = needTotal/p.years;
-    const needMonthly = sel==='5' ? needAnnual*S.fx/12 : (needAnnual*2*S.fx - (S.useLump?num(S.lump):0))/12;
-    const okT = R.monthlyTwd >= tgt;
-    html += `<div class="section"><h4>目標回推</h4><div class="hint ${okT?'good':'warn'}">
-      想要 ${R.startAge} 歲起每月領 <b>${twdFull(tgt)}</b>，${p.name}年繳約需 <b>${usd(needAnnual)}</b>，換算每月要存約 <b>${twd(Math.max(0,needMonthly))}</b>。
-      ${okT?'目前的存款能力已經達標 👍':`目前每月 ${twd(num(S.monthly))}，${needMonthly>0?`還差約 ${twd(needMonthly-num(S.monthly))}／月`:''}；可以溝通調整目標、延後開始領的年齡，或先求有再求好。`}
-    </div></div>`;
-  }
-
-  // 提領時間表
   const maxPy = Math.min(60, 90 - S.age + 1);
   const sched = rateSchedule(sel, maxPy).filter(s => S.age + s.year - 1 >= Math.min(R.startAge, 45) || s.year >= R.py - 15);
   html += `<div class="section"><h4>${p.name}｜越晚領，每月越多</h4><div class="scroll-x"><table class="tl">
@@ -512,10 +789,10 @@ function renderRetire(){
     ${sched.map(s=>{ const a = p.total*s.rate/100; return `<tr class="${s.year===R.py?'hl':''}"><td>${S.age+s.year-1} 歲</td><td>第 ${s.year} 年</td><td>${+s.rate.toFixed(2)}%</td><td>${usd(a)}</td><td>${twd(a*S.fx/12)}</td></tr>`; }).join('')}
   </table></div><div class="mini" style="margin-top:6px">提領率口訣：記住前三個數字，之後每 10 年翻一倍；提領金額以「總保費」計算，開始領之後每年固定領。</div></div>`;
 
-  // 對比
   const B = bankCompare(p, R);
   const totalTwd = p.total*S.fx;
   const lastsTxt = B.lastsYears >= 50 ? '超過 50 年' : `約 ${B.lastsYears.toFixed(1)} 年，${Math.floor(B.endAge)} 歲就領完`;
+  const selfYears = Math.max(1, S.retireAge - S.age);
   html += `<div class="section"><h4>沒規劃 vs. 有規劃</h4>
   <div class="vs">
     <div class="without"><h5>同樣的錢放定存（年利率 ${S.bank}%）</h5>
@@ -531,20 +808,19 @@ function renderRetire(){
       <ul>
         <li>只要繳 ${p.years} 年，總投入 ${twd(totalTwd)}</li>
         <li>${R.startAge} 歲起每年領 ${usd(R.annualUsd)}（約 ${twd(R.annualUsd*S.fx)}）</li>
-        <li>領到 85 歲累積約 <b>${twd(R.to85)}</b>，是投入的 <b>${(R.to85/totalTwd).toFixed(1)} 倍</b></li>
+        <li>領到 ${S.life} 歲累積約 <b>${twd(R.to85)}</b>，是投入的 <b>${(R.to85/totalTwd).toFixed(1)} 倍</b></li>
         <li>邊領邊滾，保單價值還在，可以留給家人（以建議書為準）</li>
       </ul></div>
   </div>
   <div class="pills4">
-    <div class="pill4"><small>時間</small><div>只用 ${p.years} 年，完成別人要存幾十年的退休金</div></div>
-    <div class="pill4"><small>總金額</small><div>總投入 ${twd(totalTwd)}，到 85 歲領回約 ${twd(R.to85)}</div></div>
+    <div class="pill4"><small>時間</small><div>只存 ${p.years} 年；自己存要一路存到 ${S.retireAge} 歲（${selfYears} 年）</div></div>
+    <div class="pill4"><small>總金額</small><div>總投入 ${twd(totalTwd)}，到 ${S.life} 歲領回約 ${twd(R.to85)}</div></div>
     <div class="pill4"><small>現金流</small><div>${R.startAge} 歲起每月 ${twd(R.monthlyTwd)}，活多久領多久</div></div>
     <div class="pill4"><small>生活品質</small><div>繳完之後不用再存退休金，之後賺的錢可以好好享受人生</div></div>
   </div></div>`;
 
-  // 圖：累積領回 vs 定存餘額
   const pts1=[],pts2=[]; let bal=B.atStart, cum=0; const r=S.bank/100/12;
-  for(let a=R.startAge; a<=90; a++){
+  for(let a=R.startAge; a<=Math.max(90, S.life); a++){
     pts1.push([a, cum]); pts2.push([a, Math.max(0,bal)]);
     for(let m=0;m<12;m++){ bal = bal*(1+r) - R.monthlyTwd; }
     cum += R.annualUsd*S.fx;
@@ -555,7 +831,14 @@ function renderRetire(){
   ], {xfmt:x=>x+'歲', yfmt:v=>v>=1e4?Math.round(v/1e4).toLocaleString()+'萬':v})}</div>`;
 
   html += advisorNotesRetire(p);
-  $('results').innerHTML = html; bindPlanCards();
+  $('results').innerHTML = html; bindRetire();
+}
+function bindRetire(){
+  bindPlanCards();
+  const sel = S.plan || recommendPlan(plans());
+  document.querySelectorAll('#goalPlan button').forEach(b => { b.classList.toggle('on', b.dataset.v===sel); b.onclick = () => { S.plan = b.dataset.v; update(); }; });
+  const lc = $('ladderCustom');
+  if(lc) lc.addEventListener('change', e => { S.ladderCustom = e.target.value===''?'':num(e.target.value); update(false); });
 }
 function advisorNotesRetire(p){
   return `<div class="section advisor"><h4>顧問筆記（客戶模式會隱藏）</h4><div class="note"><ul>
@@ -711,12 +994,15 @@ function renderSaveRatio(){
 }
 
 function update(full=true){
+  if(S.needsLink) S.target = Math.round(needsCalc().monthly);
   if(full) renderInputs();
   fillFields();
   renderSaveRatio();
-  if(S.mode==='retire') renderRetire(); else renderHouse();
+  $('needsPanel').style.display = S.mode==='retire' ? '' : 'none';
+  if(S.mode==='retire'){ updateNeedsPanel(); renderRetire(); } else renderHouse();
   save();
 }
+buildNeedsPanel();
 update();
 </script>
 </body>
