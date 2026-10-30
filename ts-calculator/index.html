@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TS計算機</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-1024.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TS計算機">
+<meta name="theme-color" content="#4a1a1f">
+<style>
+  html,body{
+    margin:0;
+    height:100%;
+    background:#4a1a1f;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Microsoft JhengHei",sans-serif;
+  }
+  .wrap{text-align:center; padding:24px;}
+  img{width:96px; height:96px; border-radius:22px; box-shadow:0 6px 20px rgba(0,0,0,.35); margin-bottom:16px;}
+  p{color:#e2ccb8; font-size:13px; margin:0 0 14px;}
+  a.btn{
+    display:inline-block;
+    padding:10px 22px;
+    border-radius:999px;
+    background:#e2ccb8;
+    color:#4a1a1f;
+    text-decoration:none;
+    font-size:14px;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <img src="apple-touch-icon.png" alt="TS計算機">
+    <p id="hint">點下方按鈕開啟 TS計算機</p>
+    <a class="btn" id="openBtn" href="https://claude.ai/artifact/VvYaGWU2ZxH93TTyiukXsk">開啟 TS計算機 →</a>
+  </div>
+  <script>
+    var TARGET = "https://claude.ai/artifact/VvYaGWU2ZxH93TTyiukXsk";
+    var isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+    if (isStandalone){
+      document.getElementById("hint").textContent = "正在開啟 TS計算機…";
+      location.replace(TARGET);
+    }
+  </script>
+</body>
+</html>
