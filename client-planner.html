@@ -547,7 +547,11 @@ function lineChart(series, opts){
     const d = s.pts.map((p,i)=>{ const x=X(p[0]), y=Y(p[1]); if(!s.step) return (i?'L':'M')+x+','+y;
       if(!i) return 'M'+x+','+y; const py=Y(s.pts[i-1][1]); return `L${x},${py}L${x},${y}`; }).join('');
     g += `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${s.w||2.5}" ${s.dash?'stroke-dasharray="5 4"':''} stroke-linejoin="round"/>`;
+    if(opts.endLabels){ const lp=s.pts[s.pts.length-1]; g += `<circle cx="${X(lp[0])}" cy="${Y(lp[1])}" r="4" fill="${s.color}"/>`; }
   });
+  if(opts.gap){ const gx=X(opts.gap.y)-10, ya=Y(opts.gap.a), yb=Y(opts.gap.b);
+    g += `<line x1="${gx}" x2="${gx}" y1="${ya}" y2="${yb}" stroke="#b08a46" stroke-width="2" stroke-dasharray="3 3"/>`;
+    g += `<text x="${gx-6}" y="${(ya+yb)/2+5}" font-size="14" font-weight="700" text-anchor="end" fill="#8a6a2e">${opts.gap.text}</text>`; }
   return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">${g}</svg>
     <div class="legend">${series.map(s=>`<span><i style="background:${s.color}"></i>${s.name}</span>`).join('')}</div>`;
 }
@@ -964,30 +968,47 @@ function renderHouse(){
     [`第 6 年（${S.age+6} 歲）`, `用同一筆頭期款買房，保單放著不動`],
     [`第 6～${5+graceY} 年`, `寬限期，每月 ${twd(M.gracePay)}`],
     [`第 11 年起（${S.age+11} 歲）`, prepay ? `每年領 ${twd(wAnnualTwd)} 拿去還本金，月付照常 ${twd(M.pay)}` : `每月房貸 ${twd(M.pay)} − 保單 ${twd(wMonthly)} ＝ 實付 ${twd(Math.max(0,M.pay-wMonthly))}`],
-    [`${payoffAgeB} 歲`, `房貸繳清${prepay?`（比正常提早 ${ageB-ageBp} 年）`:''}，保單每月 ${twd(wMonthly)} 繼續領`]
+    [`${payoffAgeB} 歲`, `房貸繳清${prepay?`（比 B 自己照常繳的 ${ageB} 歲提早 ${ageB-ageBp} 年）`:''}，保單每月 ${twd(wMonthly)} 繼續領`]
   ];
   html += `<div class="section"><h4>兩種走法的時間軸</h4><div class="cards">
     <div class="plan" style="cursor:default"><h3 style="color:#5b6272">A｜直接買</h3>${rowsA.map(r=>`<div class="kv"><span>${r[0]}</span><b>${r[1]}</b></div>`).join('')}</div>
     <div class="plan sel" style="cursor:default"><h3>B｜聰明買房</h3>${rowsB.map(r=>`<div class="kv"><span>${r[0]}</span><b>${r[1]}</b></div>`).join('')}</div>
   </div></div>`;
 
-  // 圖：每月房貸自付
-  const ptsA=[], ptsB=[], horizon = Math.max(Y, 5 + (prepay?Math.ceil(PP.months/12):Y)) + 3;
+  // 圖：累積付出（折線）— A 直接買 vs B 聰明買房（已扣掉保單領回、真正拿到手的錢）
   const payoffYearB = prepay ? 5 + Math.ceil(PP.months/12) : 5 + Y;
-  for(let y=1; y<=horizon; y++){
-    ptsA.push([y, y<=graceY?M.gracePay : y<=Y?M.pay : 0]);
-    let b;
-    if(y<=5) b = num(S.rent);
-    else { const ly = y-5;
-      if(y > payoffYearB) b = 0;
-      else if(ly<=graceY) b = M.gracePay;
-      else b = (y>=11 && !prepay) ? Math.max(0, M.pay - wMonthly) : M.pay; }
-    ptsB.push([y,b]);
+  const endY = Math.max(85 - S.age, payoffYearB + 3, Y + 3);
+  const premTwdY = annualPrem*fx;
+  let cA=0, cB=0; const ptsA=[[0,0]], ptsB=[[0,0]];
+  let paidA=0, paidB=0, wdB=0;
+  for(let y=1; y<=endY; y++){
+    const a = 12*(y<=graceY?M.gracePay : y<=Y?M.pay : 0);
+    let house=0, prem=0, rent=0, wd=0;
+    if(y<=5){ prem = premTwdY; rent = num(S.rent)*12; }
+    else if(y<=payoffYearB){ const ly=y-5; house = 12*(ly<=graceY?M.gracePay : (!prepay && y>=11) ? Math.max(0, M.pay-wMonthly) : M.pay); }
+    if(y>=11 && y>payoffYearB) wd = wAnnualTwd;            // 房貸繳清後，領的錢真正回到口袋
+    cA += a; cB += house + prem + rent - wd;
+    paidA += a; paidB += house + prem + rent; wdB += wd;
+    ptsA.push([y,cA]); ptsB.push([y,cB]);
   }
-  html += `<div class="section"><h4>每月實際付給房子的錢</h4>${lineChart([
-    {name:'A 直接買', color:'#8a93a6', pts:ptsA, step:true},
-    {name:'B 聰明買房'+(num(S.rent)?'（前 5 年為房租）':''), color:'#b08a46', pts:ptsB, step:true}
-  ], {xfmt:x=>`${S.age+x}歲`, yfmt:v=>v?(v/1e4).toFixed(1).replace(/\.0$/,'')+'萬':'0'})}</div>`;
+  const endAge = S.age+endY, saved = cA - cB;
+  const wan = v => (v/1e4).toFixed(0)+' 萬';
+  html += `<div class="section"><h4>一輩子為房子付出多少錢（累積）</h4>
+    <div class="mini" style="margin-bottom:6px">A：房貸。B：前 5 年存的保費${num(S.rent)?'＋房租':''}＋房貸，再扣掉房貸繳清後保單每年領回的錢。兩條線的距離，就是聰明買房幫客戶省下來的錢。</div>
+    ${lineChart([
+      {name:`A 直接買｜${endAge} 歲累積付出 ${wan(cA)}`, color:'#8a93a6', pts:ptsA, w:3},
+      {name:`B 聰明買房｜${endAge} 歲累積淨付出 ${wan(cB)}`, color:'#b08a46', pts:ptsB, w:3.5}
+    ], {xfmt:x=>`${S.age+x}歲`, yfmt:v=>v?(v/1e4).toFixed(0)+'萬':'0', endLabels:true, gap:{y:endY, a:cA, b:cB, text:saved>0?`少付 ${wan(saved)}`:`多付 ${wan(-saved)}`}})}
+    <div class="cards" style="margin-top:10px">
+      <div class="plan" style="cursor:default"><h3 style="color:#5b6272">A｜到 ${endAge} 歲</h3>
+        <div class="kv"><span>付給房子（含利息）</span><b>${twd(paidA)}</b></div>
+        <div class="kv"><span>手上另外有的現金流</span><b>0</b></div></div>
+      <div class="plan sel" style="cursor:default"><h3>B｜到 ${endAge} 歲</h3>
+        <div class="kv"><span>保費${num(S.rent)?'＋房租':''}＋房貸</span><b>${twd(paidB)}</b></div>
+        <div class="kv"><span>房貸繳清後保單領回</span><b>− ${twd(wdB)}</b></div>
+        <div class="kv"><span>淨付出</span><b>${twd(cB)}</b></div>
+        <div class="hero"><small>比直接買${saved>0?'少付':'多付'}</small><strong>${twd(Math.abs(saved))}</strong></div></div>
+    </div></div>`;
 
   // 對比
   const interestSaved = M.interest - PP.interest;
