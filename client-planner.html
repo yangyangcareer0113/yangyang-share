@@ -529,15 +529,18 @@ $('btnRandom').onclick=()=>{
 
 /* ---------- 圖表 ---------- */
 function lineChart(series, opts){
-  const W=720,H=240,pl=56,pr=14,pt=14,pb=30;
+  const W=720,H=opts.H||240,pl=56,pr=14,pt=14,pb=30;
   const xs = series[0].pts.map(p=>p[0]);
   const xmin=Math.min(...xs), xmax=Math.max(...xs);
   let ymax = Math.max(1,...series.flatMap(s=>s.pts.map(p=>p[1])));
-  const step = Math.pow(10, Math.floor(Math.log10(ymax)))/2; ymax = Math.ceil(ymax*1.08/step)*step;
+  const step = opts.ystep || Math.pow(10, Math.floor(Math.log10(ymax)))/2; ymax = Math.ceil(ymax*(opts.ystep?1.02:1.08)/step)*step;
   const X = x => pl + (x-xmin)/(xmax-xmin||1)*(W-pl-pr);
   const Y = y => pt + (1 - y/ymax)*(H-pt-pb);
   let g = '';
-  for(let k=0;k<=4;k++){ const v=ymax*k/4, y=Y(v);
+  const nt = opts.ystep ? Math.round(ymax/step) : 4;
+  if(opts.fillBetween && series.length>1){ const a=series[0].pts, b=series[1].pts;
+    g += `<path d="${a.map((p,i)=>(i?'L':'M')+X(p[0])+','+Y(p[1])).join('')}${b.slice().reverse().map(p=>'L'+X(p[0])+','+Y(p[1])).join('')}Z" fill="${opts.fillBetween}" stroke="none"/>`; }
+  for(let k=0;k<=nt;k++){ const v=ymax*k/nt, y=Y(v);
     g += `<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" stroke="#e3e0d8"/>`;
     g += `<text x="${pl-6}" y="${y+4}" font-size="11" text-anchor="end" fill="#6b7385">${opts.yfmt(v)}</text>`; }
   const tickEvery = Math.ceil((xmax-xmin)/8/5)*5 || 1;
@@ -551,7 +554,7 @@ function lineChart(series, opts){
   });
   if(opts.gap){ const gx=X(opts.gap.y)-10, ya=Y(opts.gap.a), yb=Y(opts.gap.b);
     g += `<line x1="${gx}" x2="${gx}" y1="${ya}" y2="${yb}" stroke="#b08a46" stroke-width="2" stroke-dasharray="3 3"/>`;
-    g += `<text x="${gx-6}" y="${(ya+yb)/2+5}" font-size="14" font-weight="700" text-anchor="end" fill="#8a6a2e">${opts.gap.text}</text>`; }
+    g += `<text x="${gx-6}" y="${(ya+yb)/2+5}" font-size="18" font-weight="800" text-anchor="end" fill="#8a6a2e">${opts.gap.text}</text>`; }
   return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img">${g}</svg>
     <div class="legend">${series.map(s=>`<span><i style="background:${s.color}"></i>${s.name}</span>`).join('')}</div>`;
 }
@@ -998,7 +1001,7 @@ function renderHouse(){
     ${lineChart([
       {name:`A 直接買｜${endAge} 歲累積付出 ${wan(cA)}`, color:'#8a93a6', pts:ptsA, w:3},
       {name:`B 聰明買房｜${endAge} 歲累積淨付出 ${wan(cB)}`, color:'#b08a46', pts:ptsB, w:3.5}
-    ], {xfmt:x=>`${S.age+x}歲`, yfmt:v=>v?(v/1e4).toFixed(0)+'萬':'0', endLabels:true, gap:{y:endY, a:cA, b:cB, text:saved>0?`少付 ${wan(saved)}`:`多付 ${wan(-saved)}`}})}
+    ], {H:520, ystep:1e6, fillBetween:'rgba(176,138,70,.22)', xfmt:x=>`${S.age+x}歲`, yfmt:v=>v?(v/1e4).toFixed(0)+'萬':'0', endLabels:true, gap:{y:endY, a:cA, b:cB, text:saved>0?`少付 ${wan(saved)}`:`多付 ${wan(-saved)}`}})}
     <div class="cards" style="margin-top:10px">
       <div class="plan" style="cursor:default"><h3 style="color:#5b6272">A｜到 ${endAge} 歲</h3>
         <div class="kv"><span>付給房子（含利息）</span><b>${twd(paidA)}</b></div>
