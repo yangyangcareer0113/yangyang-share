@@ -373,7 +373,10 @@ const DEFAULTS = {
 };
 let S = JSON.parse(JSON.stringify(DEFAULTS));
 try{ const saved = JSON.parse(localStorage.getItem('planner-v1')||'null'); if(saved){ const n = Object.assign({}, S.needs, saved.needs||{}); if(!saved.fxV30 && saved.fx===31) saved.fx = 30; S = Object.assign(S, saved); S.needs = n; } S.fxV30 = true; }catch(e){}
-const save = () => { try{ localStorage.setItem('planner-v1', JSON.stringify(S)); }catch(e){} };
+/* 客戶專屬連結：#c=<base64url(JSON {n,s})>，資料只存在連結裡 */
+let SHARED=null;
+try{ const m=location.hash.match(/[#&]c=([^&]+)/); if(m){ const b=m[1].replace(/-/g,'+').replace(/_/g,'/'); SHARED=JSON.parse(decodeURIComponent(escape(atob(b)))); const n=Object.assign({}, DEFAULTS.needs, (SHARED.s||{}).needs||{}); S=Object.assign(JSON.parse(JSON.stringify(DEFAULTS)), SHARED.s||{}); S.needs=n; } }catch(e){ SHARED=null; }
+const save = () => { if(SHARED) return; try{ localStorage.setItem('planner-v1', JSON.stringify(S)); }catch(e){} };
 
 /* ---------- 格式 ---------- */
 const $ = id => document.getElementById(id);
@@ -1078,6 +1081,12 @@ function update(full=true){
   $('needsPanel').style.display = (S.mode==='retire' && S.needsLink) ? '' : 'none';
   if(S.mode==='retire'){ if(S.needsLink) updateNeedsPanel(); renderRetire(); } else renderHouse();
   save();
+}
+if(SHARED){
+  document.body.classList.add('client');
+  const ta=document.querySelector('.top-actions'); if(ta) ta.style.display='none';
+  const h=document.querySelector('header.top h1'); if(h) h.innerHTML=`${(SHARED.n||'你').replace(/[<>&"]/g,'')} 的專屬規劃試算<small>由楊楊理財顧問為你準備｜可以自己調整數字看看不同結果</small>`;
+  document.title=`${SHARED.n||''} 的專屬規劃試算`;
 }
 buildNeedsPanel();
 update();
